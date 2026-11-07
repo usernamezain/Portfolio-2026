@@ -85,41 +85,62 @@ npm run preview
 
 ---
 
-## 📂 Project Structure
+## 📂 Production Folder Structure
 
 ```text
 Personal-Portfolio/
 ├── public/
-│   ├── favicon.svg          # Custom ZM SVG favicon
+│   ├── favicon.svg          # High-res ZM SVG favicon
 │   ├── og-image.svg         # Open Graph social preview banner
 │   └── robots.txt           # Crawler instructions & sitemap link
 ├── src/
-│   ├── components/
-│   │   ├── About.astro      # Developer bio, philosophy & languages
-│   │   ├── Blog.astro       # Technical guides & notes
-│   │   ├── Contact.astro    # Social links & WhatsApp community
-│   │   ├── Experience.astro # Career milestones & engineering history
-│   │   ├── FaqKnowledge.astro# Interactive FAQ targeting search queries
-│   │   ├── Footer.astro     # Copyright & back-to-top anchor
-│   │   ├── Header.astro     # Sticky nav & dark/light theme switch
-│   │   ├── Hero.astro       # Lede, available pill & primary CTAs
-│   │   ├── Icon.astro       # Lightweight 0-JS SVG icon engine
-│   │   ├── Preloader.astro  # Futuristic terminal loader
-│   │   ├── Projects.astro   # Selected works with external links
-│   │   ├── SEO.astro        # Meta tags, OpenGraph & JSON-LD schemas
-│   │   └── TechStack.astro  # Skill chips with Anime.js elasticity
+│   ├── assets/              # Optimized & fingerprinted build-time media
+│   │   └── images/
+│   │       ├── avatar/      # Developer avatar (eager loaded, high-priority)
+│   │       │   └── avatar.svg
+│   │       └── projects/    # 16:9 responsive project showcase previews
+│   │           ├── ultimate-empire.svg
+│   │           ├── mughal-dev.svg
+│   │           ├── beauty-studio.svg
+│   │           ├── bento-portfolio.svg
+│   │           ├── chuzi-wisher.svg
+│   │           └── bukhari-designs.svg
+│   ├── components/          # Domain-driven component architecture
+│   │   ├── common/          # Reusable design primitives (Icon, Badge)
+│   │   │   ├── Badge.astro
+│   │   │   └── Icon.astro
+│   │   ├── layout/          # Global layout chrome
+│   │   │   ├── Header.astro
+│   │   │   └── Footer.astro
+│   │   ├── media/           # Performance media components
+│   │   │   ├── Avatar.astro
+│   │   │   └── ProjectMedia.astro
+│   │   ├── motion/          # Animation & preloader primitives
+│   │   │   └── Preloader.astro
+│   │   ├── sections/        # Semantic page sections
+│   │   │   ├── Hero.astro
+│   │   │   ├── About.astro
+│   │   │   ├── TechStack.astro
+│   │   │   ├── Projects.astro
+│   │   │   ├── Experience.astro
+│   │   │   ├── FaqKnowledge.astro
+│   │   │   ├── Blog.astro
+│   │   │   └── Contact.astro
+│   │   └── seo/             # High-authority SEO & structured data
+│   │       └── SEO.astro
 │   ├── data/
-│   │   ├── portfolio.ts     # Central portfolio content & projects
-│   │   └── seo.ts           # SEO keywords, schema graph generator
+│   │   ├── portfolio.ts     # Portfolio data with image imports
+│   │   └── seo.ts           # Target search keywords & Schema Graph
 │   ├── layouts/
-│   │   └── Layout.astro     # Base HTML layout, FOUC guard, scripts
+│   │   └── Layout.astro     # Core HTML shell & motion controller hook
 │   ├── pages/
-│   │   └── index.astro      # Main single-page portfolio
+│   │   └── index.astro      # Single-page portfolio entry
 │   ├── scripts/
-│   │   └── animationController.ts # Unified GSAP + Lenis + Anime.js logic
-│   └── styles/
-│       └── global.css       # Token system, 4px grid & responsive styles
-├── astro.config.mjs         # Astro configuration & sitemap integration
+│   │   └── animationController.ts # GSAP + Lenis + Anime.js orchestration
+│   ├── styles/
+│   │   └── global.css       # Token system, 4px grid & responsive styles
+│   └── env.d.ts             # TypeScript definitions
+├── astro.config.mjs         # Astro 5 configuration & sitemap integration
 ├── package.json             # Scripts & dependencies
 └── tsconfig.json            # Strict TypeScript configuration
 ```
