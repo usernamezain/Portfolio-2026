@@ -128,17 +128,26 @@ Personal-Portfolio/
 │   │   │   └── Contact.astro
 │   │   └── seo/             # High-authority SEO & structured data
 │   │       └── SEO.astro
+│   ├── content/             # Astro Content Layer Collections
+│   │   └── blog/            # Optimized Markdown technical articles (.md)
+│   │       ├── making-lenis-and-scrolltrigger-work-together.md
+│   │       ├── coexistence-gsap-animejs-and-css-physics-in-astro.md
+│   │       └── zero-cls-and-100-100-lighthouse-on-astro-portfolios.md
 │   ├── data/
 │   │   ├── portfolio.ts     # Portfolio data with image imports
 │   │   └── seo.ts           # Target search keywords & Schema Graph
 │   ├── layouts/
 │   │   └── Layout.astro     # Core HTML shell & motion controller hook
 │   ├── pages/
+│   │   ├── blog/            # Blog system routes
+│   │   │   ├── index.astro  # All articles listing
+│   │   │   └── [...slug].astro # Dynamic markdown slug renderer
 │   │   └── index.astro      # Single-page portfolio entry
 │   ├── scripts/
 │   │   └── animationController.ts # GSAP + Lenis + Anime.js orchestration
 │   ├── styles/
 │   │   └── global.css       # Token system, 4px grid & responsive styles
+│   ├── content.config.ts    # Content collection schema (Zod)
 │   └── env.d.ts             # TypeScript definitions
 ├── astro.config.mjs         # Astro 5 configuration & sitemap integration
 ├── package.json             # Scripts & dependencies
