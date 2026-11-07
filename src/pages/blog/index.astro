@@ -36,57 +36,55 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
       <hr class="rule" data-rule />
 
       <!-- Interactive Search & Topic Filter Widget -->
-      <div class="blog-search-filter-section" data-hero>
-        <div class="search-bar-row">
-          <div class="search-bar" id="search-bar-box">
-            <div class="search-icon-wrapper" aria-hidden="true">
-              <Icon name="search" size={16} class="search-icon" />
-            </div>
-
-            <div class="search-typing-arena">
-              <input
-                type="text"
-                id="blog-search-input"
-                class="search-native-input"
-                placeholder=""
-                autocomplete="off"
-                spellcheck="false"
-                aria-label="Search articles by title, description, or keyword"
-              />
-
-              <div class="search-visual-layer" aria-hidden="true">
-                <span class="search-placeholder" id="search-placeholder">Search articles, tags, GSAP, Astro...</span>
-                <div class="search-chars-container" id="search-chars-container"></div>
-                <span class="search-custom-cursor" id="search-custom-cursor"></span>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              id="search-clear-btn"
-              class="search-clear-btn"
-              aria-label="Clear search query"
-              hidden
-            >
-              <Icon name="x" size={13} />
-            </button>
-
-            <span class="search-counter mono" id="search-count-badge">
-              {sortedPosts.length} {sortedPosts.length === 1 ? 'article' : 'articles'}
-            </span>
+      <div class="search-widget-wrapper" data-hero>
+        <div class="search-box-shell" id="search-bar-box">
+          <div class="search-icon-slot" aria-hidden="true">
+            <Icon name="search" size={16} />
           </div>
+
+          <div class="search-input-stage">
+            <input
+              type="text"
+              id="blog-search-input"
+              class="search-hidden-input"
+              placeholder=""
+              autocomplete="off"
+              spellcheck="false"
+              aria-label="Search articles by title, description, or keyword"
+            />
+
+            <div class="search-visual-viewport" aria-hidden="true">
+              <span class="search-ghost-placeholder" id="search-placeholder">Search articles, tags, GSAP, Astro...</span>
+              <div class="search-chars-stream" id="search-chars-container"></div>
+              <span class="search-gliding-caret" id="search-custom-cursor"></span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            id="search-clear-btn"
+            class="search-clear-action"
+            aria-label="Clear search query"
+            hidden
+          >
+            <Icon name="x" size={13} />
+          </button>
+
+          <span class="search-count-pill mono" id="search-count-badge">
+            {sortedPosts.length} {sortedPosts.length === 1 ? 'article' : 'articles'}
+          </span>
         </div>
 
         <!-- Filter Pills Bar -->
-        <div class="filter-pills-row" role="tablist" aria-label="Filter articles by topic">
-          <span class="filter-label mono">FILTER:</span>
-          <button type="button" class="filter-pill is-active" data-filter="all">All</button>
-          <button type="button" class="filter-pill" data-filter="gsap">GSAP</button>
-          <button type="button" class="filter-pill" data-filter="astro">Astro</button>
-          <button type="button" class="filter-pill" data-filter="performance">Performance</button>
-          <button type="button" class="filter-pill" data-filter="lenis">Lenis</button>
-          <button type="button" class="filter-pill" data-filter="motion">Motion</button>
-          <button type="button" class="filter-pill" data-filter="architecture">Architecture</button>
+        <div class="filter-chips-row" role="tablist" aria-label="Filter articles by topic">
+          <span class="filter-caption mono">FILTER:</span>
+          <button type="button" class="filter-chip is-active" data-filter="all">All</button>
+          <button type="button" class="filter-chip" data-filter="gsap">GSAP</button>
+          <button type="button" class="filter-chip" data-filter="astro">Astro</button>
+          <button type="button" class="filter-chip" data-filter="performance">Performance</button>
+          <button type="button" class="filter-chip" data-filter="lenis">Lenis</button>
+          <button type="button" class="filter-chip" data-filter="motion">Motion</button>
+          <button type="button" class="filter-chip" data-filter="architecture">Architecture</button>
         </div>
       </div>
 
@@ -153,7 +151,7 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     const clearBtn = document.getElementById('search-clear-btn');
     const countBadge = document.getElementById('search-count-badge');
     const searchBarBox = document.getElementById('search-bar-box');
-    const filterPills = document.querySelectorAll<HTMLButtonElement>('.filter-pill');
+    const filterPills = document.querySelectorAll<HTMLButtonElement>('.filter-chip');
     const postCards = document.querySelectorAll<HTMLElement>('.post-card-wrap');
     const emptyState = document.getElementById('blog-empty-state');
     const emptyDesc = document.getElementById('empty-desc');
@@ -224,7 +222,6 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
         // Apply smooth blur-in only to newly typed characters
         if (newLen > oldLen && i >= oldLen) {
           span.classList.add('char-blur-in');
-          // Micro-stagger for pasted or fast multichar inputs
           const delay = (i - oldLen) * 0.03;
           span.style.animationDelay = `${delay}s`;
         }
@@ -427,53 +424,52 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
   /* ==========================================================================
      SEARCH & FILTER WIDGET
      ========================================================================== */
-  .blog-search-filter-section {
+  .search-widget-wrapper {
     margin: var(--s6) 0 var(--s8);
-  }
-
-  .search-bar-row {
     display: flex;
-    width: 100%;
+    flex-direction: column;
+    gap: var(--s3);
   }
 
-  .search-bar {
+  .search-box-shell {
     position: relative;
     display: flex;
     align-items: center;
     width: 100%;
-    height: 48px;
+    height: 46px;
     padding: 0 var(--s4);
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--r-full);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     transition: border-color 200ms var(--ease), box-shadow 200ms var(--ease), background-color 200ms var(--ease);
   }
 
-  .search-bar:hover {
+  .search-box-shell:hover {
     border-color: var(--border-focus);
   }
 
-  .search-bar.is-focused {
+  .search-box-shell.is-focused {
     border-color: var(--accent);
-    box-shadow: 0 0 0 1px var(--accent), 0 0 24px var(--accent-glow);
+    box-shadow: 0 0 0 1px var(--accent), 0 0 20px var(--accent-glow);
     background: var(--card-hover);
   }
 
-  .search-icon-wrapper {
+  .search-icon-slot {
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--t3);
     margin-right: var(--s3);
+    flex-shrink: 0;
     transition: color 180ms var(--ease);
   }
 
-  .search-bar.is-focused .search-icon-wrapper {
+  .search-box-shell.is-focused .search-icon-slot {
     color: var(--accent);
   }
 
-  .search-typing-arena {
+  .search-input-stage {
     position: relative;
     flex: 1;
     height: 100%;
@@ -482,33 +478,37 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     overflow: hidden;
   }
 
-  .search-native-input {
+  /* Real input capturing keyboard events */
+  .search-hidden-input {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     opacity: 0;
-    z-index: 2;
+    z-index: 10;
     cursor: text;
     border: none;
     outline: none;
     background: transparent;
     font-family: var(--font-sans);
     font-size: 14px;
+    color: transparent;
     caret-color: transparent;
+    padding: 0;
+    margin: 0;
   }
 
-  .search-visual-layer {
+  .search-visual-viewport {
     position: absolute;
     inset: 0;
     display: flex;
     align-items: center;
     pointer-events: none;
-    z-index: 1;
+    z-index: 5;
     overflow: hidden;
   }
 
-  .search-placeholder {
+  .search-ghost-placeholder {
     font-size: 14px;
     color: var(--t3);
     pointer-events: none;
@@ -517,7 +517,7 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     user-select: none;
   }
 
-  .search-chars-container {
+  .search-chars-stream {
     display: inline-flex;
     align-items: center;
     white-space: pre;
@@ -535,14 +535,14 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
 
   /* Smooth Blur-in Typography Keyframes */
   .search-char.char-blur-in {
-    animation: charBlurIn 240ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: charBlurIn 220ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   @keyframes charBlurIn {
     0% {
       opacity: 0;
       filter: blur(8px);
-      transform: translateY(3px) scale(0.9);
+      transform: translateY(3px) scale(0.88);
     }
     60% {
       opacity: 0.85;
@@ -556,7 +556,7 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
   }
 
   /* Smooth Gliding Custom Cursor */
-  .search-custom-cursor {
+  .search-gliding-caret {
     position: absolute;
     left: 0;
     top: 50%;
@@ -571,12 +571,12 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     transition: opacity 180ms var(--ease);
   }
 
-  .search-custom-cursor.is-focused {
+  .search-gliding-caret.is-focused {
     opacity: 1;
     animation: cursorBreathe 1.2s ease-in-out infinite alternate;
   }
 
-  .search-custom-cursor.is-typing {
+  .search-gliding-caret.is-typing {
     animation: none;
     opacity: 1;
   }
@@ -587,12 +587,12 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
       box-shadow: 0 0 10px var(--accent), 0 0 2px #fff;
     }
     50% {
-      opacity: 0.3;
+      opacity: 0.25;
       box-shadow: 0 0 4px var(--accent-glow);
     }
   }
 
-  .search-clear-btn {
+  .search-clear-action {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -604,44 +604,49 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     color: var(--t2);
     cursor: pointer;
     margin: 0 var(--s2);
+    padding: 0;
+    flex-shrink: 0;
     transition: background-color 150ms var(--ease), color 150ms var(--ease), transform 150ms var(--ease);
   }
 
-  .search-clear-btn:hover {
+  .search-clear-action:hover {
     background: var(--accent);
     color: var(--on-t1);
     transform: scale(1.08);
   }
 
-  .search-counter {
+  .search-count-pill {
     font-size: 11px;
-    color: var(--t3);
-    padding: 3px var(--s2);
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid var(--border);
+    color: var(--accent);
+    padding: 2px var(--s3);
+    background: var(--badge-bg);
+    border: 1px solid var(--badge-border);
     border-radius: var(--r-full);
     white-space: nowrap;
     margin-left: var(--s1);
+    flex-shrink: 0;
   }
 
-  /* Filter Pills */
-  .filter-pills-row {
+  /* Filter Chips */
+  .filter-chips-row {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     gap: var(--s2);
-    margin-top: var(--s3);
     padding: 0 var(--s1);
   }
 
-  .filter-label {
+  .filter-caption {
     font-size: 10.5px;
     letter-spacing: 0.08em;
     color: var(--t3);
     margin-right: var(--s1);
   }
 
-  .filter-pill {
+  .filter-chip {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
     font-size: 12px;
     font-weight: 500;
     padding: 4px var(--s3);
@@ -650,16 +655,17 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     border: 1px solid var(--border);
     color: var(--t2);
     cursor: pointer;
+    box-sizing: border-box;
     transition: background-color 180ms var(--ease), border-color 180ms var(--ease), color 180ms var(--ease), transform 180ms var(--ease), box-shadow 180ms var(--ease);
   }
 
-  .filter-pill:hover {
-    border-color: var(--t3);
+  .filter-chip:hover {
+    border-color: var(--border-focus);
     color: var(--t1);
     transform: translateY(-1px);
   }
 
-  .filter-pill.is-active {
+  .filter-chip.is-active {
     background: var(--badge-bg);
     border-color: var(--accent);
     color: var(--accent);
@@ -825,16 +831,15 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
   }
 
   @media (max-width: 640px) {
-    .filter-pills-row {
+    .filter-chips-row {
       gap: 6px;
     }
-    .filter-pill {
+    .filter-chip {
       font-size: 11px;
       padding: 3px 10px;
     }
-    .search-counter {
+    .search-count-pill {
       display: none;
     }
   }
 </style>
-
