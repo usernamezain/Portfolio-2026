@@ -387,9 +387,42 @@ export function initMotionSystem() {
   });
 
   /* ==========================================================================
-     8. FAQ ACCORDION WITH BUTTERY SMOOTH EXPANSION & BLUR-IN TYPOGRAPHY
+     8. FAQ ACCORDION WITH STAGGERED CHARACTER-BY-CHARACTER BLUR-IN TYPOGRAPHY
      ========================================================================== */
-  document.querySelectorAll('.faq-item').forEach((item) => {
+  function splitFaqTextIntoChars(el: HTMLElement): HTMLElement[] {
+    const text = el.textContent || '';
+    el.innerHTML = '';
+    const allChars: HTMLElement[] = [];
+
+    // Split text into words, preserving spaces
+    const words = text.split(/(\s+)/);
+
+    words.forEach((word) => {
+      if (!word) return;
+      if (/^\s+$/.test(word)) {
+        el.appendChild(document.createTextNode(word));
+      } else {
+        const wordSpan = document.createElement('span');
+        wordSpan.className = 'faq-word';
+
+        for (let i = 0; i < word.length; i++) {
+          const char = word[i];
+          const charSpan = document.createElement('span');
+          charSpan.className = 'faq-char';
+          charSpan.textContent = char;
+          wordSpan.appendChild(charSpan);
+          allChars.push(charSpan);
+        }
+        el.appendChild(wordSpan);
+      }
+    });
+
+    return allChars;
+  }
+
+  const faqCharsMap = new Map<HTMLElement, HTMLElement[]>();
+
+  document.querySelectorAll('.faq-item').forEach((item, itemIndex) => {
     const trigger = item.querySelector('.faq-question') as HTMLButtonElement | null;
     const collapse = item.querySelector('.faq-answer-collapse') as HTMLElement | null;
     const inner = item.querySelector('.faq-answer-inner') as HTMLElement | null;
@@ -397,6 +430,17 @@ export function initMotionSystem() {
     const icon = item.querySelector('.faq-chevron') as HTMLElement | null;
 
     if (!trigger || !collapse || !inner || !textEl) return;
+
+    // Split text into individual letter elements
+    const chars = splitFaqTextIntoChars(textEl);
+    faqCharsMap.set(textEl, chars);
+
+    if (itemIndex === 0) {
+      // First item starts open and fully clear
+      gsap.set(chars, { opacity: 1, filter: 'blur(0px)', y: 0 });
+    } else {
+      gsap.set(chars, { opacity: 0, filter: 'blur(8px)', y: 6 });
+    }
 
     let isBusy = false;
 
@@ -441,23 +485,28 @@ export function initMotionSystem() {
           },
         });
 
-        // Buttery Smooth Text Blur-In Animation
+        // Staggered Character-by-Character Blur-In Typography Animation
+        const staggerSpeed = Math.min(0.012, 0.55 / chars.length);
         gsap.fromTo(
-          textEl,
+          chars,
           {
             opacity: 0,
-            filter: 'blur(10px)',
-            y: 10,
+            filter: 'blur(8px)',
+            y: 6,
           },
           {
             opacity: 1,
             filter: 'blur(0px)',
             y: 0,
-            duration: 0.5,
-            delay: 0.08,
+            duration: 0.35,
+            delay: 0.06,
+            stagger: {
+              each: staggerSpeed,
+              from: 'start',
+            },
             ease: 'power2.out',
             onComplete: () => {
-              gsap.set(textEl, { clearProps: 'filter' });
+              gsap.set(chars, { clearProps: 'filter,transform' });
             },
           }
         );
@@ -478,12 +527,12 @@ export function initMotionSystem() {
           });
         }
 
-        // Smooth text blur-out
-        gsap.to(textEl, {
+        // Smooth character blur-out
+        gsap.to(chars, {
           opacity: 0,
-          filter: 'blur(6px)',
-          y: -6,
-          duration: 0.25,
+          filter: 'blur(4px)',
+          duration: 0.2,
+          stagger: 0.002,
           ease: 'power2.in',
         });
 
@@ -498,7 +547,7 @@ export function initMotionSystem() {
           },
           onComplete: () => {
             collapse.style.display = 'none';
-            gsap.set(textEl, { clearProps: 'all' });
+            gsap.set(chars, { clearProps: 'all' });
             isBusy = false;
             ScrollTrigger.refresh();
             lenisInstance?.resize();
