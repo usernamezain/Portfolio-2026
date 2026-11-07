@@ -489,3 +489,4 @@ export function initThemeToggle() {
 
   updateAriaLabel();
 }
+

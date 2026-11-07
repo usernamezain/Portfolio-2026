@@ -1,19 +1,11 @@
 ---
 import Icon from '../common/Icon.astro';
-import Badge from '../common/Badge.astro';
 import Avatar from '../media/Avatar.astro';
 import { portfolioData } from '../../data/portfolio';
 ---
 
 <section class="hero" id="top" aria-label="Introduction">
   <div class="container">
-    <!-- Available Status Pill -->
-    <div class="hero-status" data-hero>
-      <Badge dot={true}>
-        <span>Available for Freelance &amp; Contracts</span>
-      </Badge>
-    </div>
-
     <!-- Header & Avatar with Media Optimization -->
     <div class="hero-head" data-hero>
       <Avatar size={72} />
@@ -47,10 +39,6 @@ import { portfolioData } from '../../data/portfolio';
 <style>
   .hero {
     padding: var(--s20) 0 var(--s16);
-  }
-
-  .hero-status {
-    margin-bottom: var(--s5);
   }
 
   .hero-head {
@@ -112,3 +100,4 @@ import { portfolioData } from '../../data/portfolio';
     }
   }
 </style>
+
