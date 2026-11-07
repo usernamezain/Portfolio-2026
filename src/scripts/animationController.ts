@@ -131,10 +131,15 @@ export function initMotionSystem() {
      3. SMOOTH ANCHOR NAVIGATION
      ========================================================================== */
   const navHeight = 60;
-  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+  document.querySelectorAll('a[href^="#"], a[href^="/#"]').forEach((anchor) => {
     anchor.addEventListener('click', (e) => {
-      const href = anchor.getAttribute('href');
-      if (!href || href === '#' || href.length < 2) return;
+      let href = anchor.getAttribute('href');
+      if (!href) return;
+      if (href.startsWith('/#')) {
+        if (window.location.pathname !== '/' && window.location.pathname !== '') return;
+        href = href.slice(1);
+      }
+      if (href === '#' || href.length < 2) return;
       const target = document.querySelector(href);
       if (!target) return;
 
@@ -556,6 +561,34 @@ export function initMotionSystem() {
       }
     });
   });
+
+  /* ==========================================================================
+     9. 1-CLICK COPY EMAIL UTILITY
+     ========================================================================== */
+  const copyBtn = document.getElementById('copy-email-btn');
+  if (copyBtn) {
+    const copyText = copyBtn.querySelector('.copy-text');
+    copyBtn.addEventListener('click', () => {
+      const email = 'contact@zainalidev.com';
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(email).then(() => {
+          if (copyText) {
+            const original = copyText.textContent;
+            copyText.textContent = 'Copied!';
+            anime({
+              targets: copyBtn,
+              scale: [1, 1.08, 1],
+              duration: 300,
+              easing: 'easeOutQuad',
+            });
+            setTimeout(() => {
+              copyText.textContent = original;
+            }, 2000);
+          }
+        });
+      }
+    });
+  }
 
   // Refresh triggers on font load
   if (document.fonts && document.fonts.ready) {

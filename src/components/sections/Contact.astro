@@ -13,6 +13,16 @@ import { portfolioData } from '../../data/portfolio';
     </p>
 
     <div class="social-links" data-reveal>
+      <a class="contact-link" href={`mailto:${portfolioData.contact.email}`} target="_blank" rel="noopener noreferrer">
+        <Icon name="mail" size={17} />
+        <span>{portfolioData.contact.email}</span>
+      </a>
+
+      <button class="contact-link copy-email-btn" id="copy-email-btn" type="button" aria-label="Copy email address to clipboard">
+        <Icon name="copy" size={16} class="copy-icon" />
+        <span class="copy-text">Copy Email</span>
+      </button>
+
       <a class="contact-link" href={portfolioData.contact.github} target="_blank" rel="noopener noreferrer">
         <Icon name="github" size={17} />
         <span>GitHub</span>
@@ -69,6 +79,11 @@ import { portfolioData } from '../../data/portfolio';
     color: var(--t1);
     font-size: 13.5px;
     font-weight: 500;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    font-family: inherit;
     transition: color 160ms var(--ease), transform 160ms var(--ease);
   }
 

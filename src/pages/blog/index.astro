@@ -1,0 +1,222 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/common/Icon.astro';
+
+const posts = await getCollection('blog');
+const sortedPosts = posts.sort(
+  (a, b) => new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf()
+);
+
+const seoTitle = "Engineering Notes & Creative Development Blog | Zain Ali Developer (zainalidev)";
+const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, Anime.js physics, Astro performance optimization, and Core Web Vitals by Zain Ali Mughal.";
+---
+
+<Layout title={seoTitle} description={seoDesc}>
+  <section class="blog-page">
+    <div class="container">
+      <!-- Breadcrumb / Back Link -->
+      <div class="blog-nav-bar" data-hero>
+        <a href="/" class="back-link">
+          <span>← Back to portfolio</span>
+        </a>
+      </div>
+
+      <!-- Header -->
+      <header class="blog-page-header" data-hero>
+        <div class="blog-badge">
+          <span>CREATIVE ENGINEERING NOTES</span>
+        </div>
+        <h1 class="blog-page-title">Articles &amp; Field Notes</h1>
+        <p class="blog-page-desc">
+          Insights on motion synchronization, WebGL experimentation, Core Web Vitals optimization, and modern frontend architecture.
+        </p>
+      </header>
+
+      <hr class="rule" data-rule />
+
+      <!-- Post Listing -->
+      <ul class="posts-grid">
+        {sortedPosts.map((post) => (
+          <li class="post-card-wrap" data-reveal>
+            <a href={`/blog/${post.id}`} class="post-card">
+              <div class="post-card-top">
+                <span class="post-tag">{post.data.status}</span>
+                <span class="mono post-read-time">{post.data.readTime}</span>
+              </div>
+
+              <h2 class="post-title">{post.data.title}</h2>
+              <p class="post-desc">{post.data.description}</p>
+
+              <div class="post-card-footer">
+                <div class="post-chips">
+                  {post.data.tags.map((tag) => (
+                    <span class="chip-sm">{tag}</span>
+                  ))}
+                </div>
+                <span class="post-arrow" aria-hidden="true">
+                  <Icon name="arrow-up-right" size={16} />
+                </span>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .blog-page {
+    padding: var(--s12) 0 var(--s20);
+    min-height: 80vh;
+  }
+
+  .blog-nav-bar {
+    margin-bottom: var(--s8);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s2);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--t2);
+    text-decoration: none;
+    transition: color 160ms var(--ease), transform 160ms var(--ease);
+  }
+
+  .back-link:hover {
+    color: var(--accent);
+    transform: translateX(-2px);
+  }
+
+  .blog-page-header {
+    margin-bottom: var(--s8);
+  }
+
+  .blog-badge {
+    display: inline-flex;
+    margin-bottom: var(--s3);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+  }
+
+  .blog-page-title {
+    font-size: clamp(28px, 4.5vw, 38px);
+    font-weight: 700;
+    color: var(--t1);
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+  }
+
+  .blog-page-desc {
+    margin-top: var(--s3);
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--t2);
+    max-width: 60ch;
+  }
+
+  .posts-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s4);
+  }
+
+  .post-card-wrap {
+    list-style: none;
+  }
+
+  .post-card {
+    display: flex;
+    flex-direction: column;
+    padding: var(--s6);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    text-decoration: none;
+    transition: background-color 180ms var(--ease), border-color 180ms var(--ease), box-shadow 180ms var(--ease), transform 180ms var(--ease);
+  }
+
+  .post-card:hover {
+    background: var(--card-hover);
+    border-color: var(--t3);
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.18);
+    transform: translateY(-2px);
+  }
+
+  .post-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--s3);
+  }
+
+  .post-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    border: 1px solid var(--badge-border);
+    border-radius: var(--r-sm);
+    padding: 2px var(--s2);
+    background: var(--badge-bg);
+  }
+
+  .post-read-time {
+    font-size: 12px;
+  }
+
+  .post-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--t1);
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+    margin-bottom: var(--s2);
+  }
+
+  .post-desc {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--t2);
+    margin-bottom: var(--s5);
+  }
+
+  .post-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .post-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s2);
+  }
+
+  .chip-sm {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--t3);
+    padding: 2px var(--s2);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+  }
+
+  .post-arrow {
+    display: inline-flex;
+    color: var(--t3);
+    transition: color 160ms var(--ease), transform 160ms var(--ease);
+  }
+
+  .post-card:hover .post-arrow {
+    color: var(--accent);
+    transform: translate(2px, -2px);
+  }
+</style>
