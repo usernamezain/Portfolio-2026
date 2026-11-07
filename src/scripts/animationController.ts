@@ -387,59 +387,123 @@ export function initMotionSystem() {
   });
 
   /* ==========================================================================
-     8. FAQ ACCORDION (Interactive SEO answers)
+     8. FAQ ACCORDION WITH BUTTERY SMOOTH EXPANSION & BLUR-IN TYPOGRAPHY
      ========================================================================== */
   document.querySelectorAll('.faq-item').forEach((item) => {
     const trigger = item.querySelector('.faq-question') as HTMLButtonElement | null;
-    const answer = item.querySelector('.faq-answer') as HTMLElement | null;
+    const collapse = item.querySelector('.faq-answer-collapse') as HTMLElement | null;
+    const inner = item.querySelector('.faq-answer-inner') as HTMLElement | null;
+    const textEl = item.querySelector('.faq-text') as HTMLElement | null;
     const icon = item.querySelector('.faq-chevron') as HTMLElement | null;
 
-    if (!trigger || !answer) return;
+    if (!trigger || !collapse || !inner || !textEl) return;
+
+    let isBusy = false;
 
     trigger.addEventListener('click', () => {
+      if (isBusy) return;
       const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
-      trigger.setAttribute('aria-expanded', String(!isExpanded));
 
       if (!isExpanded) {
-        answer.style.display = 'block';
-        anime({
-          targets: answer,
-          opacity: [0, 1],
-          translateY: [-6, 0],
-          duration: 260,
-          easing: 'easeOutCubic',
-          complete: () => {
-            ScrollTrigger.refresh();
-          }
-        });
+        // OPENING FAQ ACCORDION SMOOTHLY
+        isBusy = true;
+        trigger.setAttribute('aria-expanded', 'true');
+
+        // Reveal panel to calculate natural height
+        collapse.style.display = 'block';
+        collapse.style.height = 'auto';
+        const targetHeight = inner.offsetHeight;
+        collapse.style.height = '0px';
+
+        // Rotate Chevron Icon with spring feel
         if (icon) {
-          anime({
-            targets: icon,
+          gsap.to(icon, {
             rotate: 180,
-            duration: 200,
-            easing: 'easeOutQuad'
+            duration: 0.4,
+            ease: 'back.out(1.6)',
           });
         }
-      } else {
-        anime({
-          targets: answer,
-          opacity: [1, 0],
-          translateY: [0, -6],
-          duration: 200,
-          easing: 'easeInCubic',
-          complete: () => {
-            answer.style.display = 'none';
+
+        // Smooth Height Expansion (synchronized with Lenis)
+        gsap.to(collapse, {
+          height: targetHeight,
+          opacity: 1,
+          duration: 0.45,
+          ease: 'power2.out',
+          onUpdate: () => {
+            lenisInstance?.resize();
+          },
+          onComplete: () => {
+            collapse.style.height = 'auto';
+            isBusy = false;
             ScrollTrigger.refresh();
-          }
+            lenisInstance?.resize();
+          },
         });
+
+        // Buttery Smooth Text Blur-In Animation
+        gsap.fromTo(
+          textEl,
+          {
+            opacity: 0,
+            filter: 'blur(10px)',
+            y: 10,
+          },
+          {
+            opacity: 1,
+            filter: 'blur(0px)',
+            y: 0,
+            duration: 0.5,
+            delay: 0.08,
+            ease: 'power2.out',
+            onComplete: () => {
+              gsap.set(textEl, { clearProps: 'filter' });
+            },
+          }
+        );
+      } else {
+        // CLOSING FAQ ACCORDION SMOOTHLY
+        isBusy = true;
+        trigger.setAttribute('aria-expanded', 'false');
+
+        // Lock starting height
+        collapse.style.height = `${collapse.offsetHeight}px`;
+
+        // Rotate Chevron Icon Back
         if (icon) {
-          anime({
-            targets: icon,
+          gsap.to(icon, {
             rotate: 0,
-            duration: 200,
-            easing: 'easeOutQuad'
+            duration: 0.35,
+            ease: 'power2.out',
           });
         }
+
+        // Smooth text blur-out
+        gsap.to(textEl, {
+          opacity: 0,
+          filter: 'blur(6px)',
+          y: -6,
+          duration: 0.25,
+          ease: 'power2.in',
+        });
+
+        // Smooth Height Collapse
+        gsap.to(collapse, {
+          height: 0,
+          opacity: 0,
+          duration: 0.35,
+          ease: 'power2.inOut',
+          onUpdate: () => {
+            lenisInstance?.resize();
+          },
+          onComplete: () => {
+            collapse.style.display = 'none';
+            gsap.set(textEl, { clearProps: 'all' });
+            isBusy = false;
+            ScrollTrigger.refresh();
+            lenisInstance?.resize();
+          },
+        });
       }
     });
   });

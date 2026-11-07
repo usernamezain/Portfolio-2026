@@ -24,19 +24,21 @@ import { portfolioData } from '../../data/portfolio';
             id={`faq-btn-${index}`}
           >
             <span class="faq-title">{faq.question}</span>
-            <span class="faq-chevron" aria-hidden="true">
+            <span class="faq-chevron" aria-hidden="true" style={index === 0 ? "transform: rotate(180deg);" : ""}>
               <Icon name="chevron-down" size={16} />
             </span>
           </button>
           
           <div
-            class="faq-answer"
+            class="faq-answer-collapse"
             id={`faq-answer-${index}`}
             role="region"
             aria-labelledby={`faq-btn-${index}`}
-            style={index === 0 ? "display: block;" : "display: none;"}
+            style={index === 0 ? "display: block; height: auto; opacity: 1;" : "display: none; height: 0px; opacity: 0;"}
           >
-            <p>{faq.answer}</p>
+            <div class="faq-answer-inner">
+              <p class="faq-text">{faq.answer}</p>
+            </div>
           </div>
         </div>
       ))}
@@ -108,15 +110,21 @@ import { portfolioData } from '../../data/portfolio';
     color: var(--t1);
   }
 
-  .faq-answer {
-    padding: 0 var(--s5) var(--s4);
-    font-size: 13.5px;
-    line-height: 1.65;
-    color: var(--t2);
+  .faq-answer-collapse {
+    overflow: hidden;
+    will-change: height, opacity;
   }
 
-  .faq-answer p {
+  .faq-answer-inner {
+    padding: 0 var(--s5) var(--s5);
+  }
+
+  .faq-text {
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--t2);
     margin: 0;
+    will-change: transform, opacity, filter;
   }
 </style>
 
