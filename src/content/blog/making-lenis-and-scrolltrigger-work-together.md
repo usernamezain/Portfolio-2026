@@ -102,3 +102,4 @@ window.addEventListener('load', () => {
 ## Conclusion
 
 By routing Lenis through GSAP's central ticker and disabling redundant loops, you eliminate all coordinates jitter, reduce CPU utilization, and guarantee silky 60/120fps motion across both desktop and mobile screens.
+

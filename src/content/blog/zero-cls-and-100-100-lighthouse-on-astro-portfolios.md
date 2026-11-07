@@ -88,3 +88,4 @@ By wrapping SVG paths in lightweight Astro components (`<Icon name="sun" />`), i
 ## Conclusion
 
 Performance is not the enemy of creativity. With modern Astro architecture, static compilation, and thoughtful animation lifecycles, you never have to choose between aesthetic motion design and top-ranking Core Web Vitals.
+

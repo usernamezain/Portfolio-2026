@@ -35,10 +35,72 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
 
       <hr class="rule" data-rule />
 
+      <!-- Interactive Search & Topic Filter Widget -->
+      <div class="blog-search-filter-section" data-hero>
+        <div class="search-bar-row">
+          <div class="search-bar" id="search-bar-box">
+            <div class="search-icon-wrapper" aria-hidden="true">
+              <Icon name="search" size={16} class="search-icon" />
+            </div>
+
+            <div class="search-typing-arena">
+              <input
+                type="text"
+                id="blog-search-input"
+                class="search-native-input"
+                placeholder=""
+                autocomplete="off"
+                spellcheck="false"
+                aria-label="Search articles by title, description, or keyword"
+              />
+
+              <div class="search-visual-layer" aria-hidden="true">
+                <span class="search-placeholder" id="search-placeholder">Search articles, tags, GSAP, Astro...</span>
+                <div class="search-chars-container" id="search-chars-container"></div>
+                <span class="search-custom-cursor" id="search-custom-cursor"></span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              id="search-clear-btn"
+              class="search-clear-btn"
+              aria-label="Clear search query"
+              hidden
+            >
+              <Icon name="x" size={13} />
+            </button>
+
+            <span class="search-counter mono" id="search-count-badge">
+              {sortedPosts.length} {sortedPosts.length === 1 ? 'article' : 'articles'}
+            </span>
+          </div>
+        </div>
+
+        <!-- Filter Pills Bar -->
+        <div class="filter-pills-row" role="tablist" aria-label="Filter articles by topic">
+          <span class="filter-label mono">FILTER:</span>
+          <button type="button" class="filter-pill is-active" data-filter="all">All</button>
+          <button type="button" class="filter-pill" data-filter="gsap">GSAP</button>
+          <button type="button" class="filter-pill" data-filter="astro">Astro</button>
+          <button type="button" class="filter-pill" data-filter="performance">Performance</button>
+          <button type="button" class="filter-pill" data-filter="lenis">Lenis</button>
+          <button type="button" class="filter-pill" data-filter="motion">Motion</button>
+          <button type="button" class="filter-pill" data-filter="architecture">Architecture</button>
+        </div>
+      </div>
+
       <!-- Post Listing -->
-      <ul class="posts-grid">
+      <ul class="posts-grid" id="posts-grid">
         {sortedPosts.map((post) => (
-          <li class="post-card-wrap" data-reveal>
+          <li
+            class="post-card-wrap"
+            data-reveal
+            data-tags={post.data.tags.map((t) => t.toLowerCase()).join(' ')}
+            data-title={post.data.title.toLowerCase()}
+            data-desc={post.data.description.toLowerCase()}
+            data-status={post.data.status.toLowerCase()}
+          >
             <a href={`/blog/${post.id}`} class="post-card">
               <div class="post-card-top">
                 <span class="post-tag">{post.data.status}</span>
@@ -62,9 +124,249 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
           </li>
         ))}
       </ul>
+
+      <!-- Empty Results State -->
+      <div id="blog-empty-state" class="blog-empty-state" hidden>
+        <div class="empty-icon-box" aria-hidden="true">
+          <Icon name="search" size={26} />
+        </div>
+        <h3 class="empty-title">No matching articles found</h3>
+        <p class="empty-desc" id="empty-desc">
+          Try adjusting your search terms or selecting another topic filter.
+        </p>
+        <button type="button" id="reset-filters-btn" class="reset-filters-btn">
+          Reset Search &amp; Filters
+        </button>
+      </div>
     </div>
   </section>
 </Layout>
+
+<script>
+  import gsap from 'gsap';
+
+  function initBlogSearchAndFilters() {
+    const input = document.getElementById('blog-search-input') as HTMLInputElement | null;
+    const placeholder = document.getElementById('search-placeholder');
+    const charsContainer = document.getElementById('search-chars-container');
+    const customCursor = document.getElementById('search-custom-cursor');
+    const clearBtn = document.getElementById('search-clear-btn');
+    const countBadge = document.getElementById('search-count-badge');
+    const searchBarBox = document.getElementById('search-bar-box');
+    const filterPills = document.querySelectorAll<HTMLButtonElement>('.filter-pill');
+    const postCards = document.querySelectorAll<HTMLElement>('.post-card-wrap');
+    const emptyState = document.getElementById('blog-empty-state');
+    const emptyDesc = document.getElementById('empty-desc');
+    const resetBtn = document.getElementById('reset-filters-btn');
+
+    if (!input || !charsContainer || !customCursor || !placeholder) return;
+
+    let activeFilter = 'all';
+    let previousValue = '';
+    let isTypingTimeout: number | undefined;
+
+    // Helper: update smooth custom cursor position
+    function updateCursorPosition(immediate = false) {
+      if (!input || !charsContainer || !customCursor) return;
+
+      const cursorIndex = input.selectionStart ?? input.value.length;
+      const spans = charsContainer.querySelectorAll<HTMLSpanElement>('.search-char');
+      const containerRect = charsContainer.getBoundingClientRect();
+      let targetX = 0;
+
+      if (cursorIndex > 0 && spans.length > 0) {
+        const targetSpan = spans[Math.min(cursorIndex - 1, spans.length - 1)];
+        if (targetSpan) {
+          const spanRect = targetSpan.getBoundingClientRect();
+          targetX = spanRect.right - containerRect.left;
+        }
+      }
+
+      if (immediate) {
+        gsap.set(customCursor, { x: targetX });
+      } else {
+        gsap.to(customCursor, {
+          x: targetX,
+          duration: 0.16,
+          ease: 'power2.out',
+          overwrite: 'auto'
+        });
+      }
+    }
+
+    // Helper: render typed text with blur-in letter animations
+    function renderVisualText() {
+      if (!input || !charsContainer || !placeholder || !clearBtn) return;
+      const value = input.value;
+
+      // Toggle placeholder visibility
+      if (value.length > 0) {
+        placeholder.style.opacity = '0';
+        placeholder.style.pointerEvents = 'none';
+        clearBtn.hidden = false;
+      } else {
+        placeholder.style.opacity = '1';
+        clearBtn.hidden = true;
+      }
+
+      // Diff with previous value to animate only newly appended characters
+      const oldLen = previousValue.length;
+      const newLen = value.length;
+
+      // Re-populate chars container
+      charsContainer.innerHTML = '';
+      for (let i = 0; i < newLen; i++) {
+        const char = value[i];
+        const span = document.createElement('span');
+        span.className = 'search-char';
+        span.textContent = char === ' ' ? '\u00A0' : char;
+
+        // Apply smooth blur-in only to newly typed characters
+        if (newLen > oldLen && i >= oldLen) {
+          span.classList.add('char-blur-in');
+          // Micro-stagger for pasted or fast multichar inputs
+          const delay = (i - oldLen) * 0.03;
+          span.style.animationDelay = `${delay}s`;
+        }
+
+        charsContainer.appendChild(span);
+      }
+
+      previousValue = value;
+
+      // Briefly switch cursor to solid while typing
+      customCursor?.classList.add('is-typing');
+      window.clearTimeout(isTypingTimeout);
+      isTypingTimeout = window.setTimeout(() => {
+        customCursor?.classList.remove('is-typing');
+      }, 350);
+
+      // Glide cursor smoothly
+      requestAnimationFrame(() => updateCursorPosition());
+    }
+
+    // Filter cards logic
+    function applyFilter() {
+      if (!input) return;
+      const query = input.value.trim().toLowerCase();
+      let visibleCount = 0;
+
+      postCards.forEach((card) => {
+        const title = card.getAttribute('data-title') || '';
+        const desc = card.getAttribute('data-desc') || '';
+        const tags = card.getAttribute('data-tags') || '';
+        const status = card.getAttribute('data-status') || '';
+
+        const matchesTag =
+          activeFilter === 'all' ||
+          tags.includes(activeFilter) ||
+          title.includes(activeFilter) ||
+          status.includes(activeFilter);
+
+        const matchesQuery =
+          !query ||
+          title.includes(query) ||
+          desc.includes(query) ||
+          tags.includes(query);
+
+        if (matchesTag && matchesQuery) {
+          card.style.display = '';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Update count badge
+      if (countBadge) {
+        countBadge.textContent = `${visibleCount} ${visibleCount === 1 ? 'article' : 'articles'}`;
+      }
+
+      // Empty state
+      if (emptyState) {
+        if (visibleCount === 0) {
+          emptyState.hidden = false;
+          if (emptyDesc) {
+            emptyDesc.textContent = query
+              ? `No articles match "${query}" with filter "${activeFilter.toUpperCase()}".`
+              : `No articles found for the selected "${activeFilter.toUpperCase()}" filter.`;
+          }
+        } else {
+          emptyState.hidden = true;
+        }
+      }
+    }
+
+    // Input event handlers
+    input.addEventListener('input', () => {
+      renderVisualText();
+      applyFilter();
+    });
+
+    input.addEventListener('focus', () => {
+      searchBarBox?.classList.add('is-focused');
+      customCursor?.classList.add('is-focused');
+      updateCursorPosition();
+    });
+
+    input.addEventListener('blur', () => {
+      searchBarBox?.classList.remove('is-focused');
+      customCursor?.classList.remove('is-focused');
+    });
+
+    // Track caret movements on arrow keys, clicks, and selections
+    const handleCaretMove = () => {
+      requestAnimationFrame(() => updateCursorPosition());
+    };
+
+    input.addEventListener('keyup', (e) => {
+      if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) {
+        handleCaretMove();
+      }
+    });
+    input.addEventListener('click', handleCaretMove);
+    input.addEventListener('select', handleCaretMove);
+
+    // Clear button
+    clearBtn?.addEventListener('click', () => {
+      if (!input) return;
+      input.value = '';
+      renderVisualText();
+      applyFilter();
+      input.focus();
+    });
+
+    // Reset button
+    resetBtn?.addEventListener('click', () => {
+      if (!input) return;
+      input.value = '';
+      activeFilter = 'all';
+      filterPills.forEach((p) => p.classList.toggle('is-active', p.dataset.filter === 'all'));
+      renderVisualText();
+      applyFilter();
+      input.focus();
+    });
+
+    // Filter pill buttons
+    filterPills.forEach((pill) => {
+      pill.addEventListener('click', () => {
+        filterPills.forEach((p) => p.classList.remove('is-active'));
+        pill.classList.add('is-active');
+        activeFilter = (pill.dataset.filter || 'all').toLowerCase();
+        applyFilter();
+      });
+    });
+
+    // Initial render
+    renderVisualText();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initBlogSearchAndFilters);
+  } else {
+    initBlogSearchAndFilters();
+  }
+</script>
 
 <style>
   .blog-page {
@@ -122,14 +424,316 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     max-width: 60ch;
   }
 
+  /* ==========================================================================
+     SEARCH & FILTER WIDGET
+     ========================================================================== */
+  .blog-search-filter-section {
+    margin: var(--s6) 0 var(--s8);
+  }
+
+  .search-bar-row {
+    display: flex;
+    width: 100%;
+  }
+
+  .search-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 48px;
+    padding: 0 var(--s4);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-full);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    transition: border-color 200ms var(--ease), box-shadow 200ms var(--ease), background-color 200ms var(--ease);
+  }
+
+  .search-bar:hover {
+    border-color: var(--border-focus);
+  }
+
+  .search-bar.is-focused {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent), 0 0 24px var(--accent-glow);
+    background: var(--card-hover);
+  }
+
+  .search-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--t3);
+    margin-right: var(--s3);
+    transition: color 180ms var(--ease);
+  }
+
+  .search-bar.is-focused .search-icon-wrapper {
+    color: var(--accent);
+  }
+
+  .search-typing-arena {
+    position: relative;
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .search-native-input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 2;
+    cursor: text;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    caret-color: transparent;
+  }
+
+  .search-visual-layer {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .search-placeholder {
+    font-size: 14px;
+    color: var(--t3);
+    pointer-events: none;
+    transition: opacity 160ms var(--ease);
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  .search-chars-container {
+    display: inline-flex;
+    align-items: center;
+    white-space: pre;
+    position: relative;
+  }
+
+  .search-char {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--t1);
+    line-height: 1;
+    transform-origin: center bottom;
+  }
+
+  /* Smooth Blur-in Typography Keyframes */
+  .search-char.char-blur-in {
+    animation: charBlurIn 240ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes charBlurIn {
+    0% {
+      opacity: 0;
+      filter: blur(8px);
+      transform: translateY(3px) scale(0.9);
+    }
+    60% {
+      opacity: 0.85;
+      filter: blur(1.5px);
+    }
+    100% {
+      opacity: 1;
+      filter: blur(0px);
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Smooth Gliding Custom Cursor */
+  .search-custom-cursor {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 2px;
+    height: 18px;
+    background: var(--accent);
+    border-radius: 2px;
+    transform: translateY(-50%);
+    box-shadow: 0 0 10px var(--accent), 0 0 2px #fff;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 180ms var(--ease);
+  }
+
+  .search-custom-cursor.is-focused {
+    opacity: 1;
+    animation: cursorBreathe 1.2s ease-in-out infinite alternate;
+  }
+
+  .search-custom-cursor.is-typing {
+    animation: none;
+    opacity: 1;
+  }
+
+  @keyframes cursorBreathe {
+    0%, 100% {
+      opacity: 1;
+      box-shadow: 0 0 10px var(--accent), 0 0 2px #fff;
+    }
+    50% {
+      opacity: 0.3;
+      box-shadow: 0 0 4px var(--accent-glow);
+    }
+  }
+
+  .search-clear-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: var(--r-full);
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    color: var(--t2);
+    cursor: pointer;
+    margin: 0 var(--s2);
+    transition: background-color 150ms var(--ease), color 150ms var(--ease), transform 150ms var(--ease);
+  }
+
+  .search-clear-btn:hover {
+    background: var(--accent);
+    color: var(--on-t1);
+    transform: scale(1.08);
+  }
+
+  .search-counter {
+    font-size: 11px;
+    color: var(--t3);
+    padding: 3px var(--s2);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    border-radius: var(--r-full);
+    white-space: nowrap;
+    margin-left: var(--s1);
+  }
+
+  /* Filter Pills */
+  .filter-pills-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--s2);
+    margin-top: var(--s3);
+    padding: 0 var(--s1);
+  }
+
+  .filter-label {
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    color: var(--t3);
+    margin-right: var(--s1);
+  }
+
+  .filter-pill {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px var(--s3);
+    border-radius: var(--r-full);
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--t2);
+    cursor: pointer;
+    transition: background-color 180ms var(--ease), border-color 180ms var(--ease), color 180ms var(--ease), transform 180ms var(--ease), box-shadow 180ms var(--ease);
+  }
+
+  .filter-pill:hover {
+    border-color: var(--t3);
+    color: var(--t1);
+    transform: translateY(-1px);
+  }
+
+  .filter-pill.is-active {
+    background: var(--badge-bg);
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 600;
+    box-shadow: 0 0 12px var(--accent-glow);
+  }
+
+  /* Empty State */
+  .blog-empty-state {
+    text-align: center;
+    padding: var(--s12) var(--s4);
+    background: var(--card);
+    border: 1px dashed var(--border);
+    border-radius: var(--r-lg);
+    margin-top: var(--s4);
+  }
+
+  .empty-icon-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--r-full);
+    background: var(--badge-bg);
+    color: var(--accent);
+    margin-bottom: var(--s3);
+  }
+
+  .empty-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--t1);
+    margin-bottom: var(--s2);
+  }
+
+  .empty-desc {
+    font-size: 14px;
+    color: var(--t2);
+    max-width: 45ch;
+    margin: 0 auto var(--s5);
+  }
+
+  .reset-filters-btn {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    padding: var(--s2) var(--s4);
+    border-radius: var(--r-full);
+    background: var(--accent);
+    color: var(--on-t1);
+    border: none;
+    cursor: pointer;
+    transition: opacity 150ms var(--ease), transform 150ms var(--ease);
+  }
+
+  .reset-filters-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  /* ==========================================================================
+     POST LISTING
+     ========================================================================== */
   .posts-grid {
     display: flex;
     flex-direction: column;
     gap: var(--s4);
+    margin-top: var(--s2);
   }
 
   .post-card-wrap {
     list-style: none;
+    transition: opacity 220ms var(--ease), transform 220ms var(--ease);
   }
 
   .post-card {
@@ -219,4 +823,18 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     color: var(--accent);
     transform: translate(2px, -2px);
   }
+
+  @media (max-width: 640px) {
+    .filter-pills-row {
+      gap: 6px;
+    }
+    .filter-pill {
+      font-size: 11px;
+      padding: 3px 10px;
+    }
+    .search-counter {
+      display: none;
+    }
+  }
 </style>
+

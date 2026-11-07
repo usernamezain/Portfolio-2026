@@ -91,3 +91,4 @@ document.addEventListener('astro:before-swap', () => {
 ## Summary
 
 Multi-library stacks do not cause bloat when bundled and tree-shaken intelligently through modern Astro Vite pipelines. By segregating properties and unifying requestAnimationFrame loops, you achieve both cinematic scroll storytelling and playful interactive micro-motion.
+
