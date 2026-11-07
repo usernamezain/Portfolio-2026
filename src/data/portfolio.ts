@@ -1,8 +1,18 @@
+import type { ImageMetadata } from 'astro';
+
+import ultimateEmpireImg from '../assets/images/projects/ultimate-empire.svg';
+import mughalDevImg from '../assets/images/projects/mughal-dev.svg';
+import beautyStudioImg from '../assets/images/projects/beauty-studio.svg';
+import bentoPortfolioImg from '../assets/images/projects/bento-portfolio.svg';
+import chuziWisherImg from '../assets/images/projects/chuzi-wisher.svg';
+import bukhariDesignsImg from '../assets/images/projects/bukhari-designs.svg';
+
 export interface Project {
   title: string;
   description: string;
   tags: string[];
   url: string;
+  image: ImageMetadata;
   highlight?: boolean;
 }
 
@@ -89,6 +99,7 @@ export const portfolioData = {
       description: "Website for an organic social media growth course with high-converting layout and kinetic typography.",
       tags: ["React", "GSAP", "Lenis", "Tailwind"],
       url: "https://www.ultimate-empire.online/",
+      image: ultimateEmpireImg,
       highlight: true,
     },
     {
@@ -96,6 +107,7 @@ export const portfolioData = {
       description: "Creative developer portfolio featuring interactive 3D elements, dynamic lighting, and silky smooth transitions.",
       tags: ["React", "Three.js", "GSAP", "WebGL"],
       url: "https://mughal-dev-web-portfolio.vercel.app/",
+      image: mughalDevImg,
       highlight: true,
     },
     {
@@ -103,24 +115,28 @@ export const portfolioData = {
       description: "Luxury salon web platform with smooth responsive choreography and micro-interactions.",
       tags: ["Vue 3", "Anime.js", "CSS Grid"],
       url: "https://beauty-studio-pro.vercel.app/",
+      image: beautyStudioImg,
     },
     {
       title: "Mughal Dev Bento",
       description: "Bento grid inspired digital showroom demonstrating modular card UI and physics-based interactions.",
       tags: ["React", "GSAP", "Anime.js"],
       url: "https://ui-ux-portfolio-rho.vercel.app/",
+      image: bentoPortfolioImg,
     },
     {
       title: "Chuzi Wisher",
       description: "Interactive greeting card generator delivering heartwarming customized animations for friends and family.",
       tags: ["JavaScript", "GSAP", "Lenis"],
       url: "https://chuzi-wisher.vercel.app/",
+      image: chuziWisherImg,
     },
     {
       title: "Bukhari Designers",
       description: "Agency website for global graphic design and UI/UX studio showcasing client case studies.",
       tags: ["React", "TypeScript", "Motion"],
       url: "https://www.bukharidesigns.com/",
+      image: bukhariDesignsImg,
     },
   ],
   experience: [

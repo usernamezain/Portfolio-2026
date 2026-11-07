@@ -1,23 +1,22 @@
 ---
-import Icon from './Icon.astro';
-import { portfolioData } from '../data/portfolio';
+import Icon from '../common/Icon.astro';
+import Badge from '../common/Badge.astro';
+import Avatar from '../media/Avatar.astro';
+import { portfolioData } from '../../data/portfolio';
 ---
 
 <section class="hero" id="top" aria-label="Introduction">
   <div class="container">
     <!-- Available Status Pill -->
     <div class="hero-status" data-hero>
-      <span class="badge">
-        <span class="badge-dot"></span>
-        <span>Available for Freelance & Contracts</span>
-      </span>
+      <Badge dot={true}>
+        <span>Available for Freelance &amp; Contracts</span>
+      </Badge>
     </div>
 
-    <!-- Header & Avatar -->
+    <!-- Header & Avatar with Media Optimization -->
     <div class="hero-head" data-hero>
-      <div class="avatar" aria-hidden="true">
-        <span>ZM</span>
-      </div>
+      <Avatar size={72} />
       <div class="hero-title-wrap">
         <h1 class="hero-name">Zain Ali Mughal</h1>
         <p class="role">Creative Developer &amp; Frontend Engineer <span class="handle">(@{portfolioData.handle})</span></p>
@@ -61,20 +60,9 @@ import { portfolioData } from '../data/portfolio';
     margin-bottom: var(--s6);
   }
 
-  .avatar {
-    width: 68px;
-    height: 68px;
-    flex: none;
-    border-radius: var(--r-full);
-    background: var(--card);
-    border: 1px solid var(--border);
-    display: grid;
-    place-items: center;
-    color: var(--t1);
-    font-weight: 700;
-    font-size: 22px;
-    letter-spacing: -0.02em;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  .hero-title-wrap {
+    display: flex;
+    flex-direction: column;
   }
 
   .hero-name {
@@ -121,11 +109,6 @@ import { portfolioData } from '../data/portfolio';
     }
     .hero-head {
       gap: var(--s4);
-    }
-    .avatar {
-      width: 56px;
-      height: 56px;
-      font-size: 18px;
     }
   }
 </style>

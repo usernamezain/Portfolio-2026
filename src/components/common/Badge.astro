@@ -1,0 +1,38 @@
+---
+interface Props {
+  dot?: boolean;
+  class?: string;
+}
+
+const { dot = true, class: className = '' } = Astro.props;
+---
+
+<span class={`badge ${className}`}>
+  {dot && <span class="badge-dot" aria-hidden="true" />}
+  <slot />
+</span>
+
+<style>
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s2);
+    padding: 3px var(--s3);
+    border-radius: var(--r-full);
+    background: var(--badge-bg);
+    border: 1px solid var(--badge-border);
+    color: var(--badge-text);
+    font-size: 12px;
+    font-weight: 500;
+    font-family: var(--font-mono);
+    letter-spacing: -0.01em;
+  }
+
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+  }
+</style>
