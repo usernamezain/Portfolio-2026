@@ -1,0 +1,70 @@
+---
+import Icon from './Icon.astro';
+import { portfolioData } from '../data/portfolio';
+---
+
+<section id="stack" aria-label="Technology Stack">
+  <div class="container">
+    <hr class="rule" data-rule />
+    <h2 data-reveal>Tech Stack &amp; Tools</h2>
+    
+    <div class="stack-grid">
+      {portfolioData.techCategories.map((category) => (
+        <div class="stack-group" data-reveal>
+          <h3>{category.title}</h3>
+          <ul class="chips">
+            {category.skills.map((skill) => (
+              <li class="chip">
+                <Icon name={skill.icon} size={15} />
+                <span>{skill.name}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .stack-grid {
+    display: grid;
+    gap: var(--s6);
+  }
+
+  .stack-group h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--t2);
+    margin-bottom: var(--s3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s2);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s2);
+    padding: var(--s1) var(--s3) var(--s1) var(--s2);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    background: var(--card);
+    color: var(--t2);
+    font-size: 12.5px;
+    line-height: 1.5;
+    cursor: default;
+    transition: background-color 160ms var(--ease), border-color 160ms var(--ease), color 160ms var(--ease);
+  }
+
+  .chip:hover {
+    background: var(--card-hover);
+    border-color: var(--accent);
+    color: var(--t1);
+  }
+</style>

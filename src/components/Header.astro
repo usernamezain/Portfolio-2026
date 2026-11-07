@@ -1,0 +1,142 @@
+---
+import Icon from './Icon.astro';
+---
+
+<header class="nav" id="navigation" role="banner">
+  <div class="container nav-container">
+    <a class="brand" href="#top" aria-label="Zain Ali Developer, back to top">
+      <span class="brand-name">zainalidev</span>
+      <span class="brand-suffix">.com</span>
+    </a>
+
+    <div class="nav-right">
+      <nav class="nav-links" aria-label="Primary Navigation">
+        <a href="#projects">Projects</a>
+        <a href="#stack">Stack</a>
+        <a href="#about">About</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <button
+        class="icon-btn theme-toggle"
+        id="theme-toggle"
+        type="button"
+        aria-label="Switch to light theme"
+      >
+        <span class="i-sun"><Icon name="sun" size={16} /></span>
+        <span class="i-moon"><Icon name="moon" size={16} /></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    height: var(--nav-h);
+    background: var(--bg);
+    border-bottom: 1px solid var(--divider);
+    backdrop-filter: blur(12px);
+    transition: background-color 160ms var(--ease), border-color 160ms var(--ease);
+  }
+
+  .nav-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .brand {
+    color: var(--t1);
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.02em;
+    display: inline-flex;
+    align-items: baseline;
+    transition: opacity 160ms var(--ease);
+  }
+
+  .brand:hover {
+    opacity: 0.8;
+  }
+
+  .brand-suffix {
+    color: var(--accent);
+    font-size: 12px;
+    font-family: var(--font-mono);
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: var(--s5);
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: var(--s5);
+    font-size: 13px;
+  }
+
+  .nav-links a {
+    color: var(--t2);
+    font-weight: 500;
+    transition: color 160ms var(--ease);
+    padding: var(--s1) 0;
+  }
+
+  .nav-links a:hover,
+  .nav-links a[aria-current="true"] {
+    color: var(--t1);
+  }
+
+  .nav-links a[aria-current="true"] {
+    border-bottom: 2px solid var(--accent);
+  }
+
+  .icon-btn {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: inline-grid;
+    place-items: center;
+    background: transparent;
+    color: var(--t2);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    cursor: pointer;
+    transition: background-color 160ms var(--ease), color 160ms var(--ease), border-color 160ms var(--ease);
+  }
+
+  .icon-btn:hover {
+    background: var(--card-hover);
+    color: var(--t1);
+    border-color: var(--border-focus);
+  }
+
+  /* Theme icon toggle rules */
+  html[data-theme="dark"] .i-moon {
+    display: none;
+  }
+  html[data-theme="dark"] .i-sun {
+    display: inline-grid;
+  }
+
+  html[data-theme="light"] .i-sun {
+    display: none;
+  }
+  html[data-theme="light"] .i-moon {
+    display: inline-grid;
+  }
+
+  @media (max-width: 600px) {
+    .nav-links {
+      display: none;
+    }
+  }
+</style>

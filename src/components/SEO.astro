@@ -1,0 +1,80 @@
+---
+import { seoConfig, generateStructuredData } from '../data/seo';
+
+interface Props {
+  title?: string;
+  description?: string;
+  keywords?: string[];
+  canonicalUrl?: string;
+  ogImage?: string;
+}
+
+const {
+  title = seoConfig.defaultTitle,
+  description = seoConfig.defaultDescription,
+  keywords = seoConfig.keywords,
+  canonicalUrl = seoConfig.canonicalUrl,
+  ogImage = seoConfig.ogImage,
+} = Astro.props;
+
+const structuredData = generateStructuredData();
+const keywordsString = keywords.join(', ');
+---
+
+<!-- Core Meta Tags -->
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="keywords" content={keywordsString} />
+<meta name="author" content={seoConfig.author} />
+<meta name="creator" content="Zain Ali Mughal" />
+<meta name="publisher" content="Zain Ali Developer (zainalidev)" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large" />
+<link rel="canonical" href={canonicalUrl} />
+
+<!-- Search Engine Verification & Ownership (placeholders) -->
+<meta name="application-name" content="zainalidev" />
+<meta name="apple-mobile-web-app-title" content="zainalidev" />
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#111111" />
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafafa" />
+<meta name="color-scheme" content="dark light" />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="profile" />
+<meta property="og:site_name" content={seoConfig.siteName} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Zain Ali Developer (zainalidev) Portfolio" />
+<meta property="og:locale" content="en_US" />
+<meta property="profile:first_name" content="Zain" />
+<meta property="profile:last_name" content="Ali Mughal" />
+<meta property="profile:username" content="zainalidev" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={canonicalUrl} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+<meta name="twitter:creator" content={seoConfig.handle} />
+<meta name="twitter:site" content={seoConfig.handle} />
+
+<!-- High-Speed Resource Preconnections -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="preload"
+  as="style"
+  href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap"
+/>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap"
+/>
+
+<!-- JSON-LD Structured Data Schema for #1 Ranking & Knowledge Graph -->
+<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />

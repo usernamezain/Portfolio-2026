@@ -1,0 +1,35 @@
+---
+import { portfolioData } from '../data/portfolio';
+---
+
+<section id="about" aria-label="About Zain Ali Developer">
+  <div class="container">
+    <hr class="rule" data-rule />
+    <h2 data-reveal>About Zain Ali Developer</h2>
+    
+    <div class="prose">
+      {portfolioData.bio.map((paragraph) => (
+        <p data-reveal>{paragraph}</p>
+      ))}
+      <p data-reveal>
+        Interested in collaborating? Check out my <a href="#projects">recent projects</a> or <a href="#contact">reach out directly</a> for freelance availability.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .prose {
+    max-width: 68ch;
+  }
+
+  .prose p + p {
+    margin-top: var(--s4);
+  }
+
+  .prose p {
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--t2);
+  }
+</style>

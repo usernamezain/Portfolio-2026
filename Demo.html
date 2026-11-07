@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zain Mughal | Creative Developer</title>
+<meta name="description" content="Zain Mughal is a creative developer building custom portfolios, landing pages and static websites with smooth animation (GSAP, Lenis, Three.js).">
+<meta name="color-scheme" content="dark light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+  /* Set the theme before first paint so there is no flash. */
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem("theme"); } catch (e) {}
+    if (t !== "light" && t !== "dark") {
+      t = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    }
+    document.documentElement.setAttribute("data-theme", t);
+  })();
+</script>
+<style>
+  /* ---------- Tokens (one source of truth) ---------- */
+  :root {
+    /* spacing scale, 4px base */
+    --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 20px; --s6: 24px;
+    --s8: 32px; --s10: 40px; --s12: 48px; --s16: 64px; --s20: 80px;
+    /* radius scale */
+    --r-sm: 6px; --r-md: 8px; --r-lg: 12px; --r-full: 9999px;
+    /* type */
+    --font-sans: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+    /* layout */
+    --nav-h: 56px;
+    --content: 720px;
+    --gutter: 24px;
+    --ease: cubic-bezier(0.2, 0, 0, 1);
+  }
+  html[data-theme="dark"] {
+    --bg: #141414;
+    --card: #1a1a1a;
+    --hover: #232323;
+    --border: rgba(255, 255, 255, 0.1);
+    --divider: rgba(255, 255, 255, 0.07);
+    --t1: #f5f5f5;
+    --t2: #a3a3a3;
+    --t3: #8a8a8a;
+    --accent: #6ea8fe;
+    --on-t1: #141414;
+  }
+  html[data-theme="light"] {
+    --bg: #fafafa;
+    --card: #ffffff;
+    --hover: #f0f0f2;
+    --border: rgba(0, 0, 0, 0.12);
+    --divider: rgba(0, 0, 0, 0.08);
+    --t1: #171717;
+    --t2: #52525b;
+    --t3: #71717a;
+    --accent: #2563eb;
+    --on-t1: #fafafa;
+  }
+
+  /* ---------- Base ---------- */
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-stopped { overflow: hidden; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--t2);
+    font: 400 14px/1.6 var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, p, ul, ol { margin: 0; padding: 0; }
+  ul, ol { list-style: none; }
+  a { color: inherit; text-decoration: none; }
+  p a, .link {
+    color: var(--t1);
+    text-decoration: underline;
+    text-decoration-color: var(--border);
+    text-underline-offset: 4px;
+    transition: text-decoration-color 160ms var(--ease);
+  }
+  p a:hover, .link:hover { text-decoration-color: var(--t1); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--r-sm); }
+
+  .skip {
+    position: absolute; left: var(--s4); top: -64px;
+    background: var(--t1); color: var(--on-t1);
+    padding: var(--s2) var(--s4); border-radius: var(--r-md); font-weight: 500;
+  }
+  .skip:focus { top: var(--s2); }
+
+  .container { width: 100%; max-width: calc(var(--content) + var(--gutter) * 2); margin: 0 auto; padding: 0 var(--gutter); }
+
+  /* ---------- Progress bar ---------- */
+  .progress {
+    will-change: transform;
+    position: fixed; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--accent);
+    transform: scaleX(0); transform-origin: left;
+    z-index: 20; pointer-events: none;
+  }
+
+  /* ---------- Nav ---------- */
+  .nav {
+    position: sticky; top: 0; z-index: 10;
+    height: var(--nav-h);
+    background: var(--bg);
+    border-bottom: 1px solid var(--divider);
+  }
+  .nav .container { height: 100%; display: flex; align-items: center; justify-content: space-between; }
+  .brand { color: var(--t1); font-weight: 600; letter-spacing: -0.01em; }
+  .nav-right { display: flex; align-items: center; gap: var(--s5); }
+  .nav-links { display: flex; align-items: center; gap: var(--s5); font-size: 13px; }
+  .nav-links a { color: var(--t2); transition: color 160ms var(--ease); }
+  .nav-links a:hover, .nav-links a[aria-current="true"] { color: var(--t1); }
+  .icon-btn {
+    width: 32px; height: 32px; padding: 0;
+    display: inline-grid; place-items: center;
+    background: transparent; color: var(--t2);
+    border: 1px solid var(--border); border-radius: var(--r-md);
+    cursor: pointer;
+    transition: background-color 160ms var(--ease), color 160ms var(--ease);
+  }
+  .icon-btn:hover { background: var(--hover); color: var(--t1); }
+
+  /* Icons: one family (Lucide), 16px, 1.5 stroke */
+  svg.lucide { width: 16px; height: 16px; stroke-width: 1.5; flex: none; }
+  html[data-theme="dark"] .i-moon, html[data-theme="light"] .i-sun { display: none; }
+
+  /* Words wrapped for the blur-in text effect */
+  .w { display: inline-block; }
+
+  /* ---------- Sections ---------- */
+  section { padding: var(--s16) 0; }
+  .hero { padding: var(--s20) 0 var(--s16); }
+  .rule {
+    height: 1px; border: 0; margin: 0 0 var(--s16);
+    background: var(--divider);
+    transform-origin: left;
+  }
+  h2 { color: var(--t1); font-size: 20px; line-height: 1.25; font-weight: 500; letter-spacing: -0.01em; margin-bottom: var(--s6); }
+  h3 { color: var(--t1); font-size: 14px; font-weight: 500; line-height: 1.4; }
+  .muted { color: var(--t2); }
+  .mono { font-family: var(--font-mono); font-size: 12px; color: var(--t3); }
+
+  /* ---------- Hero ---------- */
+  .hero-head { display: flex; align-items: center; gap: var(--s5); margin-bottom: var(--s6); }
+  .avatar {
+    width: 64px; height: 64px; flex: none;
+    border-radius: var(--r-full);
+    background: var(--card); border: 1px solid var(--border);
+    display: grid; place-items: center;
+    color: var(--t1); font-weight: 600; font-size: 20px; letter-spacing: -0.02em;
+  }
+  h1 { color: var(--t1); font-size: 28px; line-height: 1.15; font-weight: 600; letter-spacing: -0.02em; }
+  .role { margin-top: var(--s1); font-size: 13px; color: var(--t2); }
+  .lede { max-width: 60ch; font-size: 16px; line-height: 1.6; margin-bottom: var(--s8); }
+  .actions { display: flex; flex-wrap: wrap; gap: var(--s3); }
+  .btn {
+    display: inline-flex; align-items: center; height: 36px; padding: 0 var(--s4);
+    border-radius: var(--r-md); font-weight: 500; font-size: 13px;
+    border: 1px solid var(--border); color: var(--t1); background: transparent;
+    transition: background-color 160ms var(--ease);
+  }
+  .btn:hover { background: var(--hover); }
+  .btn-primary { background: var(--t1); color: var(--on-t1); border-color: var(--t1); }
+  .btn-primary:hover { background: var(--t1); opacity: 0.88; }
+
+  /* ---------- About ---------- */
+  .prose { max-width: 66ch; }
+  .prose p + p { margin-top: var(--s4); }
+
+  /* ---------- Stack ---------- */
+  .stack { display: grid; gap: var(--s6); }
+  .stack h3 { font-size: 13px; color: var(--t2); margin-bottom: var(--s2); }
+  .chips { display: flex; flex-wrap: wrap; gap: var(--s2); }
+  .chip {
+    display: inline-flex; align-items: center; gap: var(--s2);
+    padding: var(--s1) var(--s3) var(--s1) var(--s2);
+    border: 1px solid var(--border); border-radius: var(--r-sm);
+    background: var(--card); color: var(--t2); font-size: 12px; line-height: 1.5;
+  }
+
+  /* ---------- Projects ---------- */
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--s3); }
+  .card {
+    display: block; padding: var(--s5);
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--r-lg);
+    transition: background-color 160ms var(--ease), border-color 160ms var(--ease);
+  }
+  .card:hover { background: var(--hover); border-color: var(--t3); }
+  .card-top { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s2); }
+  .card .arrow { display: inline-flex; color: var(--t3); transition: color 160ms var(--ease); }
+  .card:hover .arrow { color: var(--t1); }
+  .card p { margin-top: var(--s2); font-size: 13px; }
+  .card .mono { display: block; margin-top: var(--s4); }
+
+  /* ---------- Experience / Blog lists ---------- */
+  .rows > li { padding: var(--s4) 0; border-bottom: 1px solid var(--divider); }
+  .rows > li:first-child { padding-top: 0; }
+  .rows > li:last-child { border-bottom: 0; padding-bottom: 0; }
+  .row-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s4); }
+  .rows .sub { font-size: 13px; color: var(--t2); margin-top: var(--s1); }
+  .rows .body { margin-top: var(--s2); font-size: 13px; max-width: 62ch; }
+  .post-tag {
+    font-family: var(--font-mono); font-size: 12px; color: var(--t3);
+    border: 1px solid var(--border); border-radius: var(--r-sm); padding: 0 var(--s2);
+  }
+  .blog-intro { max-width: 62ch; margin: calc(var(--s2) * -1) 0 var(--s6); }
+
+  /* ---------- Contact / footer ---------- */
+  .links { display: flex; flex-wrap: wrap; gap: var(--s6); margin-top: var(--s6); }
+  .links .link { display: inline-flex; align-items: center; gap: var(--s2); text-decoration: none; }
+  .links .link:hover { color: var(--t2); }
+  .community { margin-top: var(--s12); padding-top: var(--s6); border-top: 1px solid var(--divider); }
+  .community h3 { margin-bottom: var(--s2); }
+  footer { padding: var(--s6) 0; border-top: 1px solid var(--divider); }
+  footer .container { display: flex; justify-content: space-between; gap: var(--s4); font-size: 12px; color: var(--t3); }
+
+  @media (max-width: 600px) {
+    :root { --gutter: 16px; }
+    .hero { padding: var(--s12) 0 var(--s12); }
+    section { padding: var(--s12) 0; }
+    .rule { margin-bottom: var(--s12); }
+    .grid { grid-template-columns: 1fr; }
+    .nav-right, .nav-links { gap: var(--s4); }
+    .row-head { flex-direction: column; gap: var(--s1); }
+    footer .container { flex-direction: column; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="progress" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="container">
+    <a class="brand" href="#top" aria-label="Zain Mughal, back to top">zainmughal</a>
+    <div class="nav-right">
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#projects">Projects</a>
+        <a href="#blog">Blog</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <button class="icon-btn" id="theme" type="button" aria-label="Switch to light theme">
+        <i data-lucide="sun" class="i-sun"></i><i data-lucide="moon" class="i-moon"></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <!-- Hero -->
+  <section class="hero" id="top">
+    <div class="container">
+      <div class="hero-head" data-hero>
+        <!-- Replace the initials with <img class="avatar" src="your-photo.jpg" alt="Zain Mughal"> -->
+        <div class="avatar" aria-hidden="true">ZM</div>
+        <div>
+          <h1>Zain Mughal</h1>
+          <p class="role">Creative Developer</p>
+        </div>
+      </div>
+      <p class="lede" data-hero>I build custom portfolios, landing pages and static websites with smooth, restrained animation. My tools are React, GSAP, Lenis and Three.js.</p>
+      <div class="actions" data-hero>
+        <a class="btn btn-primary" href="#projects">View projects</a>
+        <a class="btn" href="#contact">Get in touch</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about">
+    <div class="container">
+      <hr class="rule" data-rule>
+      <h2 data-reveal>About</h2>
+      <div class="prose">
+        <p data-reveal>I'm Zain, a creative developer. I turn design ideas into fast, accessible websites and add motion where it helps the reader, not where it only decorates.</p>
+        <p data-reveal>I work with React, Next.js and TypeScript on the frontend, GSAP and Lenis for scroll and motion, and Three.js when a project needs 3D. I also write small npm packages and CLI tools. I speak Punjabi, English and Urdu.</p>
+        <p data-reveal>I'm open to freelance projects and collaborations. <a href="#contact">Get in touch</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stack -->
+  <section id="stack">
+    <div class="container">
+      <hr class="rule" data-rule>
+      <h2 data-reveal>Tech stack</h2>
+      <div class="stack">
+        <div data-reveal>
+          <h3>Frontend</h3>
+          <ul class="chips">
+            <li class="chip"><i data-lucide="braces"></i>JavaScript</li><li class="chip"><i data-lucide="file-code"></i>TypeScript</li><li class="chip"><i data-lucide="atom"></i>React</li>
+            <li class="chip"><i data-lucide="layout-template"></i>Next.js</li><li class="chip"><i data-lucide="component"></i>Vue 3</li><li class="chip"><i data-lucide="wind"></i>Tailwind CSS</li><li class="chip"><i data-lucide="palette"></i>Modern CSS</li>
+          </ul>
+        </div>
+        <div data-reveal>
+          <h3>Motion</h3>
+          <ul class="chips">
+            <li class="chip"><i data-lucide="activity"></i>GSAP</li><li class="chip"><i data-lucide="scroll-text"></i>ScrollTrigger</li><li class="chip"><i data-lucide="move-vertical"></i>Lenis</li>
+            <li class="chip"><i data-lucide="play"></i>Anime.js</li><li class="chip"><i data-lucide="film"></i>Framer Motion</li>
+          </ul>
+        </div>
+        <div data-reveal>
+          <h3>3D and WebGL</h3>
+          <ul class="chips">
+            <li class="chip"><i data-lucide="box"></i>Three.js</li><li class="chip"><i data-lucide="boxes"></i>React Three Fiber</li><li class="chip"><i data-lucide="cpu"></i>GLSL</li>
+          </ul>
+        </div>
+        <div data-reveal>
+          <h3>Backend and tooling</h3>
+          <ul class="chips">
+            <li class="chip"><i data-lucide="server"></i>Node.js</li><li class="chip"><i data-lucide="workflow"></i>GraphQL</li><li class="chip"><i data-lucide="package"></i>npm packages</li><li class="chip"><i data-lucide="terminal"></i>CLI tools</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects">
+    <div class="container">
+      <hr class="rule" data-rule>
+      <h2 data-reveal>Selected work</h2>
+      <ul class="grid">
+        <li data-reveal>
+          <a class="card" href="https://www.ultimate-empire.online/" target="_blank" rel="noopener">
+            <div class="card-top"><h3>Ultimate Empire</h3><span class="arrow" aria-hidden="true"><i data-lucide="arrow-up-right"></i></span></div>
+            <p>Website for an organic social media growth course.</p>
+            <span class="mono">React, GSAP, Lenis</span>
+          </a>
+        </li>
+        <li data-reveal>
+          <a class="card" href="https://mughal-dev-web-portfolio.vercel.app/" target="_blank" rel="noopener">
+            <div class="card-top"><h3>Mughal.Dev</h3><span class="arrow" aria-hidden="true"><i data-lucide="arrow-up-right"></i></span></div>
+            <p>Creative developer portfolio with skills and projects.</p>
+            <span class="mono">React, Three.js</span>
+          </a>
+        </li>
+        <li data-reveal>
+          <a class="card" href="https://beauty-studio-pro.vercel.app/" target="_blank" rel="noopener">
+            <div class="card-top"><h3>Beauty Studio by Aqsa</h3><span class="arrow" aria-hidden="true"><i data-lucide="arrow-up-right"></i></span></div>
+            <p>Beauty salon website with smooth animation.</p>
+            <span class="mono">Vue 3, Anime.js</span>
+          </a>
+        </li>
+        <li data-reveal>
+          <a class="card" href="https://ui-ux-portfolio-rho.vercel.app/" target="_blank" rel="noopener">
+            <div class="card-top"><h3>Mughal Dev Bento</h3><span class="arrow" aria-hidden="true"><i data-lucide="arrow-up-right"></i></span></div>
+            <p>Portfolio built on a bento grid.</p>
+            <span class="mono">React, GSAP, Anime.js</span>
+          </a>
+        </li>
+        <li data-reveal>
+          <a class="card" href="https://chuzi-wisher.vercel.app/" target="_blank" rel="noopener">
+            <div class="card-top"><h3>Chuzi Wisher</h3><span class="arrow" aria-hidden="true"><i data-lucide="arrow-up-right"></i></span></div>
+            <p>Birthday card generator for sending wishes to loved ones.</p>
+            <span class="mono">JavaScript, GSAP, Lenis</span>
+          </a>
+        </li>
+        <li data-reveal>
+          <a class="card" href="https://www.bukharidesigns.com/" target="_blank" rel="noopener">
+            <div class="card-top"><h3>Bukhari Designers</h3><span class="arrow" aria-hidden="true"><i data-lucide="arrow-up-right"></i></span></div>
+            <p>Site for a graphic and UI/UX design agency working worldwide.</p>
+            <span class="mono">React, TypeScript</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Experience -->
+  <section id="experience">
+    <div class="container">
+      <hr class="rule" data-rule>
+      <h2 data-reveal>Experience</h2>
+      <ol class="rows">
+        <li data-reveal>
+          <div class="row-head"><h3>Senior Frontend Developer</h3><span class="mono">2026 – Present</span></div>
+          <p class="sub">Mughal Dev</p>
+          <p class="body">Leading frontend work on animation-heavy sites, including animation systems and 3D visualizations for clients.</p>
+        </li>
+        <li data-reveal>
+          <div class="row-head"><h3>Web Developer</h3><span class="mono">2024 – 2025</span></div>
+          <p class="sub">Tech Startup Inc.</p>
+          <p class="body">Built scalable React applications with a focus on performance. Introduced GSAP and Three.js to the team's stack.</p>
+        </li>
+        <li data-reveal>
+          <div class="row-head"><h3>Junior Developer</h3><span class="mono">2021 – 2024</span></div>
+          <p class="sub">W3 Schools</p>
+          <p class="body">Built responsive websites and e-commerce platforms, working with designers on interfaces and animation.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Blog -->
+  <section id="blog">
+    <div class="container">
+      <hr class="rule" data-rule>
+      <h2 data-reveal>Blog</h2>
+      <p class="blog-intro" data-reveal>Notes on motion, scrolling and building for the web. These are drafts: replace the titles, dates and links with your real posts.</p>
+      <ul class="rows">
+        <li data-reveal>
+          <div class="row-head"><h3>Making Lenis and ScrollTrigger work together</h3><span class="post-tag">Draft</span></div>
+          <p class="body">How to drive Lenis from the GSAP ticker so ScrollTrigger positions stay accurate while scrolling stays smooth.</p>
+        </li>
+        <li data-reveal>
+          <div class="row-head"><h3>Scroll reveals without the slop</h3><span class="post-tag">Draft</span></div>
+          <p class="body">One small fade-up, played once, and why that is usually enough.</p>
+        </li>
+        <li data-reveal>
+          <div class="row-head"><h3>Building a portfolio as a single HTML file</h3><span class="post-tag">Draft</span></div>
+          <p class="body">What to keep in one file, and when to split styles and scripts apart.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <div class="container">
+      <hr class="rule" data-rule>
+      <h2 data-reveal>Contact</h2>
+      <p class="prose" data-reveal>I'm available for custom portfolios, landing pages and static websites. If you have a project in mind, message me on any of these.</p>
+      <div class="links" data-reveal>
+        <a class="link" href="https://github.com/usernamezain" target="_blank" rel="noopener"><i data-lucide="github"></i>GitHub</a>
+        <a class="link" href="https://www.linkedin.com/in/mughal-dev-471975400/" target="_blank" rel="noopener"><i data-lucide="linkedin"></i>LinkedIn</a>
+        <a class="link" href="https://instagram.com/daily_hack.dev" target="_blank" rel="noopener"><i data-lucide="instagram"></i>Instagram</a>
+      </div>
+      <div class="community" data-reveal>
+        <h3>Mughal.dev community</h3>
+        <p class="prose">A community for developers at any level, where I share resources and opportunities. <a href="https://whatsapp.com/channel/0029VbBUVv35fM5eAnXw3w2D" target="_blank" rel="noopener">Join the WhatsApp channel</a>.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <span>© 2026 Zain Mughal</span>
+    <a href="#top">Back to top</a>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.446.0/dist/umd/lucide.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- Theme toggle ---------- */
+  var root = document.documentElement;
+  var themeBtn = document.getElementById("theme");
+  function syncThemeLabel() {
+    var dark = root.getAttribute("data-theme") === "dark";
+    themeBtn.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+  }
+  themeBtn.addEventListener("click", function () {
+    var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch (e) {}
+    syncThemeLabel();
+  });
+  syncThemeLabel();
+
+  /* ---------- Icons (Lucide) ---------- */
+  if (window.lucide) lucide.createIcons();
+
+  /* ---------- Motion ---------- */
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var navH = 56;
+  var lenis = null;
+
+  function jump(target) {
+    if (lenis) lenis.scrollTo(target, { offset: -navH, duration: 1.1 });
+    else target.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  }
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      var id = a.getAttribute("href");
+      if (id.length < 2) return;
+      var el = document.querySelector(id);
+      if (!el) return;
+      e.preventDefault();
+      if (id === "#top") { if (lenis) lenis.scrollTo(0, { duration: 1.1 }); else window.scrollTo({ top: 0 }); }
+      else jump(el);
+      history.pushState(null, "", id);
+    });
+  });
+
+  /* If motion is off or a library failed to load, the page is already fully visible. */
+  if (reduce || !window.gsap || !window.ScrollTrigger) return;
+
+  gsap.registerPlugin(ScrollTrigger);
+  gsap.config({ nullTargetWarn: false });
+  /* Mobile address bars resize the viewport while scrolling; don't re-measure every time. */
+  ScrollTrigger.config({ ignoreMobileResize: true });
+
+  var coarse = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+
+  /* One animation loop: GSAP's ticker drives Lenis, and Lenis tells ScrollTrigger.
+     Touch devices keep native scrolling (syncTouch off), which is smoother on phones. */
+  if (window.Lenis) {
+    lenis = new Lenis({
+      autoRaf: false,
+      lerp: 0.1,
+      smoothWheel: true,
+      syncTouch: false,
+      wheelMultiplier: 1,
+      anchors: false
+    });
+    lenis.on("scroll", ScrollTrigger.update);
+    gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
+    gsap.ticker.lagSmoothing(0);
+  }
+
+  /* Re-measure at most once per frame burst (fonts, load and resize can all fire together). */
+  var refreshQueued = false;
+  function queueRefresh() {
+    if (refreshQueued) return;
+    refreshQueued = true;
+    requestAnimationFrame(function () {
+      refreshQueued = false;
+      ScrollTrigger.refresh();
+      if (lenis) lenis.resize();
+    });
+  }
+
+  /* Blur-in text: each word starts blurred and transparent, then sharpens in order. */
+  var TEXT = "h1,h2,h3,p,.mono,.post-tag,.chip,.link,.btn";
+  function splitWords(el) {
+    var words = [];
+    (function walk(node) {
+      Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+        if (n.nodeType === 3) {
+          var frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(function (part) {
+            if (!part) return;
+            if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+            var s = document.createElement("span");
+            s.className = "w"; s.textContent = part;
+            frag.appendChild(s); words.push(s);
+          });
+          n.replaceWith(frag);
+        } else if (n.nodeType === 1 && n.getAttribute("aria-hidden") !== "true" && n.tagName.toLowerCase() !== "svg") {
+          walk(n);
+        }
+      });
+    })(el);
+    return words;
+  }
+  function prepare(item) {
+    var targets = item.matches(TEXT) ? [item] : Array.prototype.slice.call(item.querySelectorAll(TEXT));
+    var done = [], words = [];
+    targets.forEach(function (el) {
+      if (done.some(function (d) { return d.contains(el); })) return;
+      done.push(el);
+      /* Flex items drop the spaces between words, so keep the text together in one wrapper. */
+      if (/(^|\s)(btn|chip|link)(\s|$)/.test(el.className)) {
+        Array.prototype.slice.call(el.childNodes).forEach(function (n) {
+          if (n.nodeType === 3 && n.textContent.trim()) {
+            var wrap = document.createElement("span");
+            n.replaceWith(wrap); wrap.appendChild(n);
+          }
+        });
+      }
+      words = words.concat(splitWords(el));
+    });
+    /* At rest the words are only transparent. The blur is applied when each word starts
+       animating, so the browser never holds hundreds of filtered layers for hidden text. */
+    gsap.set(item, { opacity: 0 });
+    gsap.set(words, { opacity: 0 });
+    return words;
+  }
+  var BLUR = coarse ? "blur(4px)" : "blur(6px)";
+  function play(item, words, delay) {
+    gsap.to(item, { opacity: 1, duration: 0.4, ease: "power1.out", delay: delay || 0 });
+    if (!words.length) return;
+    gsap.fromTo(words,
+      { opacity: 0, filter: BLUR },
+      {
+        opacity: 1, filter: "blur(0px)", duration: 0.5, ease: "power2.out",
+        stagger: Math.min(0.03, 0.6 / words.length), delay: delay || 0,
+        immediateRender: false, force3D: false,
+        /* Drop the filter once done so finished text costs nothing while scrolling. */
+        onComplete: function () { gsap.set(words, { clearProps: "filter" }); }
+      });
+  }
+
+  /* Hero: plays on load, one block after another. */
+  document.querySelectorAll("[data-hero]").forEach(function (item, i) {
+    play(item, prepare(item), 0.05 + i * 0.15);
+  });
+
+  /* Everything else: plays once as it scrolls into view. */
+  var pending = new Map();
+  document.querySelectorAll("[data-reveal]").forEach(function (item) { pending.set(item, prepare(item)); });
+  ScrollTrigger.batch("[data-reveal]", {
+    start: "top 90%",
+    once: true,
+    onEnter: function (batch) {
+      batch.forEach(function (item, i) { play(item, pending.get(item), i * 0.08); });
+    }
+  });
+
+  /* Dividers draw in once. */
+  gsap.set("[data-rule]", { scaleX: 0 });
+  ScrollTrigger.batch("[data-rule]", {
+    start: "top 92%",
+    once: true,
+    onEnter: function (batch) {
+      gsap.to(batch, { scaleX: 1, duration: 0.7, ease: "power2.out", overwrite: true });
+    }
+  });
+
+  /* Reading progress: write the transform directly, with no tween per scroll tick. */
+  var bar = document.querySelector(".progress");
+  ScrollTrigger.create({
+    trigger: document.documentElement, start: "top top", end: "bottom bottom",
+    onUpdate: function (self) { bar.style.transform = "scaleX(" + self.progress.toFixed(4) + ")"; }
+  });
+
+  /* Highlight the nav link for the section in view. */
+  var links = {};
+  document.querySelectorAll(".nav-links a").forEach(function (a) { links[a.getAttribute("href")] = a; });
+  Object.keys(links).forEach(function (id) {
+    var section = document.querySelector(id);
+    if (!section) return;
+    ScrollTrigger.create({
+      trigger: section, start: "top 45%", end: "bottom 45%",
+      onToggle: function (self) {
+        if (self.isActive) {
+          Object.keys(links).forEach(function (k) { links[k].removeAttribute("aria-current"); });
+          links[id].setAttribute("aria-current", "true");
+        } else {
+          links[id].removeAttribute("aria-current");
+        }
+      }
+    });
+  });
+
+  /* Fonts change layout height, so recalculate trigger positions once they load. */
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(queueRefresh);
+  window.addEventListener("load", queueRefresh);
+})();
+</script>
+</body>
+</html>

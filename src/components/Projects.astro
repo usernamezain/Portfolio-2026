@@ -1,0 +1,111 @@
+---
+import Icon from './Icon.astro';
+import { portfolioData } from '../data/portfolio';
+---
+
+<section id="projects" aria-label="Selected Client Work and Projects">
+  <div class="container">
+    <hr class="rule" data-rule />
+    <h2 data-reveal>Selected Work</h2>
+    
+    <ul class="projects-grid">
+      {portfolioData.projects.map((project) => (
+        <li data-reveal>
+          <a
+            class="project-card"
+            href={project.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${project.title} - ${project.description}`}
+          >
+            <div class="card-header">
+              <h3 class="card-title">{project.title}</h3>
+              <span class="card-arrow" aria-hidden="true">
+                <Icon name="arrow-up-right" size={16} />
+              </span>
+            </div>
+            
+            <p class="card-desc">{project.description}</p>
+            
+            <div class="card-footer">
+              <span class="mono card-tags">{project.tags.join(' • ')}</span>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--s4);
+  }
+
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: var(--s5);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    transition: background-color 180ms var(--ease), border-color 180ms var(--ease), box-shadow 180ms var(--ease);
+  }
+
+  .project-card:hover {
+    background: var(--card-hover);
+    border-color: var(--t3);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--s2);
+  }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--t1);
+    letter-spacing: -0.01em;
+  }
+
+  .card-arrow {
+    display: inline-flex;
+    color: var(--t3);
+    transition: color 160ms var(--ease);
+  }
+
+  .project-card:hover .card-arrow {
+    color: var(--accent);
+  }
+
+  .card-desc {
+    margin-top: var(--s2);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--t2);
+    flex-grow: 1;
+  }
+
+  .card-footer {
+    margin-top: var(--s4);
+  }
+
+  .card-tags {
+    display: block;
+    font-size: 11.5px;
+  }
+
+  @media (max-width: 600px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

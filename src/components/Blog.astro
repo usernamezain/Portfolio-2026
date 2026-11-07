@@ -1,0 +1,99 @@
+---
+import { portfolioData } from '../data/portfolio';
+---
+
+<section id="blog" aria-label="Technical Writing and Insights">
+  <div class="container">
+    <hr class="rule" data-rule />
+    <h2 data-reveal>Engineering Notes &amp; Blog</h2>
+    <p class="blog-intro" data-reveal>
+      Practical guides on animation synchronization, Core Web Vitals, and modern frontend architecture.
+    </p>
+
+    <ul class="blog-list">
+      {portfolioData.blogPosts.map((post) => (
+        <li class="blog-item" data-reveal>
+          <div class="blog-header">
+            <h3>{post.title}</h3>
+            <span class="post-tag">{post.status}</span>
+          </div>
+          <p class="blog-body">{post.description}</p>
+          <div class="blog-footer">
+            <span class="mono">{post.readTime}</span>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .blog-intro {
+    max-width: 62ch;
+    font-size: 13.5px;
+    color: var(--t2);
+    margin: calc(var(--s2) * -1) 0 var(--s6);
+  }
+
+  .blog-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .blog-item {
+    padding: var(--s5) 0;
+    border-bottom: 1px solid var(--divider);
+  }
+
+  .blog-item:first-child {
+    padding-top: 0;
+  }
+
+  .blog-item:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .blog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--s4);
+  }
+
+  .blog-header h3 {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--t1);
+    letter-spacing: -0.01em;
+  }
+
+  .post-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 2px var(--s2);
+    background: var(--card);
+  }
+
+  .blog-body {
+    margin-top: var(--s2);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--t2);
+    max-width: 64ch;
+  }
+
+  .blog-footer {
+    margin-top: var(--s3);
+  }
+
+  @media (max-width: 600px) {
+    .blog-header {
+      flex-direction: column;
+      gap: var(--s1);
+    }
+  }
+</style>

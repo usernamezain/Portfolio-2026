@@ -1,0 +1,79 @@
+---
+import { portfolioData } from '../data/portfolio';
+---
+
+<section id="experience" aria-label="Professional Experience">
+  <div class="container">
+    <hr class="rule" data-rule />
+    <h2 data-reveal>Experience</h2>
+    
+    <ol class="experience-list">
+      {portfolioData.experience.map((item) => (
+        <li class="experience-item" data-reveal>
+          <div class="exp-header">
+            <h3>{item.role}</h3>
+            <span class="mono exp-period">{item.period}</span>
+          </div>
+          <p class="exp-company">{item.company}</p>
+          <p class="exp-body">{item.description}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .experience-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .experience-item {
+    padding: var(--s5) 0;
+    border-bottom: 1px solid var(--divider);
+  }
+
+  .experience-item:first-child {
+    padding-top: 0;
+  }
+
+  .experience-item:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .exp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--s4);
+  }
+
+  .exp-header h3 {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--t1);
+  }
+
+  .exp-company {
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 500;
+    margin-top: var(--s1);
+  }
+
+  .exp-body {
+    margin-top: var(--s2);
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--t2);
+    max-width: 66ch;
+  }
+
+  @media (max-width: 600px) {
+    .exp-header {
+      flex-direction: column;
+      gap: var(--s1);
+    }
+  }
+</style>

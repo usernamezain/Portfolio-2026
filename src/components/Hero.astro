@@ -1,0 +1,131 @@
+---
+import Icon from './Icon.astro';
+import { portfolioData } from '../data/portfolio';
+---
+
+<section class="hero" id="top" aria-label="Introduction">
+  <div class="container">
+    <!-- Available Status Pill -->
+    <div class="hero-status" data-hero>
+      <span class="badge">
+        <span class="badge-dot"></span>
+        <span>Available for Freelance & Contracts</span>
+      </span>
+    </div>
+
+    <!-- Header & Avatar -->
+    <div class="hero-head" data-hero>
+      <div class="avatar" aria-hidden="true">
+        <span>ZM</span>
+      </div>
+      <div class="hero-title-wrap">
+        <h1 class="hero-name">Zain Ali Mughal</h1>
+        <p class="role">Creative Developer &amp; Frontend Engineer <span class="handle">(@{portfolioData.handle})</span></p>
+      </div>
+    </div>
+
+    <!-- Lede Paragraph -->
+    <p class="lede" data-hero>
+      I engineer high-speed Astro websites, interactive landing pages, and motion-rich digital experiences. Built with <strong>React</strong>, <strong>GSAP</strong>, <strong>Anime.js</strong>, and <strong>Three.js</strong> — optimized for 100/100 Core Web Vitals and zero layout shift.
+    </p>
+
+    <!-- Call to Actions -->
+    <div class="actions" data-hero>
+      <a class="btn btn-primary" href="#projects">
+        <span>View selected work</span>
+        <Icon name="arrow-up-right" size={15} />
+      </a>
+      <a class="btn" href="#contact">
+        <span>Get in touch</span>
+      </a>
+      <a class="btn" href="#faq" title="Learn more about Zain Ali Developer">
+        <span>Who is zainalidev?</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding: var(--s20) 0 var(--s16);
+  }
+
+  .hero-status {
+    margin-bottom: var(--s5);
+  }
+
+  .hero-head {
+    display: flex;
+    align-items: center;
+    gap: var(--s5);
+    margin-bottom: var(--s6);
+  }
+
+  .avatar {
+    width: 68px;
+    height: 68px;
+    flex: none;
+    border-radius: var(--r-full);
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: grid;
+    place-items: center;
+    color: var(--t1);
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  .hero-name {
+    font-size: clamp(26px, 4.5vw, 36px);
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  .role {
+    margin-top: var(--s1);
+    font-size: 14px;
+    color: var(--t2);
+  }
+
+  .handle {
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+
+  .lede {
+    max-width: 62ch;
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--t2);
+    margin-bottom: var(--s8);
+  }
+
+  .lede strong {
+    color: var(--t1);
+    font-weight: 600;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s3);
+  }
+
+  @media (max-width: 600px) {
+    .hero {
+      padding: var(--s12) 0 var(--s10);
+    }
+    .hero-head {
+      gap: var(--s4);
+    }
+    .avatar {
+      width: 56px;
+      height: 56px;
+      font-size: 18px;
+    }
+  }
+</style>

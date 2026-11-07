@@ -1,0 +1,85 @@
+---
+import SEO from '../components/SEO.astro';
+import Preloader from '../components/Preloader.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  keywords?: string[];
+  canonicalUrl?: string;
+  ogImage?: string;
+}
+
+const props = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    
+    <!-- Theme script executed synchronously before first paint to prevent theme flash (FOUC) -->
+    <script is:inline>
+      (function () {
+        var theme = null;
+        try {
+          theme = localStorage.getItem("theme");
+        } catch (e) {}
+        if (theme !== "light" && theme !== "dark") {
+          theme = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark";
+        }
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
+
+    <!-- SEO Meta Suite & JSON-LD Structured Data Graph -->
+    <SEO {...props} />
+
+    <!-- Favicon & Touch Icon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <!-- Accessibility Skip Link -->
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <!-- Reading Progress Bar (ScaleX driven by GSAP) -->
+    <div class="progress-bar" aria-hidden="true"></div>
+
+    <!-- High-Performance Preloader (Anime.js + GSAP smooth dismiss) -->
+    <Preloader />
+
+    <!-- Navigation Header -->
+    <Header />
+
+    <!-- Main Content Slot -->
+    <main id="main">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <Footer />
+
+    <!-- High-Performance Motion Controller (GSAP + Lenis + Anime.js) -->
+    <script>
+      import { initMotionSystem, initThemeToggle } from '../scripts/animationController';
+
+      // Setup theme toggle interactions
+      initThemeToggle();
+
+      // Launch unified motion architecture
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+          initMotionSystem();
+        });
+      } else {
+        initMotionSystem();
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "name": "zainalidev-portfolio",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.2.1",
+    "animejs": "^3.2.2",
+    "astro": "^5.4.2",
+    "gsap": "^3.12.7",
+    "lenis": "^1.1.20",
+    "lucide-astro": "^0.556.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@types/animejs": "^3.1.13",
+    "@types/node": "^22.13.9",
+    "typescript": "^5.7.3"
+  }
+}

@@ -1,0 +1,121 @@
+---
+import Icon from './Icon.astro';
+import { portfolioData } from '../data/portfolio';
+---
+
+<section id="faq" aria-label="Frequently Asked Questions & Developer Identity">
+  <div class="container">
+    <hr class="rule" data-rule />
+    <div class="section-title-wrap" data-reveal>
+      <h2>Knowledge &amp; FAQ</h2>
+      <p class="section-subtitle">
+        Direct answers to common search questions: <em>who is zainalidev</em>, developer background, and services.
+      </p>
+    </div>
+
+    <div class="faq-container">
+      {portfolioData.faqs.map((faq, index) => (
+        <div class="faq-item" data-reveal>
+          <button
+            class="faq-question"
+            type="button"
+            aria-expanded={index === 0 ? "true" : "false"}
+            aria-controls={`faq-answer-${index}`}
+            id={`faq-btn-${index}`}
+          >
+            <span class="faq-title">{faq.question}</span>
+            <span class="faq-chevron" aria-hidden="true">
+              <Icon name="chevron-down" size={16} />
+            </span>
+          </button>
+          
+          <div
+            class="faq-answer"
+            id={`faq-answer-${index}`}
+            role="region"
+            aria-labelledby={`faq-btn-${index}`}
+            style={index === 0 ? "display: block;" : "display: none;"}
+          >
+            <p>{faq.answer}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-subtitle {
+    font-size: 13.5px;
+    color: var(--t2);
+    margin-top: calc(var(--s2) * -1);
+    margin-bottom: var(--s6);
+  }
+
+  .section-subtitle em {
+    color: var(--accent);
+    font-style: normal;
+    font-family: var(--font-mono);
+  }
+
+  .faq-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s3);
+  }
+
+  .faq-item {
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    background: var(--card);
+    overflow: hidden;
+    transition: border-color 160ms var(--ease);
+  }
+
+  .faq-item:hover {
+    border-color: var(--border-focus);
+  }
+
+  .faq-question {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s4);
+    padding: var(--s4) var(--s5);
+    background: transparent;
+    border: 0;
+    color: var(--t1);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .faq-title {
+    flex-grow: 1;
+    letter-spacing: -0.01em;
+  }
+
+  .faq-chevron {
+    color: var(--t3);
+    display: inline-flex;
+    transition: color 160ms var(--ease);
+  }
+
+  .faq-question:hover .faq-chevron {
+    color: var(--t1);
+  }
+
+  .faq-answer {
+    padding: 0 var(--s5) var(--s4);
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--t2);
+  }
+
+  .faq-answer p {
+    margin: 0;
+  }
+</style>
