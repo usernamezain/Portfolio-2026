@@ -48,6 +48,8 @@ import { portfolioData } from '../../data/portfolio';
   }
 
   .chip {
+    --beam-color: var(--accent);
+    --beam-glow: 5px;
     display: inline-flex;
     align-items: center;
     gap: var(--s2);
@@ -59,7 +61,8 @@ import { portfolioData } from '../../data/portfolio';
     font-size: 12.5px;
     line-height: 1.5;
     cursor: default;
-    transition: background-color 160ms var(--ease), border-color 160ms var(--ease), color 160ms var(--ease);
+    outline: none;
+    transition: background-color 160ms var(--ease), color 160ms var(--ease);
   }
 
   .chip > * {
@@ -69,7 +72,6 @@ import { portfolioData } from '../../data/portfolio';
 
   .chip:hover {
     background: var(--card-hover);
-    border-color: var(--accent);
     color: var(--t1);
   }
 </style>
