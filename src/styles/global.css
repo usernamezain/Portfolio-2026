@@ -315,6 +315,84 @@ section {
   }
 }
 
+/* ==========================================================================
+   BORDER BEAM MOTION EFFECT
+   ========================================================================== */
+@property --beam-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.border-beam {
+  --beam-color: #ff6a00;
+  --beam-width: 1.5px;
+  --beam-duration: 4s;
+  --beam-length: 30%;
+  --beam-glow: 6px;
+  --beam-base-border: rgba(255, 255, 255, 0.08);
+  position: relative;
+}
+
+.border-beam::before,
+.border-beam::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: var(--beam-width);
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--beam-angle),
+    transparent 0 calc(100% - var(--beam-length)),
+    var(--beam-color) 90%,
+    transparent 100%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: borderBeamSpin var(--beam-duration) linear infinite;
+}
+
+.border-beam::before {
+  filter: blur(var(--beam-glow));
+  opacity: 0.6;
+  z-index: 0;
+}
+
+.border-beam::after {
+  z-index: 1;
+}
+
+.border-beam--hover::before,
+.border-beam--hover::after {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.border-beam--hover:hover::before {
+  opacity: 0.6;
+}
+
+.border-beam--hover:hover::after {
+  opacity: 1;
+}
+
+@keyframes borderBeamSpin {
+  to {
+    --beam-angle: 360deg;
+  }
+}
+
+@supports not (background: paint(something)) {
+  .border-beam::before,
+  .border-beam::after {
+    background: var(--beam-base-border);
+    animation: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
@@ -324,6 +402,10 @@ section {
   }
   .progress-bar {
     display: none;
+  }
+  .border-beam::before,
+  .border-beam::after {
+    animation: none !important;
   }
 }
 

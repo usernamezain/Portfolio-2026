@@ -14,7 +14,7 @@ import { portfolioData } from '../../data/portfolio';
           <h3>{category.title}</h3>
           <ul class="chips">
             {category.skills.map((skill) => (
-              <li class="chip">
+              <li class="chip border-beam border-beam--hover">
                 <Icon name={skill.icon} size={15} />
                 <span>{skill.name}</span>
               </li>
@@ -60,6 +60,11 @@ import { portfolioData } from '../../data/portfolio';
     line-height: 1.5;
     cursor: default;
     transition: background-color 160ms var(--ease), border-color 160ms var(--ease), color 160ms var(--ease);
+  }
+
+  .chip > * {
+    position: relative;
+    z-index: 2;
   }
 
   .chip:hover {
