@@ -75,7 +75,7 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
           </span>
         </div>
 
-        <!-- Filter Pills Bar -->
+        <!-- Filter Chips Bar -->
         <div class="filter-chips-row" role="tablist" aria-label="Filter articles by topic">
           <span class="filter-caption mono">FILTER:</span>
           <button type="button" class="filter-chip is-active" data-filter="all">All</button>
@@ -123,11 +123,59 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
         ))}
       </ul>
 
-      <!-- Empty Results State -->
+      <!-- Empty Results State with Animated Bot Mascot -->
       <div id="blog-empty-state" class="blog-empty-state" hidden>
-        <div class="empty-icon-box" aria-hidden="true">
-          <Icon name="search" size={26} />
+        <div class="empty-bot-mascot" aria-hidden="true">
+          <div class="bot-floating-container">
+            <svg class="bot-svg" viewBox="0 0 120 120" width="84" height="84">
+              <defs>
+                <radialGradient id="botHeadGlow" cx="50%" cy="30%" r="70%">
+                  <stop offset="0%" stop-color="#2a2e38" />
+                  <stop offset="100%" stop-color="#12141a" />
+                </radialGradient>
+                <linearGradient id="botVisorGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#0a0c12" />
+                  <stop offset="100%" stop-color="#050608" />
+                </linearGradient>
+                <filter id="eyeGlow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="2.5" result="glow" />
+                  <feMerge>
+                    <feMergeNode in="glow" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              <g id="bot-head-group" class="bot-head-group">
+                <!-- Antenna stalk & beacon light -->
+                <line x1="60" y1="22" x2="60" y2="11" stroke="rgba(255,255,255,0.25)" stroke-width="2.5" stroke-linecap="round" />
+                <circle id="bot-antenna" cx="60" cy="9" r="4" fill="var(--accent)" filter="url(#eyeGlow)" />
+
+                <!-- Side ear muff pods -->
+                <rect x="22" y="47" width="6" height="18" rx="3" fill="#1e222b" stroke="var(--border)" stroke-width="1.2" />
+                <rect x="92" y="47" width="6" height="18" rx="3" fill="#1e222b" stroke="var(--border)" stroke-width="1.2" />
+
+                <!-- Circular Head Body -->
+                <circle cx="60" cy="56" r="34" fill="url(#botHeadGlow)" stroke="rgba(255,255,255,0.14)" stroke-width="1.5" />
+
+                <!-- Dark Visor Screen -->
+                <rect class="bot-visor-screen" x="35" y="42" width="50" height="26" rx="9" fill="url(#botVisorGrad)" stroke="rgba(110, 168, 254, 0.3)" stroke-width="1.2" />
+
+                <!-- Animated Eyes Group -->
+                <g id="bot-eyes" class="bot-eyes">
+                  <ellipse class="bot-pupil" cx="50" cy="55" rx="4.5" ry="5.5" fill="var(--accent)" filter="url(#eyeGlow)" />
+                  <ellipse class="bot-pupil" cx="70" cy="55" rx="4.5" ry="5.5" fill="var(--accent)" filter="url(#eyeGlow)" />
+                  <circle cx="51.5" cy="53" r="1.5" fill="#ffffff" />
+                  <circle cx="71.5" cy="53" r="1.5" fill="#ffffff" />
+                </g>
+
+                <!-- Dynamic Expressive Mouth -->
+                <path id="bot-mouth" d="M 53 62 Q 60 62 67 62" stroke="rgba(110, 168, 254, 0.55)" stroke-width="1.6" stroke-linecap="round" fill="none" />
+              </g>
+            </svg>
+          </div>
         </div>
+
         <h3 class="empty-title">No matching articles found</h3>
         <p class="empty-desc" id="empty-desc">
           Try adjusting your search terms or selecting another topic filter.
@@ -157,11 +205,69 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     const emptyDesc = document.getElementById('empty-desc');
     const resetBtn = document.getElementById('reset-filters-btn');
 
+    // Bot mascot elements
+    const botHead = document.getElementById('bot-head-group');
+    const botEyes = document.getElementById('bot-eyes');
+    const botMouth = document.getElementById('bot-mouth');
+    const botAntenna = document.getElementById('bot-antenna');
+
     if (!input || !charsContainer || !customCursor || !placeholder) return;
 
     let activeFilter = 'all';
     let previousValue = '';
     let isTypingTimeout: number | undefined;
+
+    // Launch continuous Mascot animation loop
+    if (botHead && botEyes && botMouth && botAntenna) {
+      // Gentle floating head
+      gsap.to(botHead, {
+        y: -4,
+        duration: 1.8,
+        ease: 'sine.inOut',
+        yoyo: true,
+        repeat: -1,
+      });
+
+      // Antenna beacon pulse
+      gsap.to(botAntenna, {
+        opacity: 0.35,
+        scale: 0.85,
+        transformOrigin: 'center center',
+        duration: 0.8,
+        ease: 'sine.inOut',
+        yoyo: true,
+        repeat: -1,
+      });
+
+      // Continuous search-and-shrug eye timeline
+      const botTl = gsap.timeline({ repeat: -1, repeatDelay: 0.3 });
+      botTl
+        // Center gaze
+        .to(botEyes, { x: 0, y: 0, duration: 0.5, ease: 'power2.out' })
+        // Look smoothly left
+        .to(botEyes, { x: -7, y: -1, duration: 0.5, ease: 'power2.inOut' }, '+=0.25')
+        .to(botHead, { rotation: -3, transformOrigin: 'center 56px', duration: 0.5, ease: 'power2.inOut' }, '<')
+        // Blink left
+        .to(botEyes, { scaleY: 0.1, transformOrigin: 'center 55px', duration: 0.1, ease: 'power1.in' }, '+=0.35')
+        .to(botEyes, { scaleY: 1, duration: 0.1, ease: 'power1.out' })
+        // Look smoothly right
+        .to(botEyes, { x: 7, y: -1, duration: 0.65, ease: 'power2.inOut' }, '+=0.3')
+        .to(botHead, { rotation: 3, transformOrigin: 'center 56px', duration: 0.65, ease: 'power2.inOut' }, '<')
+        // Blink right
+        .to(botEyes, { scaleY: 0.1, transformOrigin: 'center 55px', duration: 0.1, ease: 'power1.in' }, '+=0.35')
+        .to(botEyes, { scaleY: 1, duration: 0.1, ease: 'power1.out' })
+        // Center & look down perplexed ("found nothing")
+        .to(botEyes, { x: 0, y: 3.5, duration: 0.4, ease: 'power2.out' }, '+=0.25')
+        .to(botHead, { rotation: 0, duration: 0.4, ease: 'power2.out' }, '<')
+        // Mouth curves to confused shrug
+        .to(botMouth, { attr: { d: 'M 54 64 Q 60 60 66 64' }, duration: 0.3, ease: 'power2.out' }, '<')
+        // Bewildered blink
+        .to(botEyes, { scaleY: 0.1, transformOrigin: 'center 58px', duration: 0.1 }, '+=0.5')
+        .to(botEyes, { scaleY: 1, duration: 0.1 })
+        // Restore neutral expression
+        .to(botMouth, { attr: { d: 'M 53 62 Q 60 62 67 62' }, duration: 0.3, ease: 'power2.out' }, '+=0.7')
+        .to(botEyes, { y: 0, duration: 0.3, ease: 'power2.out' }, '<');
+    }
 
     // Helper: update smooth custom cursor position
     function updateCursorPosition(immediate = false) {
@@ -197,13 +303,12 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
       if (!input || !charsContainer || !placeholder || !clearBtn) return;
       const value = input.value;
 
-      // Toggle placeholder visibility
+      // Toggle placeholder visibility and layout presence
       if (value.length > 0) {
-        placeholder.style.opacity = '0';
-        placeholder.style.pointerEvents = 'none';
+        placeholder.style.display = 'none';
         clearBtn.hidden = false;
       } else {
-        placeholder.style.opacity = '1';
+        placeholder.style.display = '';
         clearBtn.hidden = true;
       }
 
@@ -211,7 +316,7 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
       const oldLen = previousValue.length;
       const newLen = value.length;
 
-      // Re-populate chars container
+      // Re-populate chars container starting at left 0
       charsContainer.innerHTML = '';
       for (let i = 0; i < newLen; i++) {
         const char = value[i];
@@ -422,7 +527,7 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
   }
 
   /* ==========================================================================
-     SEARCH & FILTER WIDGET
+     SEARCH & FILTER WIDGET (Matching Card Border Radius: var(--r-lg) = 12px)
      ========================================================================== */
   .search-widget-wrapper {
     margin: var(--s6) 0 var(--s8);
@@ -436,11 +541,11 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     display: flex;
     align-items: center;
     width: 100%;
-    height: 46px;
+    height: 48px;
     padding: 0 var(--s4);
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: var(--r-full);
+    border-radius: var(--r-lg); /* Matches blog cards border-radius */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     transition: border-color 200ms var(--ease), box-shadow 200ms var(--ease), background-color 200ms var(--ease);
   }
@@ -478,7 +583,7 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     overflow: hidden;
   }
 
-  /* Real input capturing keyboard events */
+  /* Real input capturing keyboard events starting at left: 0 */
   .search-hidden-input {
     position: absolute;
     inset: 0;
@@ -496,32 +601,41 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     caret-color: transparent;
     padding: 0;
     margin: 0;
+    text-align: left;
   }
 
+  /* Visual typography viewport aligned to the left edge */
   .search-visual-viewport {
     position: absolute;
     inset: 0;
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     pointer-events: none;
     z-index: 5;
     overflow: hidden;
   }
 
+  /* Ghost placeholder positioned absolute to left edge so it never displaces typed text */
   .search-ghost-placeholder {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
     font-size: 14px;
     color: var(--t3);
     pointer-events: none;
-    transition: opacity 160ms var(--ease);
     white-space: nowrap;
     user-select: none;
   }
 
+  /* Stream of typed characters starts directly at left: 0 */
   .search-chars-stream {
     display: inline-flex;
     align-items: center;
     white-space: pre;
     position: relative;
+    left: 0;
   }
 
   .search-char {
@@ -598,7 +712,7 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     justify-content: center;
     width: 22px;
     height: 22px;
-    border-radius: var(--r-full);
+    border-radius: var(--r-sm);
     background: rgba(255, 255, 255, 0.08);
     border: none;
     color: var(--t2);
@@ -618,16 +732,16 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
   .search-count-pill {
     font-size: 11px;
     color: var(--accent);
-    padding: 2px var(--s3);
+    padding: 3px var(--s3);
     background: var(--badge-bg);
     border: 1px solid var(--badge-border);
-    border-radius: var(--r-full);
+    border-radius: var(--r-lg); /* Matches blog cards border-radius */
     white-space: nowrap;
     margin-left: var(--s1);
     flex-shrink: 0;
   }
 
-  /* Filter Chips */
+  /* Filter Chips (Border-radius: var(--r-lg) = 12px, matching blog cards) */
   .filter-chips-row {
     display: flex;
     align-items: center;
@@ -649,8 +763,8 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     align-items: center;
     font-size: 12px;
     font-weight: 500;
-    padding: 4px var(--s3);
-    border-radius: var(--r-full);
+    padding: 5px var(--s3);
+    border-radius: var(--r-lg); /* Matches blog cards border-radius */
     background: var(--card);
     border: 1px solid var(--border);
     color: var(--t2);
@@ -673,26 +787,36 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     box-shadow: 0 0 12px var(--accent-glow);
   }
 
-  /* Empty State */
+  /* ==========================================================================
+     EMPTY STATE & ANIMATED BOT MASCOT
+     ========================================================================== */
   .blog-empty-state {
     text-align: center;
     padding: var(--s12) var(--s4);
     background: var(--card);
     border: 1px dashed var(--border);
-    border-radius: var(--r-lg);
+    border-radius: var(--r-lg); /* Matches blog cards border-radius */
     margin-top: var(--s4);
   }
 
-  .empty-icon-box {
+  .empty-bot-mascot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--s4);
+  }
+
+  .bot-floating-container {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
-    border-radius: var(--r-full);
-    background: var(--badge-bg);
-    color: var(--accent);
-    margin-bottom: var(--s3);
+    width: 88px;
+    height: 88px;
+    filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.4));
+  }
+
+  .bot-svg {
+    overflow: visible;
   }
 
   .empty-title {
@@ -713,18 +837,20 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     font-family: var(--font-sans);
     font-size: 13px;
     font-weight: 600;
-    padding: var(--s2) var(--s4);
-    border-radius: var(--r-full);
+    padding: var(--s3) var(--s5);
+    border-radius: var(--r-lg); /* Matches blog cards border-radius */
     background: var(--accent);
     color: var(--on-t1);
     border: none;
     cursor: pointer;
-    transition: opacity 150ms var(--ease), transform 150ms var(--ease);
+    transition: opacity 150ms var(--ease), transform 150ms var(--ease), box-shadow 150ms var(--ease);
+    box-shadow: 0 4px 14px var(--accent-glow);
   }
 
   .reset-filters-btn:hover {
-    opacity: 0.9;
+    opacity: 0.92;
     transform: translateY(-1px);
+    box-shadow: 0 6px 20px var(--accent-glow);
   }
 
   /* ==========================================================================
@@ -772,8 +898,8 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     font-size: 11px;
     color: var(--accent);
     border: 1px solid var(--badge-border);
-    border-radius: var(--r-sm);
-    padding: 2px var(--s2);
+    border-radius: var(--r-lg); /* Matches blog cards border-radius */
+    padding: 3px var(--s2);
     background: var(--badge-bg);
   }
 
@@ -816,7 +942,7 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     padding: 2px var(--s2);
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid var(--border);
-    border-radius: var(--r-sm);
+    border-radius: var(--r-lg); /* Matches blog cards border-radius */
   }
 
   .post-arrow {
