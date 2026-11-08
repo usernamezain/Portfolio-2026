@@ -214,7 +214,6 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     if (!input || !charsContainer || !customCursor || !placeholder) return;
 
     let activeFilter = 'all';
-    let previousValue = '';
     let isTypingTimeout: number | undefined;
 
     // Launch continuous Mascot animation loop
@@ -274,7 +273,8 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
       if (!input || !charsContainer || !customCursor) return;
 
       const cursorIndex = input.selectionStart ?? input.value.length;
-      const spans = charsContainer.querySelectorAll<HTMLSpanElement>('.search-char');
+      // Only measure active chars (excluding those currently blurring out)
+      const spans = charsContainer.querySelectorAll<HTMLSpanElement>('.search-char:not(.char-blur-out)');
       const containerRect = charsContainer.getBoundingClientRect();
       let targetX = 0;
 
@@ -298,7 +298,7 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
       }
     }
 
-    // Helper: render typed text with blur-in letter animations
+    // Helper: render typed text with blur-in from bottom and blur-out to top
     function renderVisualText() {
       if (!input || !charsContainer || !placeholder || !clearBtn) return;
       const value = input.value;
@@ -312,38 +312,57 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
         clearBtn.hidden = true;
       }
 
-      // Diff with previous value to animate only newly appended characters
-      const oldLen = previousValue.length;
+      // Existing active spans
+      const existingSpans = Array.from(
+        charsContainer.querySelectorAll<HTMLSpanElement>('.search-char:not(.char-blur-out)')
+      );
+      const oldLen = existingSpans.length;
       const newLen = value.length;
 
-      // Re-populate chars container starting at left 0
-      charsContainer.innerHTML = '';
-      for (let i = 0; i < newLen; i++) {
-        const char = value[i];
-        const span = document.createElement('span');
-        span.className = 'search-char';
-        span.textContent = char === ' ' ? '\u00A0' : char;
-
-        // Apply smooth blur-in only to newly typed characters
-        if (newLen > oldLen && i >= oldLen) {
-          span.classList.add('char-blur-in');
-          const delay = (i - oldLen) * 0.03;
+      if (newLen > oldLen) {
+        // CHARACTERS ADDED: Blur in from the bottom
+        for (let i = oldLen; i < newLen; i++) {
+          const char = value[i];
+          const span = document.createElement('span');
+          span.className = 'search-char char-blur-in';
+          span.textContent = char === ' ' ? '\u00A0' : char;
+          const delay = (i - oldLen) * 0.02;
           span.style.animationDelay = `${delay}s`;
+          charsContainer.appendChild(span);
         }
-
-        charsContainer.appendChild(span);
+      } else if (newLen < oldLen) {
+        // CHARACTERS DELETED: Blur out from center to top
+        for (let i = oldLen - 1; i >= newLen; i--) {
+          const spanToRemove = existingSpans[i];
+          if (spanToRemove) {
+            // Lock position so flow of remaining characters is unaffected
+            const offsetLeft = spanToRemove.offsetLeft;
+            spanToRemove.style.position = 'absolute';
+            spanToRemove.style.left = `${offsetLeft}px`;
+            spanToRemove.classList.remove('char-blur-in');
+            spanToRemove.classList.add('char-blur-out');
+            setTimeout(() => {
+              spanToRemove.remove();
+            }, 180);
+          }
+        }
+      } else {
+        // Synchronize content in case of character replacement
+        for (let i = 0; i < newLen; i++) {
+          if (existingSpans[i] && existingSpans[i].textContent !== value[i]) {
+            existingSpans[i].textContent = value[i] === ' ' ? '\u00A0' : value[i];
+          }
+        }
       }
 
-      previousValue = value;
-
-      // Briefly switch cursor to solid while typing
+      // Cursor briefly solid while typing
       customCursor?.classList.add('is-typing');
       window.clearTimeout(isTypingTimeout);
       isTypingTimeout = window.setTimeout(() => {
         customCursor?.classList.remove('is-typing');
       }, 350);
 
-      // Glide cursor smoothly
+      // Glide cursor smoothly to new position
       requestAnimationFrame(() => updateCursorPosition());
     }
 
@@ -429,11 +448,25 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     input.addEventListener('click', handleCaretMove);
     input.addEventListener('select', handleCaretMove);
 
-    // Clear button
+    // Clear button with blur-out to top
     clearBtn?.addEventListener('click', () => {
       if (!input) return;
       input.value = '';
-      renderVisualText();
+      const existingSpans = Array.from(
+        charsContainer.querySelectorAll<HTMLSpanElement>('.search-char:not(.char-blur-out)')
+      );
+      existingSpans.forEach((span, idx) => {
+        const offsetLeft = span.offsetLeft;
+        span.style.position = 'absolute';
+        span.style.left = `${offsetLeft}px`;
+        span.classList.remove('char-blur-in');
+        span.classList.add('char-blur-out');
+        span.style.animationDelay = `${idx * 0.015}s`;
+        setTimeout(() => span.remove(), 180 + idx * 15);
+      });
+      if (placeholder) placeholder.style.display = '';
+      clearBtn.hidden = true;
+      gsap.to(customCursor, { x: 0, duration: 0.18, ease: 'power2.out' });
       applyFilter();
       input.focus();
     });
@@ -444,7 +477,10 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
       input.value = '';
       activeFilter = 'all';
       filterPills.forEach((p) => p.classList.toggle('is-active', p.dataset.filter === 'all'));
-      renderVisualText();
+      charsContainer.innerHTML = '';
+      if (placeholder) placeholder.style.display = '';
+      if (clearBtn) clearBtn.hidden = true;
+      gsap.to(customCursor, { x: 0, duration: 0.18, ease: 'power2.out' });
       applyFilter();
       input.focus();
     });
@@ -527,7 +563,7 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
   }
 
   /* ==========================================================================
-     SEARCH & FILTER WIDGET (Matching Card Border Radius: var(--r-lg) = 12px)
+     SEARCH & FILTER WIDGET (Crisp Decreased Border Radius: var(--r-sm) = 6px)
      ========================================================================== */
   .search-widget-wrapper {
     margin: var(--s6) 0 var(--s8);
@@ -545,7 +581,7 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     padding: 0 var(--s4);
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: var(--r-lg); /* Matches blog cards border-radius */
+    border-radius: var(--r-sm); /* Decreased crisp border-radius: 6px */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     transition: border-color 200ms var(--ease), box-shadow 200ms var(--ease), background-color 200ms var(--ease);
   }
@@ -616,7 +652,7 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     overflow: hidden;
   }
 
-  /* Ghost placeholder positioned absolute to left edge so it never displaces typed text */
+  /* Ghost placeholder positioned absolute to left edge */
   .search-ghost-placeholder {
     position: absolute;
     left: 0;
@@ -644,28 +680,48 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     font-weight: 500;
     color: var(--t1);
     line-height: 1;
-    transform-origin: center bottom;
+    transform-origin: center center;
+    will-change: transform, opacity, filter;
   }
 
-  /* Smooth Blur-in Typography Keyframes */
+  /* Blur In from the Bottom Animation */
   .search-char.char-blur-in {
-    animation: charBlurIn 220ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: charBlurInFromBottom 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
-  @keyframes charBlurIn {
+  @keyframes charBlurInFromBottom {
     0% {
       opacity: 0;
-      filter: blur(8px);
-      transform: translateY(3px) scale(0.88);
+      filter: blur(10px);
+      transform: translateY(10px) scale(0.9);
     }
     60% {
       opacity: 0.85;
-      filter: blur(1.5px);
+      filter: blur(2px);
     }
     100% {
       opacity: 1;
       filter: blur(0px);
       transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Blur Out from Center to Top Animation */
+  .search-char.char-blur-out {
+    pointer-events: none;
+    animation: charBlurOutToTop 180ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes charBlurOutToTop {
+    0% {
+      opacity: 1;
+      filter: blur(0px);
+      transform: translateY(0) scale(1);
+    }
+    100% {
+      opacity: 0;
+      filter: blur(10px);
+      transform: translateY(-10px) scale(0.85);
     }
   }
 
@@ -729,19 +785,20 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     transform: scale(1.08);
   }
 
+  /* Decreased Border Radius for Capsule on Right Side with Articles Count */
   .search-count-pill {
     font-size: 11px;
     color: var(--accent);
     padding: 3px var(--s3);
     background: var(--badge-bg);
     border: 1px solid var(--badge-border);
-    border-radius: var(--r-lg); /* Matches blog cards border-radius */
+    border-radius: var(--r-sm); /* Decreased crisp border-radius: 6px */
     white-space: nowrap;
     margin-left: var(--s1);
     flex-shrink: 0;
   }
 
-  /* Filter Chips (Border-radius: var(--r-lg) = 12px, matching blog cards) */
+  /* Filter Chips (Decreased crisp border-radius: var(--r-sm) = 6px) */
   .filter-chips-row {
     display: flex;
     align-items: center;
@@ -764,7 +821,7 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     font-size: 12px;
     font-weight: 500;
     padding: 5px var(--s3);
-    border-radius: var(--r-lg); /* Matches blog cards border-radius */
+    border-radius: var(--r-sm); /* Decreased crisp border-radius: 6px */
     background: var(--card);
     border: 1px solid var(--border);
     color: var(--t2);
@@ -795,7 +852,7 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     padding: var(--s12) var(--s4);
     background: var(--card);
     border: 1px dashed var(--border);
-    border-radius: var(--r-lg); /* Matches blog cards border-radius */
+    border-radius: var(--r-lg);
     margin-top: var(--s4);
   }
 
@@ -838,7 +895,7 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     font-size: 13px;
     font-weight: 600;
     padding: var(--s3) var(--s5);
-    border-radius: var(--r-lg); /* Matches blog cards border-radius */
+    border-radius: var(--r-sm); /* Decreased crisp border-radius: 6px */
     background: var(--accent);
     color: var(--on-t1);
     border: none;
@@ -898,7 +955,7 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     font-size: 11px;
     color: var(--accent);
     border: 1px solid var(--badge-border);
-    border-radius: var(--r-lg); /* Matches blog cards border-radius */
+    border-radius: var(--r-sm);
     padding: 3px var(--s2);
     background: var(--badge-bg);
   }
@@ -942,7 +999,7 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     padding: 2px var(--s2);
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid var(--border);
-    border-radius: var(--r-lg); /* Matches blog cards border-radius */
+    border-radius: var(--r-sm);
   }
 
   .post-arrow {
