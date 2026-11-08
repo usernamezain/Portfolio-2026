@@ -306,9 +306,11 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
       // Toggle placeholder visibility and layout presence
       if (value.length > 0) {
         placeholder.style.display = 'none';
+        clearBtn.classList.add('is-visible');
         clearBtn.hidden = false;
       } else {
         placeholder.style.display = '';
+        clearBtn.classList.remove('is-visible');
         clearBtn.hidden = true;
       }
 
@@ -465,6 +467,7 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
         setTimeout(() => span.remove(), 180 + idx * 15);
       });
       if (placeholder) placeholder.style.display = '';
+      clearBtn.classList.remove('is-visible');
       clearBtn.hidden = true;
       gsap.to(customCursor, { x: 0, duration: 0.18, ease: 'power2.out' });
       applyFilter();
@@ -479,7 +482,10 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
       filterPills.forEach((p) => p.classList.toggle('is-active', p.dataset.filter === 'all'));
       charsContainer.innerHTML = '';
       if (placeholder) placeholder.style.display = '';
-      if (clearBtn) clearBtn.hidden = true;
+      if (clearBtn) {
+        clearBtn.classList.remove('is-visible');
+        clearBtn.hidden = true;
+      }
       gsap.to(customCursor, { x: 0, duration: 0.18, ease: 'power2.out' });
       applyFilter();
       input.focus();
@@ -763,7 +769,7 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
   }
 
   .search-clear-action {
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     width: 22px;
@@ -777,6 +783,14 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
     padding: 0;
     flex-shrink: 0;
     transition: background-color 150ms var(--ease), color 150ms var(--ease), transform 150ms var(--ease);
+  }
+
+  .search-clear-action.is-visible {
+    display: flex;
+  }
+
+  .search-clear-action[hidden] {
+    display: none !important;
   }
 
   .search-clear-action:hover {
