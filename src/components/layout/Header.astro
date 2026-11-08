@@ -20,7 +20,7 @@ import Icon from '../common/Icon.astro';
       </nav>
 
       <button
-        class="icon-btn theme-toggle"
+        class="icon-btn theme-toggle border-beam border-beam--hover"
         id="theme-toggle"
         type="button"
         aria-label="Switch to light theme"
@@ -101,6 +101,8 @@ import Icon from '../common/Icon.astro';
   }
 
   .icon-btn {
+    --beam-color: var(--accent);
+    --beam-glow: 5px;
     width: 32px;
     height: 32px;
     padding: 0;
@@ -111,13 +113,17 @@ import Icon from '../common/Icon.astro';
     border: 1px solid var(--border);
     border-radius: var(--r-md);
     cursor: pointer;
-    transition: background-color 160ms var(--ease), color 160ms var(--ease), border-color 160ms var(--ease);
+    transition: background-color 160ms var(--ease), color 160ms var(--ease);
+  }
+
+  .icon-btn > * {
+    position: relative;
+    z-index: 2;
   }
 
   .icon-btn:hover {
     background: var(--card-hover);
     color: var(--t1);
-    border-color: var(--border-focus);
   }
 
   /* Theme icon toggle rules */
