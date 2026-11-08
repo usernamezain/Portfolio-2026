@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pixel Ghost Mascot</title>
+<style>
+  /* ---------- demo page (delete for your portfolio) ---------- */
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: #0e0f13; color: #8a8f9c;
+    font: 15px/1.5 system-ui, sans-serif;
+    display: grid; place-items: center; text-align: center;
+  }
+  body p { max-width: 38ch; margin: 0; }
+
+  /* ---------- GHOST: copy this block + the <script> ---------- */
+  .pg {
+    position: fixed; left: 0; top: 0; z-index: 9999;
+    pointer-events: none;
+    will-change: transform;
+  }
+  .pg-pop {                       /* appear / vanish */
+    transition: transform .28s steps(5), opacity .28s steps(5);
+    transform-origin: 50% 80%;
+  }
+  .pg-pop.out { transform: scale(.15) rotate(-12deg); opacity: 0; }
+  .pg svg {
+    display: block; overflow: visible;
+    shape-rendering: crispEdges;
+    animation: pg-bob .5s steps(1) infinite;
+    filter: drop-shadow(0 0 6px rgba(255, 59, 59, .45));
+  }
+  @keyframes pg-bob { 0%,49% { transform: translateY(0) } 50%,100% { transform: translateY(-8%) } }
+  .pg .fa { animation: pg-a .5s steps(1) infinite; }
+  .pg .fb { animation: pg-b .5s steps(1) infinite; }
+  @keyframes pg-a { 0%,49% { opacity: 1 } 50%,100% { opacity: 0 } }
+  @keyframes pg-b { 0%,49% { opacity: 0 } 50%,100% { opacity: 1 } }
+  .pg .eyes { transform-box: fill-box; transform-origin: 50% 60%; transition: transform .06s; }
+  .pg.blink .eyes { transform: scaleY(.1); }
+  @media (prefers-reduced-motion: reduce) {
+    .pg svg, .pg .fa, .pg .fb { animation: none; }
+    .pg .fb { opacity: 0; }
+  }
+</style>
+</head>
+<body>
+<p>Your portfolio goes here. Somewhere on this page, a small ghost is wandering around.</p>
+
+<script>
+(() => {
+  /* ---------- settings ---------- */
+  const CONFIG = {
+    size: 20,                 // px (width = height)
+    body: '#ff3b3b',
+    eye: '#ffffff',
+    pupil: '#2a5cff',
+    speed: 55,                // px per second while walking
+    hopsBeforeVanish: [1, 3], // walks before it disappears
+    hiddenFor: [2500, 7000],  // ms invisible
+    pauseFor: [500, 1800],    // ms standing still between walks
+    edge: 12                  // keep this far from viewport edges
+  };
+
+  /* ---------- pixel art (14x14 grid) ---------- */
+  const BODY = [
+    '     ####     ',
+    '   ########   ',
+    '  ##########  ',
+    ' ############ ',
+    ' ############ ',
+    ' ############ ',
+    '##############',
+    '##############',
+    '##############',
+    '##############',
+    '##############',
+    '##############',
+  ];
+  const FEET_A = ['## ## ## ## ##', '## ## ## ## ##'];
+  const FEET_B = [' ## ## ## ## #', ' ## ## ## ## #'];
+
+  const rects = (rows, y0, fill) => {
+    let out = '';
+    rows.forEach((row, i) => {
+      let x = 0;
+      while (x < row.length) {
+        if (row[x] !== '#') { x++; continue; }
+        let w = 0;
+        while (row[x + w] === '#') w++;
+        out += `<rect x="${x}" y="${y0 + i}" width="${w}" height="1" fill="${fill}"/>`;
+        x += w;
+      }
+    });
+    return out;
+  };
+
+  const eyeShape = x => `<rect x="${x + 1}" y="3" width="2" height="5"/><rect x="${x}" y="4" width="4" height="3"/>`;
+
+  const svg = `
+    <svg viewBox="0 0 14 14" width="${CONFIG.size}" height="${CONFIG.size}" aria-hidden="true">
+      ${rects(BODY, 0, CONFIG.body)}
+      <g class="fa">${rects(FEET_A, 12, CONFIG.body)}</g>
+      <g class="fb">${rects(FEET_B, 12, CONFIG.body)}</g>
+      <g class="eyes" fill="${CONFIG.eye}">${eyeShape(2)}${eyeShape(8)}</g>
+      <g fill="${CONFIG.pupil}" id="pg-pupils">
+        <rect class="p" x="2" y="5" width="2" height="2"/>
+        <rect class="p" x="8" y="5" width="2" height="2"/>
+      </g>
+    </svg>`;
+
+  /* ---------- build DOM ---------- */
+  const root = document.createElement('div');
+  root.className = 'pg';
+  root.setAttribute('role', 'presentation');
+  root.innerHTML = `<div class="pg-pop out">${svg}</div>`;
+  document.body.appendChild(root);
+  const pop = root.firstElementChild;
+  const pupils = root.querySelectorAll('.p');
+
+  /* ---------- helpers ---------- */
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const rint = (a, b) => Math.floor(rnd(a, b + 1));
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let x = 0, y = 0;
+
+  const place = (nx, ny, ms = 0) => {
+    root.style.transition = ms ? `transform ${ms}ms linear` : 'none';
+    root.style.transform = `translate(${nx}px, ${ny}px)`;
+    x = nx; y = ny;
+  };
+  const randomSpot = () => {
+    const e = CONFIG.edge, s = CONFIG.size;
+    return [
+      rnd(e, Math.max(e + 1, innerWidth - s - e)),
+      rnd(e, Math.max(e + 1, innerHeight - s - e))
+    ];
+  };
+  const look = dir => {               // -1 left, 0 centre, 1 right
+    const dx = dir < 0 ? 0 : dir > 0 ? 2 : 1;
+    pupils[0].setAttribute('x', 2 + (dx));
+    pupils[1].setAttribute('x', 8 + (dx));
+  };
+  const lookY = up => pupils.forEach(p => p.setAttribute('y', up ? 4 : 5));
+
+  /* random blinking */
+  (function blink() {
+    root.classList.add('blink');
+    setTimeout(() => root.classList.remove('blink'), 120);
+    setTimeout(blink, rnd(1800, 5000));
+  })();
+
+  /* ---------- behaviour loop ---------- */
+  async function walkTo(tx, ty) {
+    const dist = Math.hypot(tx - x, ty - y);
+    const ms = Math.max(400, (dist / CONFIG.speed) * 1000);
+    look(tx - x);
+    lookY(ty < y - 20);
+    if (reduce) { place(tx, ty); await sleep(300); return; }
+    place(tx, ty, ms);
+    await sleep(ms);
+    look(0); lookY(false);
+  }
+
+  async function life() {
+    for (;;) {
+      // appear somewhere new
+      const [sx, sy] = randomSpot();
+      place(sx, sy);
+      look(0);
+      await sleep(60);
+      pop.classList.remove('out');
+      await sleep(500);
+
+      // wander a few times
+      const hops = rint(...CONFIG.hopsBeforeVanish);
+      for (let i = 0; i < hops; i++) {
+        await sleep(rnd(...CONFIG.pauseFor));
+        const [tx, ty] = randomSpot();
+        await walkTo(tx, ty);
+      }
+      await sleep(rnd(...CONFIG.pauseFor));
+
+      // vanish
+      pop.classList.add('out');
+      await sleep(rnd(...CONFIG.hiddenFor));
+    }
+  }
+
+  // keep it inside the viewport if the window shrinks
+  addEventListener('resize', () => {
+    const [mx, my] = [innerWidth - CONFIG.size - CONFIG.edge, innerHeight - CONFIG.size - CONFIG.edge];
+    if (x > mx || y > my) place(Math.min(x, mx), Math.min(y, my));
+  });
+
+  life();
+})();
+</script>
+</body>
+</html>
