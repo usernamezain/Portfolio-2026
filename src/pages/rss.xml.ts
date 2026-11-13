@@ -11,7 +11,7 @@ export async function GET(context: APIContext) {
   return rss({
     title: 'Zain Ali Developer (zainalidev) | Engineering & Vibe Coding Notes',
     description: 'Technical essays, architectural breakdowns, AI engineering, Vibe Coding, and WebGL physics by Zain Ali Mughal.',
-    site: context.site || 'https://zainalidev.com',
+    site: context.site || 'https://zaindev.me',
     items: sortedPosts.map((post) => ({
       title: post.data.title,
       pubDate: post.data.pubDate,
@@ -23,9 +23,9 @@ export async function GET(context: APIContext) {
     customData: `
       <language>en-us</language>
       <copyright>Copyright © ${new Date().getFullYear()} Zain Ali Mughal (zainalidev). All rights reserved.</copyright>
-      <managingEditor>me@zainalidev.com (Zain Ali Mughal)</managingEditor>
-      <webMaster>me@zainalidev.com (Zain Ali Mughal)</webMaster>
-      <atom:link href="https://zainalidev.com/rss.xml" rel="self" type="application/rss+xml" xmlns:atom="http://www.w3.org/2005/Atom" />
+      <managingEditor>me@zaindev.me (Zain Ali Mughal)</managingEditor>
+      <webMaster>me@zaindev.me (Zain Ali Mughal)</webMaster>
+      <atom:link href="https://zaindev.me/rss.xml" rel="self" type="application/rss+xml" xmlns:atom="http://www.w3.org/2005/Atom" />
     `,
   });
 }

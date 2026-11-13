@@ -21,7 +21,7 @@ const formattedDate = new Date(post.data.pubDate).toLocaleDateString('en-US', {
   day: 'numeric',
 });
 
-const postUrl = `https://zainalidev.com/blog/${post.id}/`;
+const postUrl = `https://zaindev.me/blog/${post.id}/`;
 const articleTitle = `${post.data.title} | Zain Ali Developer (zainalidev)`;
 
 // Comprehensive Rich Schema Graph (TechArticle + BreadcrumbList + FAQPage for #1 Search Snippets)
@@ -38,15 +38,15 @@ const articleSchemaGraph = {
       "inLanguage": "en-US",
       "author": {
         "@type": "Person",
-        "@id": "https://zainalidev.com/#person",
+        "@id": "https://zaindev.me/#person",
         "name": post.data.author,
-        "url": "https://zainalidev.com"
+        "url": "https://zaindev.me"
       },
       "publisher": {
         "@type": "Person",
-        "@id": "https://zainalidev.com/#person",
+        "@id": "https://zaindev.me/#person",
         "name": "Zain Ali Mughal",
-        "url": "https://zainalidev.com"
+        "url": "https://zaindev.me"
       },
       "mainEntityOfPage": {
         "@type": "WebPage",
@@ -55,7 +55,7 @@ const articleSchemaGraph = {
       "keywords": post.data.tags.join(', '),
       "articleSection": "Software Engineering & AI Architecture",
       "isAccessibleForFree": true,
-      "image": "https://zainalidev.com/og-image.png"
+      "image": "https://zaindev.me/og-image.png"
     },
     {
       "@type": "BreadcrumbList",
@@ -65,13 +65,13 @@ const articleSchemaGraph = {
           "@type": "ListItem",
           "position": 1,
           "name": "Home",
-          "item": "https://zainalidev.com/"
+          "item": "https://zaindev.me/"
         },
         {
           "@type": "ListItem",
           "position": 2,
           "name": "Blog",
-          "item": "https://zainalidev.com/blog/"
+          "item": "https://zaindev.me/blog/"
         },
         {
           "@type": "ListItem",

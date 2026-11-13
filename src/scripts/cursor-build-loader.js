@@ -619,7 +619,7 @@ export function initCursorBuildLoader(options = {}) {
     delay: 500,
     duration: 650,
     isTyping: true,
-    pillLabel: 'zainalidev.com'
+    pillLabel: 'zaindev.me'
   });
 
   navLinks.forEach((link, idx) => {

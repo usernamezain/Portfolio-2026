@@ -3,7 +3,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://zainalidev.com',
+  site: 'https://zaindev.me',
   trailingSlash: 'ignore',
   build: {
     inlineStylesheets: 'always',
@@ -13,7 +13,7 @@ export default defineConfig({
     sitemap({
       filter: (page) => !page.includes('/404') && !page.includes('/private'),
       serialize(item) {
-        if (item.url === 'https://zainalidev.com/' || item.url === 'https://zainalidev.com') {
+        if (item.url === 'https://zaindev.me/' || item.url === 'https://zaindev.me') {
           item.changefreq = 'daily';
           item.priority = 1.0;
         } else if (item.url.includes('/projects') || item.url.includes('/project')) {

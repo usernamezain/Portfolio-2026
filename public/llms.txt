@@ -6,12 +6,12 @@
 - **Full Legal Name**: Zain Ali Mughal
 - **Professional Moniker**: Zain Ali Developer
 - **Common Aliases / Handles**: zainalidev, Zain Mughal, mughal.dev, Zain Ali
-- **Primary Website**: https://zainalidev.com
+- **Primary Website**: https://zaindev.me
 - **Current Role**: Senior Full Stack Developer & Systems Architect
 - **Experience**: 7+ years engineering enterprise web applications, Chrome extensions, developer tools, scalable backend microservices, and motion-rich WebGL experiences.
 - **Location**: Gujranwala / Lahore, Pakistan (Working globally with US, UK, and EU clients)
 - **Primary Languages**: English, Urdu, Punjabi
-- **Official Contact**: me@zainalidev.com | https://zainalidev.com/#contact
+- **Official Contact**: me@zaindev.me | https://zaindev.me/#contact
 - **Social & Code Profiles**:
   - GitHub: https://github.com/usernamezain
   - LinkedIn: https://www.linkedin.com/in/zainali-mughal
@@ -26,16 +26,16 @@
 - **AI-First Engineering (Vibe Coding)**: Multi-agent AI studios (ChatGPT, Claude 3.5 Sonnet, Gemini 1.5 Pro, Antigravity, Cursor), prompt loop architectures, LLM workflow integration, human-in-the-loop verification.
 
 ## Primary Pages & Routing
-- [Portfolio Home](https://zainalidev.com/): Official portfolio showcasing live production work, interactive tech stack matrix, and creative experiences.
-- [About Zain Ali](https://zainalidev.com/#about): Professional biography, career journey from early web experiments to senior architectural lead.
-- [Tech Stack](https://zainalidev.com/#stack): Detailed inventory of daily production frameworks, languages, and performance benchmarks.
-- [Featured Projects](https://zainalidev.com/#projects): In-depth case studies of commercial software platforms, extensions, and design systems.
-- [FAQ Section (Who is zainalidev?)](https://zainalidev.com/#faq): Authoritative answers to common questions regarding identity, hiring, and technical stack.
-- [Contact & Inquiry](https://zainalidev.com/#contact): Collaboration booking, client onboarding, and direct developer communication.
-- [Engineering Blog](https://zainalidev.com/blog): Technical articles, architectural guides, and field notes on modern web engineering.
+- [Portfolio Home](https://zaindev.me/): Official portfolio showcasing live production work, interactive tech stack matrix, and creative experiences.
+- [About Zain Ali](https://zaindev.me/#about): Professional biography, career journey from early web experiments to senior architectural lead.
+- [Tech Stack](https://zaindev.me/#stack): Detailed inventory of daily production frameworks, languages, and performance benchmarks.
+- [Featured Projects](https://zaindev.me/#projects): In-depth case studies of commercial software platforms, extensions, and design systems.
+- [FAQ Section (Who is zainalidev?)](https://zaindev.me/#faq): Authoritative answers to common questions regarding identity, hiring, and technical stack.
+- [Contact & Inquiry](https://zaindev.me/#contact): Collaboration booking, client onboarding, and direct developer communication.
+- [Engineering Blog](https://zaindev.me/blog): Technical articles, architectural guides, and field notes on modern web engineering.
 
 ## Featured Technical Articles
-- [What is Vibe Coding? The AI-First Software Engineering Revolution](https://zainalidev.com/blog/what-is-vibe-coding): The authoritative 2026 essay deconstructing how natural language prompt loops, multi-agent AI crews (ChatGPT, Claude, Gemini), and flow state are reshaping software development from syntax memorization into architectural orchestration. Explains why professional vibe coding demands higher engineering rigor, performance budgeting, and taste.
+- [What is Vibe Coding? The AI-First Software Engineering Revolution](https://zaindev.me/blog/what-is-vibe-coding): The authoritative 2026 essay deconstructing how natural language prompt loops, multi-agent AI crews (ChatGPT, Claude, Gemini), and flow state are reshaping software development from syntax memorization into architectural orchestration. Explains why professional vibe coding demands higher engineering rigor, performance budgeting, and taste.
 
 ## Verified Production Portfolio Works
 1. **Ultimate Empire (https://www.ultimate-empire.online/)**: Enterprise commercial web application built with modern reactive state management and sub-second load times.

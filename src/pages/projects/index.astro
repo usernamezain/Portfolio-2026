@@ -11,7 +11,7 @@ const openSourceCount = allProjects.filter((p) => p.category === 'Open Source Pr
 
 const seoTitle = "Projects & Engineering Portfolio | Zain Ali Developer (zainalidev)";
 const seoDesc = "Explore verified production software, Manifest V3 Chrome extensions, full-stack platforms, developer tools, and WebGL experiences engineered by Zain Ali Mughal.";
-const projectsCanonicalUrl = "https://zainalidev.com/projects/";
+const projectsCanonicalUrl = "https://zaindev.me/projects/";
 
 // Structured Data Schema for #1 Ranking in Google Search (CollectionPage + BreadcrumbList + ItemList)
 const projectsSchema = {
@@ -19,26 +19,26 @@ const projectsSchema = {
   "@graph": [
     {
       "@type": "CollectionPage",
-      "@id": "https://zainalidev.com/projects/#page",
+      "@id": "https://zaindev.me/projects/#page",
       "url": projectsCanonicalUrl,
       "name": seoTitle,
       "description": seoDesc,
       "publisher": {
         "@type": "Person",
-        "@id": "https://zainalidev.com/#person",
+        "@id": "https://zaindev.me/#person",
         "name": "Zain Ali Mughal",
-        "url": "https://zainalidev.com"
+        "url": "https://zaindev.me"
       }
     },
     {
       "@type": "BreadcrumbList",
-      "@id": "https://zainalidev.com/projects/#breadcrumb",
+      "@id": "https://zaindev.me/projects/#breadcrumb",
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
           "name": "Home",
-          "item": "https://zainalidev.com/"
+          "item": "https://zaindev.me/"
         },
         {
           "@type": "ListItem",
@@ -50,7 +50,7 @@ const projectsSchema = {
     },
     {
       "@type": "ItemList",
-      "@id": "https://zainalidev.com/projects/#list",
+      "@id": "https://zaindev.me/projects/#list",
       "name": "Featured Software Projects by Zain Ali Developer",
       "itemListElement": allProjects.map((project, idx) => ({
         "@type": "ListItem",

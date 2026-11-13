@@ -14,7 +14,7 @@
   <!-- Content Box -->
   <g transform="translate(100, 140)">
     <rect width="140" height="34" rx="17" fill="rgba(110, 168, 254, 0.12)" stroke="rgba(110, 168, 254, 0.3)" />
-    <text x="70" y="22" font-family="monospace" font-size="14" font-weight="600" fill="#6ea8fe" text-anchor="middle">zainalidev.com</text>
+    <text x="70" y="22" font-family="monospace" font-size="14" font-weight="600" fill="#6ea8fe" text-anchor="middle">zaindev.me</text>
 
     <text x="0" y="110" font-family="system-ui, -apple-system, sans-serif" font-size="54" font-weight="800" fill="#ffffff" letter-spacing="-1.5">
       Zain Ali Mughal

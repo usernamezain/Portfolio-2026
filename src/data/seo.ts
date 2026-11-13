@@ -17,12 +17,12 @@ export interface SEOConfig {
 }
 
 export const seoConfig: SEOConfig = {
-  siteUrl: "https://zainalidev.com",
+  siteUrl: "https://zaindev.me",
   siteName: "Zain Ali Developer (zainalidev) | Official Portfolio",
   defaultTitle: "Zain Ali Developer (zainalidev) | Senior Full Stack Developer & Creative Technologist",
   titleTemplate: "%s | Zain Ali Developer",
   defaultDescription: "Official portfolio of Zain Ali Developer (zainalidev / Zain Ali Mughal). Senior Full Stack Developer with 7+ years of experience engineering scalable web platforms, custom Chrome extensions, developer tools, React, Next.js, Node.js, and 3D WebGL experiences optimized for 100/100 Core Web Vitals.",
-  canonicalUrl: "https://zainalidev.com",
+  canonicalUrl: "https://zaindev.me",
   author: "Zain Ali Mughal",
   handle: "@zainalidev",
   keywords: [
@@ -38,6 +38,7 @@ export const seoConfig: SEOConfig = {
     "Zain Ali Mughal Dev",
     "mughal dev",
     "mughal.dev",
+    "zaindev.me",
     "who is zain ali mughal dev",
     // Vibe Coding & Modern AI-First Engineering
     "what is vibe coding",
@@ -61,7 +62,7 @@ export const seoConfig: SEOConfig = {
     "core web vitals optimization expert",
     "high performance frontend developer"
   ],
-  ogImage: "https://zainalidev.com/og-image.png",
+  ogImage: "https://zaindev.me/og-image.png",
   social: {
     github: "https://github.com/usernamezain",
     linkedin: "https://www.linkedin.com/in/zainali-mughal",
@@ -79,7 +80,7 @@ export function generateStructuredData() {
     "@graph": [
       {
         "@type": "Person",
-        "@id": "https://zainalidev.com/#person",
+        "@id": "https://zaindev.me/#person",
         "name": "Zain Ali Mughal",
         "alternateName": [
           "zainalidev",
@@ -88,7 +89,8 @@ export function generateStructuredData() {
           "Zain Mughal",
           "Zain Ali",
           "mughal.dev",
-          "Mughal Dev"
+          "Mughal Dev",
+          "zaindev.me"
         ],
         "givenName": "Zain",
         "familyName": "Ali Mughal",
@@ -96,10 +98,10 @@ export function generateStructuredData() {
         "jobTitle": "Senior Full Stack Developer & Creative Software Architect",
         "disambiguatingDescription": "Zain Ali Developer (zainalidev / Zain Ali Mughal) is a Senior Full Stack Engineer with 7+ years of experience engineering scalable web platforms, Chrome extensions, developer tools, and motion-rich WebGL/GSAP applications.",
         "description": "Zain Ali Developer (zainalidev / Zain Ali Mughal) is an experienced Senior Full Stack Developer and Creative Technologist specializing in React, Next.js, Node.js, TypeScript, Astro, WebGL, and high-performance zero-layout-shift architectures.",
-        "url": "https://zainalidev.com",
+        "url": "https://zaindev.me",
         "image": {
           "@type": "ImageObject",
-          "url": "https://zainalidev.com/og-image.png",
+          "url": "https://zaindev.me/og-image.png",
           "caption": "Zain Ali Developer (zainalidev) Official Identity"
         },
         "sameAs": [
@@ -107,7 +109,7 @@ export function generateStructuredData() {
           "https://www.linkedin.com/in/zainali-mughal",
           "https://x.com/zainalidev",
           "https://www.ultimate-empire.online/",
-          "https://mughal-dev-web-portfolio.vercel.app/"
+          "https://zaindev.me"
         ],
         "knowsAbout": [
           "Full Stack Web Development",
@@ -141,45 +143,46 @@ export function generateStructuredData() {
       },
       {
         "@type": "WebSite",
-        "@id": "https://zainalidev.com/#website",
-        "url": "https://zainalidev.com",
+        "@id": "https://zaindev.me/#website",
+        "url": "https://zaindev.me",
         "name": "Zain Ali Developer (zainalidev) Official Website",
         "alternateName": [
           "zainalidev",
           "Zain Ali Dev",
+          "zaindev.me",
           "Zain Ali Developer Portfolio",
           "Zain Ali Mughal Dev Portfolio"
         ],
         "description": "Official website and creative developer portfolio of Zain Ali Mughal (zainalidev). Featuring verified software case studies, interactive tech stack, and engineering notes.",
         "publisher": {
-          "@id": "https://zainalidev.com/#person"
+          "@id": "https://zaindev.me/#person"
         },
         "inLanguage": "en-US",
         "potentialAction": {
           "@type": "SearchAction",
           "target": {
             "@type": "EntryPoint",
-            "urlTemplate": "https://zainalidev.com/blog?q={search_term_string}"
+            "urlTemplate": "https://zaindev.me/blog?q={search_term_string}"
           },
           "query-input": "required name=search_term_string"
         }
       },
       {
         "@type": "ProfilePage",
-        "@id": "https://zainalidev.com/#profilepage",
-        "url": "https://zainalidev.com",
+        "@id": "https://zaindev.me/#profilepage",
+        "url": "https://zaindev.me",
         "name": "About Zain Ali Developer (zainalidev / Zain Ali Mughal)",
         "isPartOf": {
-          "@id": "https://zainalidev.com/#website"
+          "@id": "https://zaindev.me/#website"
         },
         "mainEntity": {
-          "@id": "https://zainalidev.com/#person"
+          "@id": "https://zaindev.me/#person"
         },
         "description": "Full portfolio, verified production work, and technical biography of creative software engineer Zain Ali."
       },
       {
         "@type": "FAQPage",
-        "@id": "https://zainalidev.com/#faq",
+        "@id": "https://zaindev.me/#faq",
         "mainEntity": [
           {
             "@type": "Question",
@@ -218,7 +221,7 @@ export function generateStructuredData() {
             "name": "How can I contact or hire Zain Ali Developer?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "You can contact Zain Ali directly via email at me@zainalidev.com or submit a collaboration inquiry through the interactive contact section at https://zainalidev.com/#contact."
+              "text": "You can contact Zain Ali directly via email at me@zaindev.me or submit a collaboration inquiry through the interactive contact section at https://zaindev.me/#contact."
             }
           }
         ]

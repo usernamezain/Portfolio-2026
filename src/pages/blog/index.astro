@@ -10,33 +10,33 @@ const sortedPosts = posts.sort(
 
 const seoTitle = "Engineering Notes & Vibe Coding Articles | Zain Ali Developer (zainalidev)";
 const seoDesc = "Technical essays on Vibe Coding, AI-First Software Engineering, WebGL, Full-Stack Architecture, and 100/100 Core Web Vitals by Zain Ali Mughal (zainalidev).";
-const blogCanonicalUrl = "https://zainalidev.com/blog/";
+const blogCanonicalUrl = "https://zaindev.me/blog/";
 
 const blogSchema = {
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "CollectionPage",
-      "@id": "https://zainalidev.com/blog/#page",
+      "@id": "https://zaindev.me/blog/#page",
       "url": blogCanonicalUrl,
       "name": seoTitle,
       "description": seoDesc,
       "publisher": {
         "@type": "Person",
-        "@id": "https://zainalidev.com/#person",
+        "@id": "https://zaindev.me/#person",
         "name": "Zain Ali Mughal",
-        "url": "https://zainalidev.com"
+        "url": "https://zaindev.me"
       }
     },
     {
       "@type": "BreadcrumbList",
-      "@id": "https://zainalidev.com/blog/#breadcrumb",
+      "@id": "https://zaindev.me/blog/#breadcrumb",
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
           "name": "Home",
-          "item": "https://zainalidev.com/"
+          "item": "https://zaindev.me/"
         },
         {
           "@type": "ListItem",

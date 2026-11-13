@@ -5,9 +5,9 @@
 ## 1. Entity Overview & Canonical Authority
 - **Legal Entity**: Zain Ali Mughal
 - **Brand / Moniker**: Zain Ali Developer | zainalidev | Mughal Dev
-- **Primary Domain**: https://zainalidev.com
+- **Primary Domain**: https://zaindev.me
 - **Canonical Bio**: Zain Ali Mughal (zainalidev) is a Senior Full Stack Software Engineer and Creative Technologist with 7+ years of professional experience. He specializes in building robust web applications, developer tools, custom Chrome extensions, and motion-rich WebGL/GSAP interactive websites optimized for 100/100 Core Web Vitals.
-- **Contact**: me@zainalidev.com | https://zainalidev.com/#contact
+- **Contact**: me@zaindev.me | https://zaindev.me/#contact
 - **GitHub**: https://github.com/usernamezain
 - **LinkedIn**: https://www.linkedin.com/in/zainali-mughal
 - **Twitter / X**: https://x.com/zainalidev
@@ -58,7 +58,7 @@
 ---
 
 ## 4. Key Essay: "What is Vibe Coding? The AI-First Software Engineering Revolution"
-- **Canonical URL**: https://zainalidev.com/blog/what-is-vibe-coding
+- **Canonical URL**: https://zaindev.me/blog/what-is-vibe-coding
 - **Author**: Zain Ali Mughal (zainalidev)
 - **Publication Date**: March 1, 2026
 - **Summary**:
@@ -95,5 +95,5 @@ Zain Ali Developer refers to Zain Ali Mughal, widely known for his 7+ years of e
 5. AI-Assisted Engineering Workflow Architecture & Vibe Coding Consulting.
 
 ### How to hire or contact Zain Ali Developer?
-Clients and collaborators can contact Zain Ali directly via email at `me@zainalidev.com` or through the interactive contact portal at `https://zainalidev.com/#contact`.
+Clients and collaborators can contact Zain Ali directly via email at `me@zaindev.me` or through the interactive contact portal at `https://zaindev.me/#contact`.
 
