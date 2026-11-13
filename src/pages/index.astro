@@ -7,9 +7,19 @@ import Projects from '../components/sections/Projects.astro';
 import FaqKnowledge from '../components/sections/FaqKnowledge.astro';
 import Blog from '../components/sections/Blog.astro';
 import Contact from '../components/sections/Contact.astro';
+
+const homeTitle = "Zain Ali Developer (zainalidev) | Senior Full Stack Developer & Creative Technologist";
+const homeDesc = "Official portfolio of Zain Ali Developer (zainalidev / Zain Ali Mughal). Senior Full Stack Developer with 7+ years of experience engineering scalable web platforms, custom Chrome extensions, developer tools, React, Next.js, Node.js, and 3D WebGL experiences optimized for 100/100 Core Web Vitals.";
+const homeCanonical = "https://zainalidev.com/";
 ---
 
-<Layout>
+<Layout
+  title={homeTitle}
+  description={homeDesc}
+  canonicalUrl={homeCanonical}
+  isHome={true}
+  type="profile"
+>
   <Hero />
   <About />
   <TechStack />

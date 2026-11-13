@@ -90,6 +90,17 @@ html {
   -webkit-text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
   scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE / legacy Edge */
+}
+
+/* Hide default browser scrollbars completely */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 html.lenis, html.lenis body {
@@ -112,6 +123,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE / legacy Edge */
 }
 
 h1, h2, h3, h4, p, ul, ol, figure {
@@ -173,19 +186,21 @@ p a:hover, .link:hover {
   padding: 0 var(--gutter);
 }
 
-/* Reading Progress Bar */
+/* Reading Progress Bar (Top Scroll Indicator) */
 .progress-bar {
   will-change: transform;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+  height: 3px;
+  background: linear-gradient(90deg, #6ea8fe, #a855f7, #22d3ee);
+  box-shadow: 0 0 12px rgba(110, 168, 254, 0.75), 0 0 4px rgba(168, 85, 247, 0.5);
   transform: scaleX(0);
   transform-origin: left;
-  z-index: 90;
+  z-index: 999999;
   pointer-events: none;
+  transition: opacity 200ms ease;
 }
 
 /* Typography Helpers */
@@ -408,4 +423,10 @@ section {
     animation: none !important;
   }
 }
+
+/* ---------- PROXIMITY TEXT: required CSS ---------- */
+[data-prox] { position: relative; user-select: none; }
+[data-prox] .pw { display: inline-block; white-space: nowrap; }
+[data-prox] .pc { display: inline-block; will-change: transform; }
+
 

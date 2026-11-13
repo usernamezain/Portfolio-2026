@@ -1,8 +1,13 @@
 ---
 import Icon from '../common/Icon.astro';
+
+const currentPath = Astro.url.pathname;
+const isProjectsActive = currentPath.startsWith('/projects') || currentPath.startsWith('/project');
+const isBlogActive = currentPath.startsWith('/blog');
+const isReviewsActive = currentPath.startsWith('/reviews');
 ---
 
-<header class="nav" id="navigation" role="banner">
+<header class="nav" id="navigation" role="banner" data-cb-auto>
   <div class="container nav-container">
     <a class="brand" href="/" aria-label="Zain Ali Developer, back to top">
       <span class="brand-name">zainalidev</span>
@@ -11,10 +16,11 @@ import Icon from '../common/Icon.astro';
 
     <div class="nav-right">
       <nav class="nav-links" aria-label="Primary Navigation">
-        <a href="/#projects">Projects</a>
+        <a href="/projects" aria-current={isProjectsActive ? 'page' : undefined}>Projects</a>
+        <a href="/reviews" aria-current={isReviewsActive ? 'page' : undefined}>Reviews</a>
         <a href="/#stack">Stack</a>
         <a href="/#about">About</a>
-        <a href="/blog">Blog</a>
+        <a href="/blog" aria-current={isBlogActive ? 'page' : undefined}>Blog</a>
         <a href="/#faq">FAQ</a>
         <a href="/#contact">Contact</a>
       </nav>
@@ -92,11 +98,13 @@ import Icon from '../common/Icon.astro';
   }
 
   .nav-links a:hover,
-  .nav-links a[aria-current="true"] {
+  .nav-links a[aria-current="true"],
+  .nav-links a[aria-current="page"] {
     color: var(--t1);
   }
 
-  .nav-links a[aria-current="true"] {
+  .nav-links a[aria-current="true"],
+  .nav-links a[aria-current="page"] {
     border-bottom: 2px solid var(--accent);
   }
 

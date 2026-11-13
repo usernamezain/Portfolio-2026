@@ -20,21 +20,24 @@ const sortedPosts = posts.sort(
     </div>
     
     <p class="blog-intro" data-reveal>
-      Practical guides on animation synchronization, Core Web Vitals, and modern frontend architecture.
+      Deep dives on AI-first software engineering, vibe coding architectures, and modern full-stack systems.
     </p>
 
     <ul class="blog-list">
       {sortedPosts.map((post) => (
         <li class="blog-item" data-reveal>
-          <a href={`/blog/${post.id}`} class="blog-row-link">
+          <a href={`/blog/${post.id}/`} class="blog-row-link">
             <div class="blog-header">
               <h3 class="blog-row-title">{post.data.title}</h3>
               <span class="post-tag">{post.data.status}</span>
             </div>
             <p class="blog-body">{post.data.description}</p>
             <div class="blog-footer">
-              <span class="mono">{post.data.readTime}</span>
-              <span class="read-more-hint">Read article →</span>
+              <span class="mono read-time">{post.data.readTime}</span>
+              <span class="read-article-btn">
+                <span>Read article</span>
+                <span class="btn-arrow" aria-hidden="true">→</span>
+              </span>
             </div>
           </a>
         </li>
@@ -81,6 +84,7 @@ const sortedPosts = posts.sort(
   }
 
   .blog-item {
+    width: 100%;
     border-bottom: 1px solid var(--divider);
   }
 
@@ -90,6 +94,7 @@ const sortedPosts = posts.sort(
 
   .blog-row-link {
     display: block;
+    width: 100%;
     padding: var(--s5) 0;
     text-decoration: none;
     transition: transform 160ms var(--ease);
@@ -104,6 +109,7 @@ const sortedPosts = posts.sort(
     justify-content: space-between;
     align-items: baseline;
     gap: var(--s4);
+    width: 100%;
   }
 
   .blog-row-title {
@@ -138,16 +144,45 @@ const sortedPosts = posts.sort(
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
   }
 
-  .read-more-hint {
+  .read-time {
     font-size: 12px;
     color: var(--t3);
-    transition: color 160ms var(--ease);
   }
 
-  .blog-row-link:hover .read-more-hint {
+  .read-article-btn {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--t2);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 160ms var(--ease), border-color 160ms var(--ease), color 160ms var(--ease), transform 160ms var(--ease), box-shadow 160ms var(--ease);
+  }
+
+  .btn-arrow {
+    display: inline-block;
+    transition: transform 160ms var(--ease);
+  }
+
+  .blog-row-link:hover .read-article-btn {
+    background: var(--card-hover);
+    border-color: var(--accent);
     color: var(--accent);
+    transform: translateX(2px);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.35), 0 0 10px var(--accent-glow);
+  }
+
+  .blog-row-link:hover .read-article-btn .btn-arrow {
+    transform: translateX(3px);
   }
 
   @media (max-width: 600px) {

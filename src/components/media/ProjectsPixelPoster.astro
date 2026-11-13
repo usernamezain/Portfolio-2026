@@ -1,0 +1,68 @@
+---
+/**
+ * ProjectsPixelPoster.astro
+ * Animated Pixel-Art Video Poster Component for Projects Page
+ * Powered by pixel-motion-studio engine.
+ */
+---
+
+<div class="projects-poster-card" data-hero>
+  <div id="projects-pixel-poster" role="img" aria-label="Projects & Systems Lab — Verified Production Works"></div>
+</div>
+
+<script>
+  import { initProjectsPixelPoster } from '../../scripts/projects-pixel-poster';
+
+  function launch() {
+    initProjectsPixelPoster('#projects-pixel-poster');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', launch);
+  } else {
+    launch();
+  }
+
+  document.addEventListener('astro:page-load', launch);
+</script>
+
+<style>
+  .projects-poster-card {
+    position: relative;
+    width: 100%;
+    margin-bottom: var(--s8);
+    border-radius: var(--r-lg, 12px);
+    overflow: hidden;
+    background: rgba(56, 189, 248, 0.03);
+    border: 1px solid rgba(56, 189, 248, 0.22);
+    box-shadow: 0 4px 24px -2px rgba(56, 189, 248, 0.12);
+    box-sizing: border-box;
+    transition: border-color 200ms ease, box-shadow 200ms ease;
+  }
+
+  .projects-poster-card:hover {
+    border-color: rgba(56, 189, 248, 0.45);
+    box-shadow: 0 8px 32px -4px rgba(56, 189, 248, 0.22);
+  }
+
+  html[data-theme="light"] .projects-poster-card {
+    background: rgba(2, 132, 199, 0.02);
+    border-color: rgba(2, 132, 199, 0.2);
+    box-shadow: 0 4px 20px -2px rgba(2, 132, 199, 0.08);
+  }
+
+  #projects-pixel-poster {
+    width: 100%;
+    display: block;
+    line-height: 0;
+  }
+
+  #projects-pixel-poster :global(canvas) {
+    display: block;
+    width: 100% !important;
+    height: auto !important;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+</style>
+

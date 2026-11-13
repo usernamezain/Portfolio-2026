@@ -1,0 +1,27 @@
+---
+import '../../styles/cursor-build.css';
+---
+
+<div id="cb-loader-root" aria-hidden="true"></div>
+
+<script>
+  import { initCursorBuildLoader } from '../../scripts/cursor-build-loader';
+
+  function runLoader() {
+    const p = window.location.pathname.replace(/\/$/, '') || '/';
+    const isHome = p === '/' || p.endsWith('/index.html');
+    const hero = document.querySelector('#top');
+    if (!isHome || !hero) {
+      document.body.classList.remove('cb-loading');
+      return;
+    }
+    initCursorBuildLoader();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runLoader);
+  } else {
+    runLoader();
+  }
+</script>
+

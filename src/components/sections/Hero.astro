@@ -1,23 +1,31 @@
 ---
 import Icon from '../common/Icon.astro';
-import Avatar from '../media/Avatar.astro';
 import { portfolioData } from '../../data/portfolio';
 ---
 
-<section class="hero" id="top" aria-label="Introduction">
-  <div class="container">
-    <!-- Header & Avatar with Media Optimization -->
+<section class="hero" id="top" aria-label="Introduction" data-cb-auto>
+  <div class="container hero-container">
+    <!-- Animated Pixel Workstation Header Video -->
+    <div class="hero-pixel-banner" data-hero>
+      <div id="zain-pixel-header" role="img" aria-label="Zain Ali — Developer, Creative, Motion Designer"></div>
+    </div>
+
+    <!-- Header & Title (Circular avatar removed per design request) -->
     <div class="hero-head" data-hero>
-      <Avatar size={72} />
       <div class="hero-title-wrap">
-        <h1 class="hero-name">Zain Ali Mughal</h1>
-        <p class="role">Creative Developer &amp; Frontend Engineer <span class="handle">(@{portfolioData.handle})</span></p>
+        <h1 class="hero-name" data-prox>Zain Ali Mughal</h1>
+        <p class="role">Full Stack Developer &bull; 7+ Years Exp <span class="handle">(@{portfolioData.handle})</span></p>
       </div>
     </div>
 
     <!-- Lede Paragraph -->
     <p class="lede" data-hero>
-      I engineer high-speed Astro websites, interactive landing pages, and motion-rich digital experiences. Built with <strong>React</strong>, <strong>GSAP</strong>, <strong>Anime.js</strong>, and <strong>Three.js</strong> — optimized for 100/100 Core Web Vitals and zero layout shift.
+      <span class="lede-desktop">
+        Full Stack Developer with 7+ years of experience engineering scalable software, custom Chrome extensions, developer tools, and motion-rich WebGL experiences. Built with <strong>React</strong>, <strong>Next.js</strong>, <strong>Node.js</strong>, <strong>TypeScript</strong>, and <strong>GSAP</strong> — optimized for 100/100 Core Web Vitals and zero layout shift.
+      </span>
+      <span class="lede-mobile">
+        Engineering scalable software, custom dev tools, and motion-rich WebGL experiences with <strong>React</strong>, <strong>Next.js</strong>, <strong>Node.js</strong>, and <strong>GSAP</strong>.
+      </span>
     </p>
 
     <!-- Call to Actions -->
@@ -33,19 +41,99 @@ import { portfolioData } from '../../data/portfolio';
         <span>Who is zainalidev?</span>
       </a>
     </div>
+
+    <!-- Scroll Marquee Text Band (Strictly inside Container Boundaries, Brought Lower Down) -->
+    <div class="hero-marquee-wrap" aria-hidden="true" data-hero>
+      <!-- Row 1: Solid Typography + Tech Stack Icons (drifts left, reacts to scroll) -->
+      <div class="hero-marquee-row row-solid" data-marquee data-speed="36">
+        <span>Creative</span>
+        <img src="/icons/javascript.svg" alt="JavaScript" class="mq-tech-icon" />
+        <span>Developer</span>
+        <img src="/icons/nodejs.svg" alt="Node.js" class="mq-tech-icon" />
+        <span>Problem Solving</span>
+        <img src="/icons/react.svg" alt="React" class="mq-tech-icon" />
+        <span>Full Stack Architect</span>
+        <img src="/icons/typescript.svg" alt="TypeScript" class="mq-tech-icon" />
+        <span>Scalable Systems</span>
+      </div>
+
+      <!-- Row 2: Outlined Typography + Creative/3D Motion Icons (drifts right, reverses on scroll up) -->
+      <div class="hero-marquee-row row-outline" data-marquee data-dir="1" data-speed="32" data-outline>
+        <span>Motion Physics</span>
+        <img src="/icons/aftereffects.svg" alt="After Effects" class="mq-tech-icon" />
+        <span>3D Experiences</span>
+        <img src="/icons/blender.svg" alt="Blender" class="mq-tech-icon" />
+        <span>WebGL &amp; GSAP</span>
+        <img src="/icons/threejs.svg" alt="Three.js" class="mq-tech-icon" />
+        <span>Interactive Creativity</span>
+        <span>Clean Code</span>
+      </div>
+    </div>
   </div>
 </section>
 
 <style>
   .hero {
-    padding: var(--s20) 0 var(--s16);
+    min-height: calc(100svh - var(--nav-h, 60px));
+    min-height: calc(100vh - var(--nav-h, 60px));
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-top: var(--s6);
+    padding-bottom: var(--s4);
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
+  .hero-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    margin-top: 0;
+  }
+
+  /* Retro Pixel Workstation Header Video Banner */
+  .hero-pixel-banner {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: var(--s8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--r-md, 10px);
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+    box-sizing: border-box;
+    transition: background-color 200ms ease, border-color 200ms ease;
+  }
+
+  html[data-theme="light"] .hero-pixel-banner {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+  }
+
+  #zain-pixel-header {
+    width: 100%;
+    display: block;
+    line-height: 0;
+  }
+
+  #zain-pixel-header :global(canvas) {
+    display: block;
+    width: 100% !important;
+    height: auto !important;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
   }
 
   .hero-head {
     display: flex;
     align-items: center;
-    gap: var(--s5);
-    margin-bottom: var(--s6);
+    gap: var(--s4);
+    margin-bottom: var(--s4);
   }
 
   .hero-title-wrap {
@@ -77,7 +165,15 @@ import { portfolioData } from '../../data/portfolio';
     font-size: 16px;
     line-height: 1.65;
     color: var(--t2);
-    margin-bottom: var(--s8);
+    margin-bottom: var(--s5);
+  }
+
+  .lede-desktop {
+    display: inline;
+  }
+
+  .lede-mobile {
+    display: none;
   }
 
   .lede strong {
@@ -91,13 +187,338 @@ import { portfolioData } from '../../data/portfolio';
     gap: var(--s3);
   }
 
-  @media (max-width: 600px) {
+  /* =====================================================
+     HERO SCROLL MARQUEE WRAPPER (Contained in blue boundary, brought down)
+     ===================================================== */
+  .hero-marquee-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin-top: auto;
+    margin-bottom: 0;
+    padding-top: var(--s6);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    pointer-events: auto;
+    user-select: none;
+    box-sizing: border-box;
+  }
+
+  .hero-marquee-row {
+    font-family: var(--font-sans);
+    font-size: clamp(19px, 2.8vw, 30px);
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+  }
+
+  .hero-marquee-row.row-solid {
+    color: var(--t1);
+    --mq-dot: var(--accent);
+  }
+
+  .hero-marquee-row.row-outline {
+    --mq-stroke-w: 1.5px;
+    --mq-stroke: rgba(255, 255, 255, 0.32);
+    --mq-dot: var(--accent);
+  }
+
+  html[data-theme="light"] .hero-marquee-row.row-outline {
+    --mq-stroke: rgba(0, 0, 0, 0.28);
+  }
+
+  /* =====================================================
+     SCROLL MARQUEE: REQUIRED CSS (from skill)
+     ===================================================== */
+  .mq-clip { overflow: hidden; width: 100%; }
+  [data-marquee] { display: flex; align-items: center; width: max-content; white-space: nowrap; will-change: transform; }
+  [data-marquee] > * { flex: none; margin-right: 0.45em; }
+  [data-marquee] > span { display: inline-flex; align-items: center; gap: 0.45em; }
+  [data-marquee] > span::after { content: ""; width: 0.28em; height: 0.28em; border-radius: 50%; background: var(--mq-dot, currentColor); }
+  [data-marquee][data-nodots] > span::after { display: none; }
+  [data-marquee] > img,
+  [data-marquee] img.mq-tech-icon {
+    width: var(--mq-img-w, 1.2em);
+    height: var(--mq-img-h, 1.2em);
+    object-fit: contain;
+    border-radius: 4px;
+    vertical-align: middle;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+    transition: transform 180ms var(--ease);
+  }
+  [data-marquee] img.mq-tech-icon:hover {
+    transform: scale(1.18) rotate(4deg);
+  }
+  [data-marquee][data-outline] {
+    color: transparent;
+    -webkit-text-stroke: var(--mq-stroke-w, 1.5px) var(--mq-stroke, currentColor);
+  }
+
+  @media (max-width: 640px) {
     .hero {
-      padding: var(--s12) 0 var(--s10);
+      min-height: calc(100svh - var(--nav-h, 60px));
+      min-height: calc(100vh - var(--nav-h, 60px));
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-top: 14px;
+      padding-bottom: 12px;
+      box-sizing: border-box;
+    }
+    .hero-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 100%;
+    }
+    .hero-pixel-banner {
+      margin-bottom: 0;
     }
     .hero-head {
-      gap: var(--s4);
+      gap: 6px;
+      margin-bottom: 0;
+    }
+    .hero-name {
+      font-size: clamp(23px, 6.5vw, 29px);
+    }
+    .role {
+      font-size: 13px;
+    }
+    .lede-desktop {
+      display: none;
+    }
+    .lede-mobile {
+      display: inline;
+    }
+    .lede {
+      font-size: 13.5px;
+      line-height: 1.5;
+      margin-bottom: 0;
+      max-width: 100%;
+    }
+    .actions {
+      gap: 8px;
+      margin-bottom: 0;
+    }
+    .actions .btn {
+      padding: 7px 13px;
+      font-size: 13px;
+    }
+    .hero-marquee-wrap {
+      margin-top: 0;
+      padding-top: 0;
+      gap: 6px;
+    }
+    .hero-marquee-row {
+      font-size: 17px;
     }
   }
 </style>
+
+<!-- ---------- PROXIMITY TEXT: required JS ---------- -->
+<script>
+  function initProximityText() {
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const fine = matchMedia('(hover:hover) and (pointer:fine)').matches;
+    // Strictly disable on mobile/touch screens or reduced motion (no dancing text!)
+    if (!fine || reduce) return;
+
+    const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+    let mx = -9999, my = -9999;
+    addEventListener('pointermove', (e: PointerEvent) => { mx = e.clientX; my = e.clientY; });
+    document.addEventListener('pointerleave', () => { mx = my = -9999; });
+
+    interface ProxItem {
+      el: HTMLElement;
+      chars: { el: HTMLElement; f: number; x: number; y: number; i: number }[];
+      visible: boolean;
+      radius: number;
+      lift: number;
+      tilt: number;
+      scale: number;
+    }
+
+    const elements = Array.from(document.querySelectorAll<HTMLElement>('[data-prox]'));
+    if (elements.length === 0) return;
+
+    const items: ProxItem[] = elements.map(el => {
+      const o: ProxItem = {
+        el,
+        chars: [],
+        visible: true,
+        radius: +(el.dataset.proxRadius || 300),   // reach of the effect in px
+        lift: +(el.dataset.proxLift || 34),        // px each letter rises
+        tilt: +(el.dataset.proxTilt || 9),         // degrees of lean
+        scale: +(el.dataset.proxScale || 0.1)      // extra scale at the cursor
+      };
+      el.setAttribute('aria-label', (el.textContent || '').replace(/\s+/g, ' ').trim());
+      // split text nodes into words, then letters. <br> and other tags are kept.
+      const walk = (n: Node) => [...n.childNodes].forEach(c => {
+        if (c.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          (c.textContent || '').split(/(\s+)/).forEach(tok => {
+            if (!tok) return;
+            if (/^\s+$/.test(tok)) { frag.appendChild(document.createTextNode(' ')); return; }
+            const w = document.createElement('span'); w.className = 'pw'; w.setAttribute('aria-hidden', 'true');
+            [...tok].forEach(ch => {
+              const s = document.createElement('span');
+              s.className = 'pc';
+              s.textContent = ch;
+              w.appendChild(s);
+              o.chars.push({ el: s, f: 0, x: 0, y: 0, i: o.chars.length });
+            });
+            frag.appendChild(w);
+          });
+          c.replaceWith(frag);
+        } else if (c.nodeType === 1 && !(c as HTMLElement).classList.contains('pw')) {
+          walk(c);
+        }
+      });
+      walk(el);
+      new IntersectionObserver(([e]) => o.visible = e.isIntersecting).observe(el);
+      return o;
+    });
+
+    // cache each letter's centre relative to its element (re-run on resize / font load)
+    function measure() {
+      items.forEach(o => {
+        const base = o.el.getBoundingClientRect();
+        o.chars.forEach(c => {
+          const r = c.el.getBoundingClientRect();
+          c.x = r.left - base.left + r.width / 2;
+          c.y = r.top - base.top + r.height / 2;
+        });
+      });
+    }
+    addEventListener('resize', measure);
+    addEventListener('load', measure);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(measure);
+    }
+    measure();
+
+    function frame(t: number) {
+      if (!reduce) {
+        items.forEach(o => {
+          if (!o.visible) return;
+          const b = o.el.getBoundingClientRect();
+          o.chars.forEach(c => {
+            let f = 0, lean = 0;
+            if (fine) {
+              const dx = mx - (b.left + c.x);
+              const dy = my - (b.top + c.y);
+              f = Math.pow(clamp(1 - Math.hypot(dx, dy) / o.radius), 2);
+              lean = clamp(dx / o.radius, -1, 1);
+            } else {
+              f = (Math.sin(t / 900 + c.i * 0.7) + 1) / 2 * 0.45;   // touch devices: slow idle wave
+            }
+            c.f += (f - c.f) * 0.12;
+            c.el.style.transform = `translate3d(0,${(-c.f * o.lift).toFixed(2)}px,0) rotate(${(-lean * c.f * o.tilt).toFixed(2)}deg) scale(${(1 + c.f * o.scale).toFixed(3)})`;
+          });
+        });
+      }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // =====================================================
+  // SCROLL MARQUEE: REQUIRED JS (from skill)
+  // =====================================================
+  function initScrollMarquee() {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+
+    const rows = Array.from(document.querySelectorAll<HTMLElement>('[data-marquee]')).map(el => {
+      let clip = el.parentElement?.classList.contains('mq-clip') ? el.parentElement : null;
+      if (!clip) {
+        clip = document.createElement('div');
+        clip.className = 'mq-clip';
+        el.before(clip);
+        clip.appendChild(el);
+      }
+      const orig = Array.from(el.children).filter(c => !c.hasAttribute('aria-hidden')) as HTMLElement[];
+      if (!orig.length) return null;
+      const w0 = el.scrollWidth || 1;
+      const copies = Math.ceil(Math.max(window.innerWidth, screen.width) / w0) + 1;
+      let first: HTMLElement | null = null;
+      for (let k = 0; k < copies; k++) {
+        orig.forEach((n, i) => {
+          const c = n.cloneNode(true) as HTMLElement;
+          c.setAttribute('aria-hidden', 'true');
+          if (c.tagName === 'IMG') (c as HTMLImageElement).alt = '';
+          if (k === 0 && i === 0) first = c;
+          el.appendChild(c);
+        });
+      }
+      const d = el.dataset.dir;
+      return {
+        el,
+        orig: orig[0],
+        first,
+        x: 0,
+        half: 1,
+        dir: d === undefined ? -1 : (+d < 0 ? -1 : 1),
+        speed: +(el.dataset.speed || 36)
+      };
+    }).filter(Boolean);
+
+    const measure = () => rows.forEach(r => {
+      if (r && r.first && r.orig) {
+        r.half = Math.max(1, r.first.offsetLeft - r.orig.offsetLeft);
+      }
+    });
+    measure();
+    addEventListener('resize', measure);
+    addEventListener('load', measure);
+
+    let prevY = window.scrollY, vel = 0, skew = 0, sign = 1, last = 0;
+    function frame(t: number) {
+      const dt = Math.min(0.05, (t - last) / 1000) || 0.016;
+      last = t;
+      const y = window.scrollY;
+      vel += (((y - prevY) / dt) - vel) * (1 - Math.exp(-dt * 10));
+      prevY = y;
+      if (Math.abs(vel) > 20) sign = vel < 0 ? -1 : 1;
+      skew += (clamp(vel / 60 * 0.18, -9, 9) - skew) * (1 - Math.exp(-dt * 7));
+      rows.forEach(r => {
+        if (!r) return;
+        r.x += (r.speed + Math.abs(vel) * 0.35) * r.dir * sign * dt;
+        while (r.x <= -r.half) r.x += r.half;
+        while (r.x > 0) r.x -= r.half;
+        r.el.style.transform = `translate3d(${r.x.toFixed(2)}px,0,0) skewX(${(-skew).toFixed(2)}deg)`;
+      });
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  import { initPixelHeader } from '../../scripts/pixel-header';
+
+  function setupPixelHeader() {
+    initPixelHeader('#zain-pixel-header');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      setupPixelHeader();
+      initProximityText();
+      (document.fonts ? document.fonts.ready : Promise.resolve()).then(initScrollMarquee);
+    });
+  } else {
+    setupPixelHeader();
+    initProximityText();
+    (document.fonts ? document.fonts.ready : Promise.resolve()).then(initScrollMarquee);
+  }
+
+  // Re-bind proximity hover effect once loader ceremony finishes and DOM text is restored
+  window.addEventListener('cb:dismissed', () => {
+    setTimeout(initProximityText, 50);
+  });
+</script>
 

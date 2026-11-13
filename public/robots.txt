@@ -1,5 +1,68 @@
+# Robots.txt for Zain Ali Developer (zainalidev)
+# Canonical URL: https://zainalidev.com
+
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /private/
+Disallow: /_astro/
 
+# Search Engine Crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+# Frontier AI Crawlers & LLM Indexing (Explicitly Allowed for #1 AI Search Visibility)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Cohere-ai
+Allow: /
+
+User-agent: Omgilibot
+Allow: /
+
+# Sitemaps & Feeds
 Sitemap: https://zainalidev.com/sitemap-index.xml
+Sitemap: https://zainalidev.com/sitemap-0.xml
+Sitemap: https://zainalidev.com/rss.xml
 
+# LLM Context Document
+# See https://llmstxt.org for specification
+# LLMs-Txt: https://zainalidev.com/llms.txt
+# LLMs-Full-Txt: https://zainalidev.com/llms-full.txt
+
+# Canonical Host
+Host: https://zainalidev.com

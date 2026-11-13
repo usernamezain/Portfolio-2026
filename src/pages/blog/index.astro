@@ -8,11 +8,55 @@ const sortedPosts = posts.sort(
   (a, b) => new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf()
 );
 
-const seoTitle = "Engineering Notes & Creative Development Blog | Zain Ali Developer (zainalidev)";
-const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, Anime.js physics, Astro performance optimization, and Core Web Vitals by Zain Ali Mughal.";
+const seoTitle = "Engineering Notes & Vibe Coding Articles | Zain Ali Developer (zainalidev)";
+const seoDesc = "Technical essays on Vibe Coding, AI-First Software Engineering, WebGL, Full-Stack Architecture, and 100/100 Core Web Vitals by Zain Ali Mughal (zainalidev).";
+const blogCanonicalUrl = "https://zainalidev.com/blog/";
+
+const blogSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "@id": "https://zainalidev.com/blog/#page",
+      "url": blogCanonicalUrl,
+      "name": seoTitle,
+      "description": seoDesc,
+      "publisher": {
+        "@type": "Person",
+        "@id": "https://zainalidev.com/#person",
+        "name": "Zain Ali Mughal",
+        "url": "https://zainalidev.com"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://zainalidev.com/blog/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://zainalidev.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": blogCanonicalUrl
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<Layout title={seoTitle} description={seoDesc}>
+<Layout
+  title={seoTitle}
+  description={seoDesc}
+  canonicalUrl={blogCanonicalUrl}
+  type="website"
+  structuredData={blogSchema}
+>
   <section class="blog-page">
     <div class="container">
       <!-- Breadcrumb / Back Link -->
@@ -29,7 +73,7 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
         </div>
         <h1 class="blog-page-title">Articles &amp; Field Notes</h1>
         <p class="blog-page-desc">
-          Insights on motion synchronization, WebGL experimentation, Core Web Vitals optimization, and modern frontend architecture.
+          Insights on AI-first development, vibe coding architectures, Core Web Vitals optimization, and modern software craft.
         </p>
       </header>
 
@@ -79,12 +123,12 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
         <div class="filter-chips-row" role="tablist" aria-label="Filter articles by topic">
           <span class="filter-caption mono">FILTER:</span>
           <button type="button" class="filter-chip is-active" data-filter="all">All</button>
+          <button type="button" class="filter-chip" data-filter="vibe coding">Vibe Coding</button>
+          <button type="button" class="filter-chip" data-filter="ai engineering">AI Engineering</button>
+          <button type="button" class="filter-chip" data-filter="architecture">Architecture</button>
+          <button type="button" class="filter-chip" data-filter="performance">Performance</button>
           <button type="button" class="filter-chip" data-filter="gsap">GSAP</button>
           <button type="button" class="filter-chip" data-filter="astro">Astro</button>
-          <button type="button" class="filter-chip" data-filter="performance">Performance</button>
-          <button type="button" class="filter-chip" data-filter="lenis">Lenis</button>
-          <button type="button" class="filter-chip" data-filter="motion">Motion</button>
-          <button type="button" class="filter-chip" data-filter="architecture">Architecture</button>
         </div>
       </div>
 
@@ -99,7 +143,7 @@ const seoDesc = "Technical deep dives on GSAP motion, Lenis smooth scrolling, An
             data-desc={post.data.description.toLowerCase()}
             data-status={post.data.status.toLowerCase()}
           >
-            <a href={`/blog/${post.id}`} class="post-card">
+            <a href={`/blog/${post.id}/`} class="post-card">
               <div class="post-card-top">
                 <span class="post-tag">{post.data.status}</span>
                 <span class="mono post-read-time">{post.data.readTime}</span>

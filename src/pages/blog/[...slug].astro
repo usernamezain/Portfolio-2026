@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Icon from '../../components/common/Icon.astro';
+import VibeCodingPoster from '../../components/media/VibeCodingPoster.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -20,32 +21,105 @@ const formattedDate = new Date(post.data.pubDate).toLocaleDateString('en-US', {
   day: 'numeric',
 });
 
-const postUrl = `https://zainalidev.com/blog/${post.id}`;
-const articleTitle = `${post.data.title} | Zain Ali Developer`;
+const postUrl = `https://zainalidev.com/blog/${post.id}/`;
+const articleTitle = `${post.data.title} | Zain Ali Developer (zainalidev)`;
 
-// Article Structured Data Schema for Google Search
-const articleSchema = {
+// Comprehensive Rich Schema Graph (TechArticle + BreadcrumbList + FAQPage for #1 Search Snippets)
+const articleSchemaGraph = {
   "@context": "https://schema.org",
-  "@type": "TechArticle",
-  "headline": post.data.title,
-  "description": post.data.description,
-  "datePublished": post.data.pubDate.toISOString(),
-  "dateModified": post.data.pubDate.toISOString(),
-  "author": {
-    "@type": "Person",
-    "name": post.data.author,
-    "url": "https://zainalidev.com/#person"
-  },
-  "publisher": {
-    "@type": "Person",
-    "name": "Zain Ali Mughal",
-    "url": "https://zainalidev.com"
-  },
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": postUrl
-  },
-  "keywords": post.data.tags.join(', ')
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": `${postUrl}#article`,
+      "headline": post.data.title,
+      "description": post.data.description,
+      "datePublished": post.data.pubDate.toISOString(),
+      "dateModified": post.data.pubDate.toISOString(),
+      "inLanguage": "en-US",
+      "author": {
+        "@type": "Person",
+        "@id": "https://zainalidev.com/#person",
+        "name": post.data.author,
+        "url": "https://zainalidev.com"
+      },
+      "publisher": {
+        "@type": "Person",
+        "@id": "https://zainalidev.com/#person",
+        "name": "Zain Ali Mughal",
+        "url": "https://zainalidev.com"
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": postUrl
+      },
+      "keywords": post.data.tags.join(', '),
+      "articleSection": "Software Engineering & AI Architecture",
+      "isAccessibleForFree": true,
+      "image": "https://zainalidev.com/og-image.png"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${postUrl}#breadcrumb`,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://zainalidev.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://zainalidev.com/blog/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": post.data.title,
+          "item": postUrl
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${postUrl}#faq`,
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is Vibe Coding?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Vibe Coding is an engineering paradigm where the human developer operates at the level of intent, architecture, and taste, while frontier language models (Claude, ChatGPT, Gemini) execute low-level code generation, refactoring, and boilerplate wiring in continuous flow state."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who created the term Vibe Coding?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The phrase 'vibe coding' was coined in early 2025 by renowned AI researcher and former Tesla AI Director Andrej Karpathy to describe coding with natural language prompts and embracing rapid AI code generation."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Vibe Coding just sloppy coding?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Professional vibe coding demands higher architectural rigor than traditional coding: strict TypeScript types, atomic test loops, performance budgets (100/100 Core Web Vitals), and relentless visual polish."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the core rules of production Vibe Coding?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "1. Prompt with intent and constraints, not boilerplate. 2. Work in small atomic loops. 3. Keep strict TypeScript types and test runners active. 4. Own the architecture and never let AI dictate database schemas without verification."
+          }
+        }
+      ]
+    }
+  ]
 };
 ---
 
@@ -53,9 +127,13 @@ const articleSchema = {
   title={articleTitle}
   description={post.data.description}
   canonicalUrl={postUrl}
+  type="article"
+  publishedTime={post.data.pubDate.toISOString()}
+  modifiedTime={post.data.pubDate.toISOString()}
+  articleTags={post.data.tags}
+  articleSection="Software Engineering & AI Architecture"
+  structuredData={articleSchemaGraph}
 >
-  <!-- Article JSON-LD Structured Data -->
-  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
 
   <article class="article-page" itemscope itemtype="https://schema.org/TechArticle">
     <div class="container article-container">
@@ -68,6 +146,9 @@ const articleSchema = {
 
       <!-- Article Header -->
       <header class="article-header" data-hero>
+        <!-- Animated Pixel Video Poster (Orange Vibe Coding Studio with AI Bots) -->
+        <VibeCodingPoster />
+
         <div class="article-meta-top">
           <span class="post-tag">{post.data.status}</span>
           <span class="mono article-read-time">{post.data.readTime}</span>
@@ -350,6 +431,173 @@ const articleSchema = {
     background: var(--card);
     color: var(--t1);
     font-weight: 600;
+  }
+
+  /* Interactive Diagrams & Flow Step Visuals */
+  .prose-content :global(.vibe-flow-diagram) {
+    margin: var(--s6) 0 var(--s8);
+    padding: var(--s5);
+    background: rgba(255, 106, 0, 0.04);
+    border: 1px solid rgba(255, 106, 0, 0.2);
+    border-radius: var(--r-md);
+    overflow-x: auto;
+  }
+
+  .prose-content :global(.flow-steps) {
+    display: flex;
+    align-items: center;
+    gap: var(--s2);
+    min-width: 580px;
+  }
+
+  .prose-content :global(.flow-step) {
+    flex: 1;
+    padding: var(--s3) var(--s2);
+    font-size: 11.5px;
+    font-weight: 600;
+    text-align: center;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    color: var(--t1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+  }
+
+  .prose-content :global(.flow-arrow) {
+    color: #ff9f0a;
+    font-weight: bold;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* Key Callout Alert Cards */
+  .prose-content :global(.callout) {
+    margin: var(--s8) 0;
+    padding: var(--s5) var(--s6);
+    border-radius: var(--r-md);
+    background: rgba(255, 106, 0, 0.05);
+    border: 1px solid rgba(255, 106, 0, 0.25);
+    border-left: 4px solid #ff6a00;
+  }
+
+  .prose-content :global(.callout-header) {
+    display: flex;
+    align-items: center;
+    gap: var(--s3);
+    margin-bottom: var(--s3);
+  }
+
+  .prose-content :global(.callout-badge) {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: #ff6a00;
+    color: #fff;
+    text-transform: uppercase;
+  }
+
+  .prose-content :global(.callout-title) {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--t1);
+  }
+
+  .prose-content :global(.callout-body) {
+    margin-bottom: 0 !important;
+    font-size: 14.5px;
+    color: var(--t1);
+    line-height: 1.65;
+  }
+
+  /* Flow Comparison Pipelines */
+  .prose-content :global(.flow-compare-grid) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s4);
+    margin: var(--s6) 0 var(--s8);
+  }
+
+  .prose-content :global(.compare-card) {
+    padding: var(--s4) var(--s5);
+    border-radius: var(--r-md);
+    background: var(--card);
+    border: 1px solid var(--border);
+  }
+
+  .prose-content :global(.compare-header) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--s3);
+    font-size: 12px;
+  }
+
+  .prose-content :global(.compare-badge) {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  .prose-content :global(.badge-dim) {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--t2);
+    border: 1px solid var(--border);
+  }
+
+  .prose-content :global(.badge-accent) {
+    background: rgba(255, 106, 0, 0.15);
+    color: #ff9f0a;
+    border: 1px solid rgba(255, 106, 0, 0.3);
+  }
+
+  .prose-content :global(.compare-friction) {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--t3);
+  }
+
+  .prose-content :global(.friction-fast) {
+    color: #10b981;
+    font-weight: 600;
+  }
+
+  .prose-content :global(.compare-pipeline) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .prose-content :global(.pipeline-pill) {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    color: var(--t2);
+  }
+
+  .prose-content :global(.pill-accent) {
+    background: rgba(255, 106, 0, 0.1);
+    border-color: rgba(255, 106, 0, 0.25);
+    color: var(--t1);
+    font-weight: 600;
+  }
+
+  .prose-content :global(.pipeline-arrow) {
+    color: var(--t3);
+    font-size: 11px;
+  }
+
+  .prose-content :global(.arrow-accent) {
+    color: #ff9f0a;
+    font-weight: bold;
   }
 
   .footer-cta-card {

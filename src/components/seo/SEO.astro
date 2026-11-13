@@ -7,6 +7,12 @@ interface Props {
   keywords?: string[];
   canonicalUrl?: string;
   ogImage?: string;
+  type?: 'website' | 'profile' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
+  articleTags?: string[];
+  articleSection?: string;
+  structuredData?: Record<string, any>;
 }
 
 const {
@@ -15,33 +21,55 @@ const {
   keywords = seoConfig.keywords,
   canonicalUrl = seoConfig.canonicalUrl,
   ogImage = seoConfig.ogImage,
+  type = 'profile',
+  publishedTime,
+  modifiedTime,
+  articleTags = [],
+  articleSection = 'Software Engineering',
+  structuredData,
 } = Astro.props;
 
-const structuredData = generateStructuredData();
-const keywordsString = keywords.join(', ');
+// Merge or use page-specific schema
+const finalStructuredData = structuredData || generateStructuredData();
+const keywordsString = Array.from(new Set([...keywords, ...articleTags])).join(', ');
 ---
 
-<!-- Core Meta Tags -->
+<!-- Core Search Engine Meta Suite -->
 <title>{title}</title>
 <meta name="description" content={description} />
 <meta name="keywords" content={keywordsString} />
 <meta name="author" content={seoConfig.author} />
 <meta name="creator" content="Zain Ali Mughal" />
 <meta name="publisher" content="Zain Ali Developer (zainalidev)" />
-<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large" />
 <link rel="canonical" href={canonicalUrl} />
 
-<!-- Search Engine Verification & Ownership -->
+<!-- Comprehensive Crawler & Search Directives -->
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+<meta name="revisit-after" content="7 days" />
+<meta name="rating" content="general" />
+
+<!-- Geo & Language Meta Tags -->
+<meta name="geo.region" content="PK-PB" />
+<meta name="geo.placename" content="Lahore, Gujranwala" />
+<meta name="language" content="English" />
+
+<!-- RSS Feed & LLMs.txt Autodiscovery -->
+<link rel="alternate" type="application/rss+xml" title="Zain Ali Developer RSS Feed" href="https://zainalidev.com/rss.xml" />
+<link rel="help" type="text/plain" title="LLM Context Specification" href="/llms.txt" />
+
+<!-- App Manifest & Theme Meta -->
 <meta name="application-name" content="zainalidev" />
 <meta name="apple-mobile-web-app-title" content="zainalidev" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <link rel="manifest" href="/site.webmanifest" />
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#111111" />
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#fafafa" />
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#100e0c" />
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#fff8f2" />
 <meta name="color-scheme" content="dark light" />
 
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="profile" />
+<!-- Open Graph Protocol (Facebook, LinkedIn, Discord, Slack) -->
 <meta property="og:site_name" content={seoConfig.siteName} />
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:title" content={title} />
@@ -49,13 +77,32 @@ const keywordsString = keywords.join(', ');
 <meta property="og:image" content={ogImage} />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="Zain Ali Developer (zainalidev) Portfolio" />
+<meta property="og:image:alt" content="Zain Ali Developer (zainalidev) — Senior Full Stack Developer" />
 <meta property="og:locale" content="en_US" />
-<meta property="profile:first_name" content="Zain" />
-<meta property="profile:last_name" content="Ali Mughal" />
-<meta property="profile:username" content="zainalidev" />
 
-<!-- Twitter -->
+{type === 'article' ? (
+  <>
+    <meta property="og:type" content="article" />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+    <meta property="article:author" content="https://zainalidev.com/#person" />
+    <meta property="article:section" content={articleSection} />
+    {articleTags.map((tag) => (
+      <meta property="article:tag" content={tag} />
+    ))}
+  </>
+) : type === 'profile' ? (
+  <>
+    <meta property="og:type" content="profile" />
+    <meta property="profile:first_name" content="Zain" />
+    <meta property="profile:last_name" content="Ali Mughal" />
+    <meta property="profile:username" content="zainalidev" />
+  </>
+) : (
+  <meta property="og:type" content="website" />
+)}
+
+<!-- Twitter Card Tags -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:url" content={canonicalUrl} />
 <meta name="twitter:title" content={title} />
@@ -64,7 +111,7 @@ const keywordsString = keywords.join(', ');
 <meta name="twitter:creator" content={seoConfig.handle} />
 <meta name="twitter:site" content={seoConfig.handle} />
 
-<!-- High-Speed Resource Preconnections -->
+<!-- Resource Preconnections for 100/100 Core Web Vitals -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link
@@ -77,6 +124,5 @@ const keywordsString = keywords.join(', ');
   href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap"
 />
 
-<!-- JSON-LD Structured Data Schema for #1 Ranking & Knowledge Graph -->
-<script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
-
+<!-- High-Authority JSON-LD Structured Data Schema Graph -->
+<script type="application/ld+json" set:html={JSON.stringify(finalStructuredData)} />

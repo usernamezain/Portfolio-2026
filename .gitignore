@@ -1,7 +1,8 @@
 # Build outputs
 dist/
 .astro/
-
+#Ai skills Secrets
+.agent
 # Dependencies
 node_modules/
 

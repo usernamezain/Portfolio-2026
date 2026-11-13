@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="340" viewBox="0 0 600 340" fill="none">
+  <defs>
+    <linearGradient id="vsBg" x1="0" y1="0" x2="600" y2="340" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0b071a" />
+      <stop offset="100%" stop-color="#030208" />
+    </linearGradient>
+    <linearGradient id="vsAccent" x1="50" y1="50" x2="550" y2="290" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#c084fc" />
+      <stop offset="100%" stop-color="#38bdf8" />
+    </linearGradient>
+    <radialGradient id="vsCenterGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <rect width="600" height="340" rx="12" fill="url(#vsBg)" />
+  <circle cx="300" cy="170" r="140" fill="url(#vsCenterGlow)" />
+
+  <!-- Mockup 3D WebGL Canvas Viewport -->
+  <rect x="40" y="36" width="520" height="268" rx="8" fill="#090514" stroke="rgba(192, 132, 252, 0.25)" stroke-width="1" />
+  
+  <!-- Canvas Header -->
+  <path d="M40 36H560V66H40V36Z" fill="#130b26" />
+  <circle cx="60" cy="51" r="4" fill="#ef4444" />
+  <circle cx="74" cy="51" r="4" fill="#eab308" />
+  <circle cx="88" cy="51" r="4" fill="#22c55e" />
+  <text x="110" y="55" font-family="monospace" font-size="10" font-weight="700" fill="#e9d5ff">VIBESPACE 3D · AUDIO-REACTIVE WEBGL</text>
+
+  <rect x="444" y="44" width="96" height="14" rx="7" fill="rgba(168,85,247,0.15)" stroke="rgba(168,85,247,0.3)" />
+  <text x="492" y="54" font-family="monospace" font-size="8" font-weight="600" fill="#c084fc" text-anchor="middle">WEBGL + GLSL</text>
+
+  <!-- 3D Orbit Rings & Audio Wave Mesh -->
+  <g transform="translate(300, 165)">
+    <!-- 3D Inclined Orbit Ellipses -->
+    <ellipse cx="0" cy="0" rx="130" ry="46" fill="none" stroke="rgba(192, 132, 252, 0.4)" stroke-width="1.5" stroke-dasharray="6 4" transform="rotate(-25)" />
+    <ellipse cx="0" cy="0" rx="110" ry="38" fill="none" stroke="rgba(56, 189, 248, 0.4)" stroke-width="1.5" stroke-dasharray="4 4" transform="rotate(35)" />
+    
+    <!-- Core Geometric Particle Sphere -->
+    <circle cx="0" cy="0" r="32" fill="#130b26" stroke="url(#vsAccent)" stroke-width="2" />
+    <polygon points="0,-24 20,-8 20,16 0,24 -20,16 -20,-8" fill="none" stroke="#e9d5ff" stroke-width="1.5" />
+    <polygon points="0,-16 14,-5 14,10 0,16 -14,10 -14,-5" fill="rgba(168,85,247,0.3)" stroke="#38bdf8" stroke-width="1" />
+    
+    <!-- Floating Orbiting Energy Spheres -->
+    <circle cx="-90" cy="-35" r="5" fill="#38bdf8" />
+    <circle cx="85" cy="40" r="6" fill="#c084fc" />
+    <circle cx="105" cy="-20" r="4" fill="#a855f7" />
+    <circle cx="-75" cy="45" r="4" fill="#38bdf8" />
+  </g>
+
+  <!-- Audio Spectrum Frequencies at Bottom -->
+  <g transform="translate(70, 240)">
+    <rect x="0" y="24" width="6" height="24" rx="3" fill="#a855f7" />
+    <rect x="14" y="16" width="6" height="32" rx="3" fill="#c084fc" />
+    <rect x="28" y="8" width="6" height="40" rx="3" fill="#38bdf8" />
+    <rect x="42" y="20" width="6" height="28" rx="3" fill="#a855f7" />
+    <rect x="56" y="4" width="6" height="44" rx="3" fill="#38bdf8" />
+    <rect x="70" y="14" width="6" height="34" rx="3" fill="#c084fc" />
+    <rect x="84" y="2" width="6" height="46" rx="3" fill="#e9d5ff" />
+    <rect x="98" y="18" width="6" height="30" rx="3" fill="#a855f7" />
+    <rect x="112" y="10" width="6" height="38" rx="3" fill="#38bdf8" />
+    <rect x="126" y="22" width="6" height="26" rx="3" fill="#c084fc" />
+    <rect x="140" y="6" width="6" height="42" rx="3" fill="#e9d5ff" />
+    <rect x="154" y="14" width="6" height="34" rx="3" fill="#38bdf8" />
+    <rect x="168" y="26" width="6" height="22" rx="3" fill="#a855f7" />
+    <rect x="182" y="12" width="6" height="36" rx="3" fill="#c084fc" />
+    <rect x="196" y="4" width="6" height="44" rx="3" fill="#e9d5ff" />
+    <rect x="210" y="16" width="6" height="32" rx="3" fill="#38bdf8" />
+    <rect x="224" y="24" width="6" height="24" rx="3" fill="#a855f7" />
+    <rect x="238" y="8" width="6" height="40" rx="3" fill="#c084fc" />
+    <rect x="252" y="14" width="6" height="34" rx="3" fill="#38bdf8" />
+    <rect x="266" y="2" width="6" height="46" rx="3" fill="#e9d5ff" />
+    <rect x="280" y="18" width="6" height="30" rx="3" fill="#a855f7" />
+    <rect x="294" y="10" width="6" height="38" rx="3" fill="#38bdf8" />
+    <rect x="308" y="22" width="6" height="26" rx="3" fill="#c084fc" />
+    <rect x="322" y="6" width="6" height="42" rx="3" fill="#e9d5ff" />
+    <rect x="336" y="16" width="6" height="32" rx="3" fill="#38bdf8" />
+    <rect x="350" y="28" width="6" height="20" rx="3" fill="#a855f7" />
+    <rect x="364" y="12" width="6" height="36" rx="3" fill="#c084fc" />
+    <rect x="378" y="4" width="6" height="44" rx="3" fill="#e9d5ff" />
+    <rect x="392" y="18" width="6" height="30" rx="3" fill="#38bdf8" />
+    <rect x="406" y="24" width="6" height="24" rx="3" fill="#a855f7" />
+    <rect x="420" y="14" width="6" height="34" rx="3" fill="#c084fc" />
+    <rect x="434" y="8" width="6" height="40" rx="3" fill="#38bdf8" />
+    <rect x="448" y="20" width="6" height="28" rx="3" fill="#a855f7" />
+  </g>
+</svg>
+

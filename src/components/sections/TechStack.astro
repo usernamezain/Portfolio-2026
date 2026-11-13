@@ -1,44 +1,188 @@
 ---
 import Icon from '../common/Icon.astro';
 import { portfolioData } from '../../data/portfolio';
+
+const totalSkillsCount = portfolioData.techCategories.reduce(
+  (acc, cat) => acc + cat.skills.length,
+  0
+);
 ---
 
 <section id="stack" aria-label="Technology Stack">
   <div class="container">
     <hr class="rule" data-rule />
-    <h2 data-reveal>Tech Stack &amp; Tools</h2>
     
-    <div class="stack-grid">
-      {portfolioData.techCategories.map((category) => (
-        <div class="stack-group" data-reveal>
-          <h3>{category.title}</h3>
-          <ul class="chips">
-            {category.skills.map((skill) => (
-              <li class="chip border-beam border-beam--hover">
-                <Icon name={skill.icon} size={15} />
-                <span>{skill.name}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+    <div class="stack-header" data-reveal>
+      <div>
+        <h2>Tech Stack &amp; Tools</h2>
+        <p class="stack-subtitle">
+          Over 7+ years of full-stack software development, Chrome extensions, tooling, and creative engineering.
+        </p>
+      </div>
+    </div>
+    
+    <!-- Collapsible Wrapper with Blur Fade-Out Wipe -->
+    <div class="stack-collapse-container" id="stack-collapse-container">
+      <div class="stack-grid" id="stack-grid">
+        {portfolioData.techCategories.map((category) => (
+          <div class="stack-group" data-reveal>
+            <div class="stack-group-header">
+              <h3>{category.title}</h3>
+              <span class="mono category-count">{category.skills.length}</span>
+            </div>
+            <ul class="chips">
+              {category.skills.map((skill) => (
+                <li class="chip border-beam border-beam--hover">
+                  <Icon name={skill.icon} size={15} />
+                  <span>{skill.name}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      <!-- Blur-wiped gradient fade-out overlay -->
+      <div class="stack-fade-wipe" id="stack-fade-wipe" aria-hidden="true"></div>
+    </div>
+
+    <!-- Load More Action Button -->
+    <div class="stack-load-more-row" id="stack-load-more-row">
+      <button
+        type="button"
+        id="stack-load-more-btn"
+        class="stack-load-more-btn border-beam border-beam--hover"
+        aria-expanded="false"
+        aria-controls="stack-collapse-container"
+      >
+        <span class="btn-text">Load More Technologies ({totalSkillsCount} Tools)</span>
+        <span class="btn-arrow" aria-hidden="true">
+          <Icon name="chevron-down" size={15} />
+        </span>
+      </button>
     </div>
   </div>
 </section>
 
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  function initTechStackExpansion() {
+    const container = document.getElementById('stack-collapse-container');
+    const fadeWipe = document.getElementById('stack-fade-wipe');
+    const loadMoreRow = document.getElementById('stack-load-more-row');
+    const loadMoreBtn = document.getElementById('stack-load-more-btn');
+
+    if (!container || !fadeWipe || !loadMoreRow || !loadMoreBtn) return;
+
+    loadMoreBtn.addEventListener('click', () => {
+      // Calculate full target height of content
+      const targetHeight = container.scrollHeight;
+
+      // 1. Fade out the blur-wiped gradient overlay
+      gsap.to(fadeWipe, {
+        opacity: 0,
+        duration: 0.35,
+        ease: 'power2.out',
+        onComplete: () => {
+          fadeWipe.style.display = 'none';
+        }
+      });
+
+      // 2. Smoothly expand container to full height
+      gsap.to(container, {
+        maxHeight: targetHeight + 60,
+        duration: 0.65,
+        ease: 'power2.out',
+        onComplete: () => {
+          container.style.maxHeight = 'none';
+          container.classList.add('is-expanded');
+          // Refresh ScrollTrigger to recalculate accurate scroll offsets
+          if (typeof ScrollTrigger !== 'undefined') {
+            ScrollTrigger.refresh();
+          }
+        }
+      });
+
+      // 3. Smoothly fade out and remove the Load More button
+      gsap.to(loadMoreRow, {
+        opacity: 0,
+        y: 10,
+        duration: 0.3,
+        ease: 'power2.out',
+        onComplete: () => {
+          loadMoreRow.style.display = 'none';
+        }
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTechStackExpansion);
+  } else {
+    initTechStackExpansion();
+  }
+</script>
+
 <style>
+  .stack-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: var(--s4);
+    margin-bottom: var(--s8);
+  }
+
+  .stack-subtitle {
+    margin-top: var(--s2);
+    font-size: 14px;
+    color: var(--t2);
+    max-width: 58ch;
+  }
+
+  /* ==========================================================================
+     COLLAPSIBLE CONTAINER WITH BLUR WIPE FADE-OUT OVERLAY
+     ========================================================================== */
+  .stack-collapse-container {
+    position: relative;
+    max-height: 480px; /* Initial preview height showing first categories */
+    overflow: hidden;
+    transition: max-height 500ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .stack-collapse-container.is-expanded {
+    max-height: none;
+    overflow: visible;
+  }
+
   .stack-grid {
-    display: grid;
-    gap: var(--s6);
+    display: flex;
+    flex-direction: column;
+    gap: 36px; /* Distinct breathing room between chip rows and the next category title */
+    padding-bottom: var(--s10);
+  }
+
+  .stack-group-header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--s2);
+    margin-bottom: var(--s3);
   }
 
   .stack-group h3 {
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 600;
     color: var(--t2);
-    margin-bottom: var(--s3);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
+    margin: 0;
+  }
+
+  .category-count {
+    font-size: 10px;
+    color: var(--t3);
   }
 
   .chips {
@@ -62,7 +206,7 @@ import { portfolioData } from '../../data/portfolio';
     line-height: 1.5;
     cursor: default;
     outline: none;
-    transition: background-color 160ms var(--ease), color 160ms var(--ease);
+    transition: background-color 160ms var(--ease), color 160ms var(--ease), border-color 160ms var(--ease);
   }
 
   .chip > * {
@@ -72,7 +216,100 @@ import { portfolioData } from '../../data/portfolio';
 
   .chip:hover {
     background: var(--card-hover);
+    border-color: var(--border-focus);
     color: var(--t1);
   }
-</style>
 
+  /* ==========================================================================
+     BLUR-WIPED FADE OVERLAY: Bottom items smoothly blur & dissolve into page bg
+     ========================================================================== */
+  .stack-fade-wipe {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 180px;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(17, 17, 17, 0.45) 30%,
+      rgba(17, 17, 17, 0.88) 70%,
+      var(--bg) 100%
+    );
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 65%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 65%);
+    z-index: 4;
+    transition: opacity 300ms var(--ease), background 200ms var(--ease);
+  }
+
+  :global(html[data-theme="light"]) .stack-fade-wipe {
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(250, 250, 250, 0.5) 30%,
+      rgba(250, 250, 250, 0.9) 70%,
+      var(--bg) 100%
+    );
+  }
+
+  /* ==========================================================================
+     LOAD MORE BUTTON ROW
+     ========================================================================== */
+  .stack-load-more-row {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    margin-top: -30px;
+    padding-bottom: var(--s4);
+  }
+
+  .stack-load-more-btn {
+    --beam-color: var(--accent);
+    --beam-glow: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s2);
+    padding: 10px var(--s5);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    color: var(--t1);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+    transition: background-color 180ms var(--ease), border-color 180ms var(--ease), transform 180ms var(--ease), box-shadow 180ms var(--ease);
+  }
+
+  .stack-load-more-btn:focus,
+  .stack-load-more-btn:focus-visible {
+    outline: none;
+  }
+
+  :global(html[data-theme="light"]) .stack-load-more-btn {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  .stack-load-more-btn:hover {
+    background: var(--card-hover);
+    border-color: var(--border);
+    outline: none;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  }
+
+  .btn-arrow {
+    display: inline-flex;
+    align-items: center;
+    transition: transform 180ms var(--ease);
+  }
+
+  .stack-load-more-btn:hover .btn-arrow {
+    transform: translateY(2px);
+  }
+</style>

@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="340" viewBox="0 0 600 340" fill="none">
+  <defs>
+    <linearGradient id="ocBg" x1="0" y1="0" x2="600" y2="340" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#180e06" />
+      <stop offset="100%" stop-color="#0a0502" />
+    </linearGradient>
+    <linearGradient id="ocAccent" x1="50" y1="50" x2="550" y2="290" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ff6a00" />
+      <stop offset="100%" stop-color="#a855f7" />
+    </linearGradient>
+    <pattern id="ocGrid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M 24 0 L 0 0 0 24" fill="none" stroke="rgba(255,106,0,0.04)" stroke-width="1" />
+    </pattern>
+  </defs>
+
+  <rect width="600" height="340" rx="12" fill="url(#ocBg)" />
+  <rect width="600" height="340" rx="12" fill="url(#ocGrid)" />
+
+  <!-- Mockup AI Studio Canvas Interface -->
+  <rect x="40" y="36" width="520" height="268" rx="8" fill="#140f0c" stroke="rgba(255, 106, 0, 0.25)" stroke-width="1" />
+  
+  <!-- Window Header Bar -->
+  <path d="M40 36H560V66H40V36Z" fill="#1f1610" />
+  <circle cx="60" cy="51" r="4" fill="#ef4444" />
+  <circle cx="74" cy="51" r="4" fill="#ff9f0a" />
+  <circle cx="88" cy="51" r="4" fill="#10b981" />
+  
+  <text x="110" y="55" font-family="monospace" font-size="10" font-weight="700" fill="#fed7aa">OMNICHAT AI · MULTI-AGENT CANVAS</text>
+  <rect x="440" y="44" width="96" height="14" rx="7" fill="rgba(255,106,0,0.15)" stroke="rgba(255,106,0,0.3)" />
+  <text x="488" y="54" font-family="monospace" font-size="8" font-weight="600" fill="#ff9f0a" text-anchor="middle">CLAUDE + GPT + GEMINI</text>
+
+  <!-- Split Screen: Chat Sidebar & Artifact Canvas -->
+  <!-- Sidebar -->
+  <rect x="52" y="76" width="160" height="216" rx="6" fill="#1b120c" stroke="rgba(255,255,255,0.04)" />
+  <text x="64" y="96" font-family="monospace" font-size="9" font-weight="600" fill="#a8a29e">AGENT CHAT THREADS</text>
+  
+  <!-- Active Chat Item -->
+  <rect x="60" y="106" width="144" height="28" rx="4" fill="rgba(255,106,0,0.12)" stroke="rgba(255,106,0,0.2)" />
+  <circle cx="72" cy="120" r="3" fill="#ff6a00" />
+  <text x="82" y="123" font-family="sans-serif" font-size="9" font-weight="600" fill="#fff7ed">Architecture Loop #4</text>
+
+  <rect x="60" y="140" width="144" height="28" rx="4" fill="#140d08" />
+  <circle cx="72" cy="154" r="3" fill="#64748b" />
+  <text x="82" y="157" font-family="sans-serif" font-size="9" fill="#a8a29e">WebGL Shader Pipeline</text>
+
+  <rect x="60" y="174" width="144" height="28" rx="4" fill="#140d08" />
+  <circle cx="72" cy="188" r="3" fill="#64748b" />
+  <text x="82" y="191" font-family="sans-serif" font-size="9" fill="#a8a29e">Database Schema Design</text>
+
+  <!-- Right Canvas Execution Space -->
+  <rect x="224" y="76" width="324" height="216" rx="6" fill="#0d0906" stroke="rgba(255,106,0,0.15)" />
+  
+  <!-- Canvas Header -->
+  <path d="M224 76H548V100H224V76Z" fill="#170f0a" />
+  <text x="238" y="92" font-family="monospace" font-size="9" font-weight="600" fill="#fb923c">ARTIFACT: WebGLHero.tsx</text>
+  <rect x="470" y="81" width="66" height="14" rx="7" fill="#10b981" fill-opacity="0.15" />
+  <text x="503" y="91" font-family="monospace" font-size="8" font-weight="600" fill="#34d399" text-anchor="middle">LIVE 60FPS</text>
+
+  <!-- Code Streaming Lines -->
+  <text x="240" y="122" font-family="monospace" font-size="9" fill="#e2e8f0"><tspan fill="#f97316">import</tspan> { Canvas, useFrame } <tspan fill="#f97316">from</tspan> <tspan fill="#34d399">'@react-three/fiber'</tspan>;</text>
+  <text x="240" y="138" font-family="monospace" font-size="9" fill="#e2e8f0"><tspan fill="#f97316">import</tspan> gsap <tspan fill="#f97316">from</tspan> <tspan fill="#34d399">'gsap'</tspan>;</text>
+  
+  <text x="240" y="162" font-family="monospace" font-size="9" fill="#e2e8f0"><tspan fill="#60a5fa">export function</tspan> <tspan fill="#fbbf24">HeroScene</tspan>() &#123;</text>
+  <text x="256" y="178" font-family="monospace" font-size="9" fill="#94a3b8">  <tspan fill="#60a5fa">const</tspan> meshRef = useRef();</text>
+  <text x="256" y="194" font-family="monospace" font-size="9" fill="#94a3b8">  useFrame((state, delta) =&gt; &#123;</text>
+  <text x="272" y="210" font-family="monospace" font-size="9" fill="#38bdf8">    meshRef.current.rotation.y += delta * 0.4;</text>
+  <text x="256" y="226" font-family="monospace" font-size="9" fill="#94a3b8">  &#125;);</text>
+  <text x="240" y="242" font-family="monospace" font-size="9" fill="#e2e8f0">&#125;</text>
+
+  <!-- Streaming progress pulse -->
+  <circle cx="282" cy="254" r="3" fill="#ff6a00" />
+  <line x1="292" y1="254" x2="380" y2="254" stroke="#ff9f0a" stroke-width="2" stroke-dasharray="4 4" />
+</svg>
+

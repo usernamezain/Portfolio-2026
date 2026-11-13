@@ -1,0 +1,740 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/common/Icon.astro';
+import ProjectMedia from '../../components/media/ProjectMedia.astro';
+import ProjectsPixelPoster from '../../components/media/ProjectsPixelPoster.astro';
+import { portfolioData } from '../../data/portfolio';
+
+const allProjects = portfolioData.projects;
+const creativeCount = allProjects.filter((p) => p.category === 'Creative Projects').length;
+const openSourceCount = allProjects.filter((p) => p.category === 'Open Source Projects').length;
+
+const seoTitle = "Projects & Engineering Portfolio | Zain Ali Developer (zainalidev)";
+const seoDesc = "Explore verified production software, Manifest V3 Chrome extensions, full-stack platforms, developer tools, and WebGL experiences engineered by Zain Ali Mughal.";
+const projectsCanonicalUrl = "https://zainalidev.com/projects/";
+
+// Structured Data Schema for #1 Ranking in Google Search (CollectionPage + BreadcrumbList + ItemList)
+const projectsSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "@id": "https://zainalidev.com/projects/#page",
+      "url": projectsCanonicalUrl,
+      "name": seoTitle,
+      "description": seoDesc,
+      "publisher": {
+        "@type": "Person",
+        "@id": "https://zainalidev.com/#person",
+        "name": "Zain Ali Mughal",
+        "url": "https://zainalidev.com"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://zainalidev.com/projects/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://zainalidev.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Projects",
+          "item": projectsCanonicalUrl
+        }
+      ]
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://zainalidev.com/projects/#list",
+      "name": "Featured Software Projects by Zain Ali Developer",
+      "itemListElement": allProjects.map((project, idx) => ({
+        "@type": "ListItem",
+        "position": idx + 1,
+        "name": project.title,
+        "description": project.description,
+        "url": project.url
+      }))
+    }
+  ]
+};
+---
+
+<Layout
+  title={seoTitle}
+  description={seoDesc}
+  canonicalUrl={projectsCanonicalUrl}
+  type="website"
+  structuredData={projectsSchema}
+>
+  <section class="projects-page">
+    <div class="container">
+      <!-- Breadcrumb Bar -->
+      <nav class="projects-nav-bar" aria-label="Breadcrumb" data-hero>
+        <a href="/" class="back-link">
+          <span>← Back to portfolio</span>
+        </a>
+      </nav>
+
+      <!-- Animated Pixelated Motion Video Header -->
+      <ProjectsPixelPoster />
+
+      <!-- Page Header -->
+      <header class="projects-page-header" data-hero>
+        <h1 class="projects-page-title">Featured Projects &amp; Software</h1>
+        <p class="projects-page-desc">
+          A showcase of scalable web platforms, Manifest V3 Chrome extensions, developer tools, and motion-rich WebGL experiences engineered by <strong>Zain Ali Mughal</strong> (@zainalidev).
+        </p>
+      </header>
+
+      <hr class="rule" data-rule />
+
+      <!-- Interactive Search & Category Filter Toolbar -->
+      <div class="projects-toolbar" data-hero>
+        <div class="search-box-shell" id="project-search-box">
+          <div class="search-icon-slot" aria-hidden="true">
+            <Icon name="search" size={16} />
+          </div>
+
+          <div class="search-input-stage">
+            <input
+              type="text"
+              id="project-search-input"
+              class="search-hidden-input"
+              placeholder="Search by name, technology (React, Three.js, Chrome...), or category..."
+              autocomplete="off"
+              spellcheck="false"
+              aria-label="Search projects by name, technology, or tag"
+            />
+          </div>
+
+          <button
+            type="button"
+            id="search-clear-btn"
+            class="search-clear-action"
+            aria-label="Clear project search query"
+            hidden
+          >
+            <Icon name="x" size={13} />
+          </button>
+
+          <span class="search-count-pill mono" id="project-count-badge">
+            {allProjects.length} {allProjects.length === 1 ? 'project' : 'projects'}
+          </span>
+        </div>
+
+        <!-- Filter Chips Bar (Creative Projects vs Open Source Projects) -->
+        <div class="filter-chips-row" role="tablist" aria-label="Filter projects by category">
+          <span class="filter-caption mono">CATEGORY:</span>
+          <button type="button" class="filter-chip is-active" data-filter="all">All ({allProjects.length})</button>
+          <button type="button" class="filter-chip" data-filter="creative projects">Creative Projects ({creativeCount})</button>
+          <button type="button" class="filter-chip" data-filter="open source projects">Open Source Projects ({openSourceCount})</button>
+        </div>
+      </div>
+
+      <!-- Pinterest-Style Masonry Grid -->
+      <ul class="projects-masonry" id="projects-grid">
+        {allProjects.map((project) => (
+          <li
+            class="project-card-wrap"
+            data-reveal
+            data-category={project.category.toLowerCase()}
+            data-title={project.title.toLowerCase()}
+            data-desc={project.description.toLowerCase()}
+            data-tags={project.tags.map((t) => t.toLowerCase()).join(' ')}
+          >
+            <article class="project-card">
+              <!-- Visual Mockup Banner linking directly to live website -->
+              <a href={project.url} target="_blank" rel="noopener noreferrer" class="project-media-wrap" aria-label={`Visit ${project.title}`}>
+                <ProjectMedia
+                  src={project.image}
+                  alt={`${project.title} - Showcase by Zain Ali Developer`}
+                />
+              </a>
+
+              <!-- Card Content (Natural height - zero dead empty space) -->
+              <div class="project-card-body">
+                <h2 class="project-card-title">
+                  <a href={project.url} target="_blank" rel="noopener noreferrer" class="title-link">
+                    <span>{project.title}</span>
+                    <span class="card-arrow" aria-hidden="true">
+                      <Icon name="arrow-up-right" size={16} />
+                    </span>
+                  </a>
+                </h2>
+
+                <p class="project-card-desc">{project.description}</p>
+
+                <div class="project-tags-wrap">
+                  {project.tags.map((tag) => (
+                    <span class="tech-chip">{tag}</span>
+                  ))}
+                </div>
+
+                <div class="project-card-actions">
+                  <a
+                    href={project.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn btn-primary btn-sm border-beam border-beam--hover"
+                  >
+                    <span>Visit Live Website</span>
+                    <Icon name="arrow-up-right" size={13} />
+                  </a>
+                  {project.githubUrl && (
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="btn btn-sm"
+                      aria-label="Source code repository"
+                    >
+                      <Icon name="github" size={13} />
+                      <span>Source Code</span>
+                    </a>
+                  )}
+                </div>
+              </div>
+            </article>
+          </li>
+        ))}
+      </ul>
+
+      <!-- Empty Results State -->
+      <div id="projects-empty-state" class="projects-empty-state" hidden>
+        <div class="empty-icon-wrap" aria-hidden="true">
+          <Icon name="search" size={32} />
+        </div>
+        <h3>No projects found</h3>
+        <p>No projects match your current search or filter query. Try clearing the filter or searching for another technology.</p>
+        <button type="button" id="reset-filters-btn" class="btn btn-primary">
+          <span>Reset all filters</span>
+        </button>
+      </div>
+
+      <!-- Bottom Inquiry / Work CTA Card -->
+      <footer class="projects-footer-cta" data-reveal>
+        <div class="cta-inner-card">
+          <div class="cta-text">
+            <h3>Need a scalable web application or creative WebGL experience?</h3>
+            <p>
+              I build production full-stack systems, Chrome extensions, and high-performance websites engineered for 100/100 Core Web Vitals and zero layout shift.
+            </p>
+          </div>
+          <div class="cta-actions">
+            <a href="/#contact" class="btn btn-primary">
+              <span>Start a conversation</span>
+              <Icon name="arrow-up-right" size={15} />
+            </a>
+            <a href="/blog" class="btn">
+              <span>Read engineering notes</span>
+            </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  function initProjectFilters() {
+    const searchInput = document.getElementById('project-search-input') as HTMLInputElement | null;
+    const clearBtn = document.getElementById('search-clear-btn') as HTMLButtonElement | null;
+    const countBadge = document.getElementById('project-count-badge');
+    const filterChips = document.querySelectorAll('.filter-chip');
+    const projectCards = document.querySelectorAll('.project-card-wrap') as NodeListOf<HTMLElement>;
+    const emptyState = document.getElementById('projects-empty-state');
+    const resetBtn = document.getElementById('reset-filters-btn');
+
+    let currentCategory = 'all';
+    let searchQuery = '';
+
+    function applyFilters() {
+      let visibleCount = 0;
+      const q = searchQuery.trim().toLowerCase();
+
+      projectCards.forEach((card) => {
+        const cat = (card.dataset.category || '').toLowerCase();
+        const title = (card.dataset.title || '').toLowerCase();
+        const desc = (card.dataset.desc || '').toLowerCase();
+        const tags = (card.dataset.tags || '').toLowerCase();
+
+        const matchesCat = currentCategory === 'all' || cat === currentCategory || cat.includes(currentCategory);
+        const matchesQuery = !q || title.includes(q) || desc.includes(q) || tags.includes(q) || cat.includes(q);
+
+        if (matchesCat && matchesQuery) {
+          card.style.display = '';
+          card.style.opacity = '1';
+          card.style.visibility = 'visible';
+          card.style.transform = 'none';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      if (countBadge) {
+        countBadge.textContent = `${visibleCount} ${visibleCount === 1 ? 'project' : 'projects'}`;
+      }
+
+      if (emptyState) {
+        if (visibleCount === 0) {
+          emptyState.removeAttribute('hidden');
+        } else {
+          emptyState.setAttribute('hidden', '');
+        }
+      }
+
+      if (clearBtn) {
+        if (q.length > 0) {
+          clearBtn.removeAttribute('hidden');
+        } else {
+          clearBtn.setAttribute('hidden', '');
+        }
+      }
+
+      window.dispatchEvent(new Event('resize'));
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        searchQuery = (e.target as HTMLInputElement).value;
+        applyFilters();
+      });
+    }
+
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        if (searchInput) {
+          searchInput.value = '';
+          searchQuery = '';
+          searchInput.focus();
+        }
+        applyFilters();
+      });
+    }
+
+    filterChips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        filterChips.forEach((c) => c.classList.remove('is-active'));
+        chip.classList.add('is-active');
+        currentCategory = chip.getAttribute('data-filter') || 'all';
+        applyFilters();
+      });
+    });
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        if (searchInput) searchInput.value = '';
+        searchQuery = '';
+        currentCategory = 'all';
+        filterChips.forEach((c) => {
+          if (c.getAttribute('data-filter') === 'all') c.classList.add('is-active');
+          else c.classList.remove('is-active');
+        });
+        applyFilters();
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initProjectFilters);
+  } else {
+    initProjectFilters();
+  }
+
+  document.addEventListener('astro:page-load', initProjectFilters);
+</script>
+
+<style>
+  .projects-page {
+    padding: var(--s12) 0 var(--s20);
+    min-height: 85vh;
+  }
+
+  .projects-nav-bar {
+    margin-bottom: var(--s8);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s2);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--t2);
+    text-decoration: none;
+    transition: color 160ms var(--ease), transform 160ms var(--ease);
+  }
+
+  .back-link:hover {
+    color: var(--accent);
+    transform: translateX(-3px);
+  }
+
+  .projects-page-header {
+    margin-bottom: var(--s8);
+  }
+
+  .projects-badge {
+    display: inline-flex;
+    margin-bottom: var(--s4);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    background: var(--badge-bg);
+    border: 1px solid var(--badge-border);
+    padding: 3px 10px;
+    border-radius: var(--r-full);
+  }
+
+  .projects-page-title {
+    font-size: clamp(28px, 4.5vw, 40px);
+    font-weight: 700;
+    color: var(--t1);
+    letter-spacing: -0.025em;
+    margin-bottom: var(--s3);
+  }
+
+  .projects-page-desc {
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: var(--t2);
+    max-width: 65ch;
+  }
+
+  .projects-page-desc strong {
+    color: var(--t1);
+  }
+
+  /* Toolbar: Search + Filter Chips */
+  .projects-toolbar {
+    margin: var(--s8) 0 var(--s10);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s4);
+  }
+
+  .search-box-shell {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--s3);
+    padding: 0 var(--s4);
+    height: 48px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    transition: border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .search-box-shell:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+
+  .search-icon-slot {
+    display: flex;
+    align-items: center;
+    color: var(--t3);
+  }
+
+  .search-input-stage {
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-hidden-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--t1);
+    font-family: var(--font-sans);
+    font-size: 14px;
+  }
+
+  .search-hidden-input::placeholder {
+    color: var(--t3);
+  }
+
+  .search-clear-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    border-radius: var(--r-full);
+    color: var(--t2);
+    cursor: pointer;
+    transition: background-color 160ms ease, color 160ms ease;
+  }
+
+  .search-clear-action:hover {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .search-count-pill {
+    font-size: 11px;
+    color: var(--t3);
+    padding: 3px 8px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    white-space: nowrap;
+  }
+
+  .filter-chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s2);
+  }
+
+  .filter-caption {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--t3);
+    margin-right: var(--s1);
+  }
+
+  .filter-chip {
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--t2);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-full);
+    cursor: pointer;
+    transition: all 160ms var(--ease);
+  }
+
+  .filter-chip:hover {
+    color: var(--t1);
+    border-color: var(--t3);
+  }
+
+  .filter-chip.is-active {
+    color: #fff;
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  /* Two-Column Responsive Grid (Always 2 Columns, No Single-Line Collapse) */
+  .projects-masonry {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--s5);
+    align-items: start;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    .projects-masonry {
+      grid-template-columns: 1fr;
+      gap: var(--s4);
+    }
+  }
+
+  .project-card-wrap {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0;
+  }
+
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    transition: background-color 180ms var(--ease), border-color 180ms var(--ease), box-shadow 180ms var(--ease), transform 180ms var(--ease);
+  }
+
+  .project-card:hover {
+    background: var(--card-hover);
+    border-color: var(--t3);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.22);
+    transform: translateY(-2px);
+  }
+
+  .project-media-wrap {
+    width: 100%;
+    border-bottom: 1px solid var(--border);
+    line-height: 0;
+    overflow: hidden;
+    display: block;
+  }
+
+  .project-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s3);
+    padding: var(--s5);
+  }
+
+  .project-card-title {
+    font-size: 16.5px;
+    font-weight: 600;
+    color: var(--t1);
+    letter-spacing: -0.015em;
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  .title-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--s2);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .card-arrow {
+    color: var(--t3);
+    transition: color 160ms var(--ease), transform 160ms var(--ease);
+    flex-shrink: 0;
+  }
+
+  .project-card:hover .card-arrow {
+    color: var(--accent);
+    transform: translate(2px, -2px);
+  }
+
+  .project-card-desc {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--t2);
+    margin: 0;
+  }
+
+  .project-tags-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 2px;
+  }
+
+  .tech-chip {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--t3);
+    padding: 2px 7px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+  }
+
+  :global([data-theme="light"]) .tech-chip {
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  .project-card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s2);
+    padding-top: var(--s3);
+    border-top: 1px solid var(--divider);
+    margin-top: var(--s1);
+  }
+
+  .btn-sm {
+    height: 32px;
+    padding: 0 var(--s3);
+    font-size: 12px;
+    border-radius: var(--r-sm);
+  }
+
+  /* Empty State */
+  .projects-empty-state {
+    padding: var(--s16) var(--s6);
+    text-align: center;
+    background: var(--card);
+    border: 1px dashed var(--border);
+    border-radius: var(--r-lg);
+    margin: var(--s8) 0;
+  }
+
+  .empty-icon-wrap {
+    color: var(--t3);
+    margin-bottom: var(--s3);
+  }
+
+  .projects-empty-state h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--t1);
+    margin-bottom: var(--s2);
+  }
+
+  .projects-empty-state p {
+    font-size: 13.5px;
+    color: var(--t2);
+    max-width: 44ch;
+    margin: 0 auto var(--s5);
+  }
+
+  /* Footer CTA */
+  .projects-footer-cta {
+    margin-top: var(--s16);
+  }
+
+  .cta-inner-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--s6);
+    padding: var(--s8);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+  }
+
+  .cta-text h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--t1);
+    margin-bottom: var(--s2);
+  }
+
+  .cta-text p {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--t2);
+    max-width: 52ch;
+  }
+
+  .cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s3);
+  }
+
+  @media (max-width: 768px) {
+    .cta-inner-card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
+

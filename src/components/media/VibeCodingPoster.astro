@@ -1,0 +1,68 @@
+---
+/**
+ * VibeCodingPoster.astro
+ * Animated Pixel-Art Video Poster Component for Blog Articles
+ * Powered by pixel-motion-studio engine.
+ */
+---
+
+<div class="vibe-poster-card" data-hero>
+  <div id="vibe-pixel-poster" role="img" aria-label="Vibe Coding — The Multi-Agent AI Software Engineering Revolution"></div>
+</div>
+
+<script>
+  import { initVibePixelPoster } from '../../scripts/vibe-pixel-poster';
+
+  function launch() {
+    initVibePixelPoster('#vibe-pixel-poster');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', launch);
+  } else {
+    launch();
+  }
+
+  document.addEventListener('astro:page-load', launch);
+</script>
+
+<style>
+  .vibe-poster-card {
+    position: relative;
+    width: 100%;
+    margin-bottom: var(--s8);
+    border-radius: var(--r-lg, 12px);
+    overflow: hidden;
+    background: rgba(255, 106, 0, 0.03);
+    border: 1px solid rgba(255, 106, 0, 0.25);
+    box-shadow: 0 4px 24px -2px rgba(255, 106, 0, 0.12);
+    box-sizing: border-box;
+    transition: border-color 200ms ease, box-shadow 200ms ease;
+  }
+
+  .vibe-poster-card:hover {
+    border-color: rgba(255, 106, 0, 0.45);
+    box-shadow: 0 8px 32px -4px rgba(255, 106, 0, 0.22);
+  }
+
+  html[data-theme="light"] .vibe-poster-card {
+    background: rgba(255, 106, 0, 0.02);
+    border-color: rgba(234, 88, 12, 0.25);
+    box-shadow: 0 4px 20px -2px rgba(234, 88, 12, 0.08);
+  }
+
+  #vibe-pixel-poster {
+    width: 100%;
+    display: block;
+    line-height: 0;
+  }
+
+  #vibe-pixel-poster :global(canvas) {
+    display: block;
+    width: 100% !important;
+    height: auto !important;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+</style>
+

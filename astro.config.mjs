@@ -11,10 +11,27 @@ export default defineConfig({
   compressHTML: true,
   integrations: [
     sitemap({
-      filter: (page) => !page.includes('/404'),
-      changefreq: 'weekly',
-      priority: 1.0,
-      lastmod: new Date(),
+      filter: (page) => !page.includes('/404') && !page.includes('/private'),
+      serialize(item) {
+        if (item.url === 'https://zainalidev.com/' || item.url === 'https://zainalidev.com') {
+          item.changefreq = 'daily';
+          item.priority = 1.0;
+        } else if (item.url.includes('/projects') || item.url.includes('/project')) {
+          item.changefreq = 'weekly';
+          item.priority = 0.95;
+        } else if (item.url.includes('/blog/')) {
+          item.changefreq = 'weekly';
+          item.priority = 0.9;
+        } else if (item.url.includes('/blog')) {
+          item.changefreq = 'daily';
+          item.priority = 0.9;
+        } else {
+          item.changefreq = 'weekly';
+          item.priority = 0.8;
+        }
+        item.lastmod = new Date();
+        return item;
+      },
     }),
   ],
   vite: {

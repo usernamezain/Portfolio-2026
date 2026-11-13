@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="340" viewBox="0 0 600 340" fill="none">
+  <defs>
+    <linearGradient id="fcBg" x1="0" y1="0" x2="600" y2="340" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0b1320" />
+      <stop offset="100%" stop-color="#030712" />
+    </linearGradient>
+    <linearGradient id="fcAccent" x1="50" y1="50" x2="550" y2="290" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#818cf8" />
+    </linearGradient>
+    <pattern id="fcGrid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M 24 0 L 0 0 0 24" fill="none" stroke="rgba(56,189,248,0.03)" stroke-width="1" />
+    </pattern>
+  </defs>
+
+  <rect width="600" height="340" rx="12" fill="url(#fcBg)" />
+  <rect width="600" height="340" rx="12" fill="url(#fcGrid)" />
+
+  <!-- Mockup Terminal CLI Console Window -->
+  <rect x="40" y="36" width="520" height="268" rx="8" fill="#090d16" stroke="rgba(56, 189, 248, 0.25)" stroke-width="1" />
+  
+  <!-- Terminal Header Bar -->
+  <path d="M40 36H560V66H40V36Z" fill="#111827" />
+  <circle cx="60" cy="51" r="4" fill="#ef4444" />
+  <circle cx="74" cy="51" r="4" fill="#eab308" />
+  <circle cx="88" cy="51" r="4" fill="#22c55e" />
+  <text x="110" y="55" font-family="monospace" font-size="10" font-weight="700" fill="#93c5fd">BASH ~ npx create-zain-stack@latest</text>
+
+  <rect x="450" y="44" width="90" height="14" rx="7" fill="rgba(56,189,248,0.15)" stroke="rgba(56,189,248,0.3)" />
+  <text x="495" y="54" font-family="monospace" font-size="8" font-weight="600" fill="#38bdf8" text-anchor="middle">NODE.JS CLI</text>
+
+  <!-- Terminal Output Code Lines -->
+  <g transform="translate(60, 84)">
+    <text x="0" y="14" font-family="monospace" font-size="10" fill="#e2e8f0"><tspan fill="#38bdf8">&gt;</tspan> npx create-zain-stack <tspan fill="#a78bfa">my-production-app</tspan> --template astro-fullstack</text>
+    
+    <text x="0" y="34" font-family="monospace" font-size="9" fill="#10b981">✓ Resolving dependencies via pnpm (esbuild bundler)... [120ms]</text>
+    <text x="0" y="50" font-family="monospace" font-size="9" fill="#10b981">✓ Bootstrapping strict TypeScript 5.7 &amp; Astro 5 configuration</text>
+    <text x="0" y="66" font-family="monospace" font-size="9" fill="#10b981">✓ Auto-wiring GSAP ScrollTrigger &amp; Lenis 60fps ticker loop</text>
+    <text x="0" y="82" font-family="monospace" font-size="9" fill="#10b981">✓ Generating 100/100 Core Web Vitals critical CSS budget</text>
+    <text x="0" y="98" font-family="monospace" font-size="9" fill="#10b981">✓ Integrating Supabase auth &amp; PostgreSQL schema models</text>
+    
+    <!-- Boxed Success Banner -->
+    <rect x="0" y="112" width="480" height="42" rx="4" fill="#0f1f1d" stroke="#10b981" stroke-width="1" />
+    <text x="16" y="130" font-family="monospace" font-size="10" font-weight="700" fill="#34d399">🚀 SUCCESS: Project scaffolded in 420ms!</text>
+    <text x="16" y="146" font-family="monospace" font-size="9" fill="#94a3b8">Run: <tspan fill="#f8fafc">cd my-production-app &amp;&amp; pnpm dev</tspan> (Ready at http://localhost:4321)</text>
+
+    <!-- Blinking Cursor -->
+    <text x="0" y="174" font-family="monospace" font-size="10" fill="#38bdf8">&gt; <tspan fill="#f8fafc">pnpm dev</tspan></text>
+    <rect x="74" y="164" width="7" height="12" fill="#38bdf8" />
+  </g>
+</svg>
+

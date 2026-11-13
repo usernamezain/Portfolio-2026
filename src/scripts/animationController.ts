@@ -21,87 +21,16 @@ export function initMotionSystem() {
   const isTouchDevice = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
 
   /* ==========================================================================
-     1. PRELOADER & INITIALIZATION
+     1. INITIALIZATION & REDUCED MOTION SAFEGUARDS
      ========================================================================== */
-  const preloader = document.getElementById('preloader');
-  const counterEl = document.getElementById('preloader-counter');
-  const barEl = document.getElementById('preloader-bar');
-  const charEls = document.querySelectorAll('.p-char');
-
-  // Preloader counter object for Anime.js interpolation
-  const counterObj = { count: 0 };
-
-  const dismissPreloader = () => {
-    if (!preloader) return;
-    
-    // Smooth GSAP exit transition
-    gsap.to(preloader, {
-      opacity: 0,
-      scale: 0.98,
-      duration: 0.45,
-      ease: 'power2.inOut',
-      onComplete: () => {
-        preloader.classList.add('preloader-hidden');
-        preloader.style.display = 'none';
-        
-        // Start Hero Entrance Animation once preloader leaves
-        playHeroEntrance();
-      }
-    });
-  };
-
-  if (reduceMotion || !preloader) {
-    if (preloader) {
-      preloader.classList.add('preloader-hidden');
-      preloader.style.display = 'none';
-    }
-    // Make sure all reveal elements are fully visible immediately
+  if (reduceMotion) {
     document.querySelectorAll('[data-hero], [data-reveal]').forEach((el) => {
       (el as HTMLElement).style.opacity = '1';
     });
     document.querySelectorAll('[data-rule]').forEach((el) => {
       (el as HTMLElement).style.transform = 'scaleX(1)';
     });
-    return;
   }
-
-  // Preloader animation powered by Anime.js
-  const preloaderTimeline = anime.timeline({
-    easing: 'easeOutExpo',
-    complete: () => {
-      setTimeout(dismissPreloader, 100);
-    }
-  });
-
-  if (charEls.length) {
-    preloaderTimeline.add({
-      targets: charEls,
-      opacity: [0, 1],
-      translateY: [10, 0],
-      delay: anime.stagger(40),
-      duration: 350,
-      easing: 'easeOutCubic'
-    }, 0);
-  }
-
-  preloaderTimeline.add({
-    targets: counterObj,
-    count: 100,
-    duration: 800,
-    easing: 'easeInOutQuad',
-    update: () => {
-      const val = Math.round(counterObj.count);
-      if (counterEl) counterEl.textContent = val < 10 ? `0${val}%` : `${val}%`;
-      if (barEl) barEl.style.width = `${val}%`;
-    }
-  }, 50);
-
-  // Fallback safety timeout: Preloader will never trap the user
-  setTimeout(() => {
-    if (preloader && !preloader.classList.contains('preloader-hidden')) {
-      dismissPreloader();
-    }
-  }, 2000);
 
   /* ==========================================================================
      2. LENIS + GSAP COEXISTENCE (Single unified RAF loop)
@@ -157,16 +86,82 @@ export function initMotionSystem() {
   });
 
   /* ==========================================================================
-     4. READING PROGRESS BAR
+     4. READING PROGRESS BAR (Custom Top Scroll Animation)
      ========================================================================== */
   const progressBar = document.querySelector('.progress-bar') as HTMLElement | null;
+
+  const updateProgressBar = (progress: number) => {
+    if (progressBar) {
+      const p = Math.max(0, Math.min(1, progress));
+      progressBar.style.transform = `scaleX(${p.toFixed(4)})`;
+    }
+  };
+
+  const getScrollProgress = () => {
+    const doc = document.documentElement;
+    const body = document.body;
+    const scrollHeight = Math.max(doc.scrollHeight, body.scrollHeight);
+    const clientHeight = window.innerHeight || doc.clientHeight;
+    const maxScroll = scrollHeight - clientHeight;
+    if (maxScroll <= 0) return 0;
+    const current = window.scrollY || doc.scrollTop || body.scrollTop || 0;
+    return current / maxScroll;
+  };
+
+  // Direct high-performance update on Lenis scroll ticks
+  lenisInstance.on('scroll', (e: any) => {
+    ScrollTrigger.update();
+    if (e && typeof e.progress === 'number') {
+      updateProgressBar(e.progress);
+    } else {
+      updateProgressBar(getScrollProgress());
+    }
+  });
+
+  // Native window scroll fallback (always responsive)
+  window.addEventListener('scroll', () => {
+    updateProgressBar(getScrollProgress());
+  }, { passive: true });
+
+  // Re-measure after window resize or dynamic content updates
+  window.addEventListener('resize', () => {
+    ScrollTrigger.refresh();
+    lenisInstance?.resize();
+    updateProgressBar(getScrollProgress());
+  });
+
+  // Re-sync and refresh triggers as soon as the CursorBuild loader dismisses
+  window.addEventListener('cb:dismissed', () => {
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+      lenisInstance?.resize();
+      updateProgressBar(getScrollProgress());
+
+      // Trigger reveal immediately for any sections already in or entering the viewport
+      const vh = window.innerHeight;
+      document.querySelectorAll('[data-reveal]').forEach((item) => {
+        const rect = item.getBoundingClientRect();
+        if (rect.top < vh * 0.95 && rect.bottom > 0) {
+          const words = pendingWordsMap.get(item) || [];
+          playReveal(item, words, 0.05);
+        }
+      });
+      document.querySelectorAll('[data-rule]').forEach((rule) => {
+        const rect = rule.getBoundingClientRect();
+        if (rect.top < vh * 0.95 && rect.bottom > 0) {
+          gsap.to(rule, { scaleX: 1, duration: 0.65, ease: 'power2.out', overwrite: true });
+        }
+      });
+    }, 120);
+  });
+
   if (progressBar) {
     ScrollTrigger.create({
-      trigger: document.documentElement,
+      trigger: document.body,
       start: 'top top',
       end: 'bottom bottom',
       onUpdate: (self) => {
-        progressBar.style.transform = `scaleX(${self.progress.toFixed(4)})`;
+        updateProgressBar(self.progress);
       },
     });
   }
@@ -569,7 +564,7 @@ export function initMotionSystem() {
   if (copyBtn) {
     const copyText = copyBtn.querySelector('.copy-text');
     copyBtn.addEventListener('click', () => {
-      const email = 'contact@zainalidev.com';
+      const email = 'devmughal8@gmail.com';
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(email).then(() => {
           if (copyText) {
@@ -631,6 +626,7 @@ export function initThemeToggle() {
       // Storage access blocked or restricted
     }
     updateAriaLabel();
+    window.dispatchEvent(new CustomEvent('theme:change', { detail: { theme: nextTheme } }));
   });
 
   updateAriaLabel();
